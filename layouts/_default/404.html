@@ -1,0 +1,38 @@
+{{ define "main" }}
+<section id="404" class="pt-24 pb-16 md:pt-32 md:pb-24 gradient-bg dark:gradient-bg-dark text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mb-10 md:mb-0">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-heading leading-tight">
+            {{ .Site.Params.fourofour_name | default "404" }}
+          </h1>
+          <h2 class="text-2xl md:text-3xl mb-6">
+            {{ .Site.Params.fourofour_tagline | default "Page Not Found" }}
+          </h2>
+          <p class="text-lg mb-8 max-w-lg">
+            {{ .Site.Params.fourofour_subtitle | default "The page you are looking for does not exist." }}
+          </p>
+          <div class="flex space-x-4">
+            <a href="{{ .Site.BaseURL }}" class="bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">{{ .Site.Params.fourofour_gohome | default "Go home" }}</a>
+            <a href="{{ .Site.Params.resume_url_en }}" target="_blank" rel="noopener" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition duration-300">{{ .Site.Params.resume_label }}</a>
+          </div>
+        </div>
+        {{ if .Site.Params.fourofour_image }}
+        <div class="md:w-1/2 flex justify-center">
+          <div class="hero-image relative animate-fade-in-up delay-200">
+            <div class="w-64 h-64 md:w-80 md:h-80 rounded-full bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg border-4 border-white border-opacity-30 overflow-hidden">
+              <div class="w-full h-full overflow-hidden rounded-full">
+                <img src="{{ .Site.Params.fourofour_image }}" alt="Portrait of {{ .Site.Params.name }}" loading="lazy" decoding="async" class="object-cover w-full h-full" />
+              </div>
+            </div>
+            <div class="absolute -bottom-5 -right-5 bg-yellow-400 dark:bg-yellow-500 text-gray-800 px-4 py-2 rounded-lg font-medium shadow-lg">
+              <i class="fas fa-map-marker-alt mr-2"></i> {{ .Site.Params.fourofour_location | default "Certainly, not Here" }}
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+  
+{{ end }}
