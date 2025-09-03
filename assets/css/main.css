@@ -258,19 +258,66 @@
     filter: brightness(1.15);
   }
 
-  /* Quick fact hover - simple slide effect */
+  /* Quick fact hover - natural rounded lighting effect */
   .quick-fact-card {
+    position: relative;
     transition: all var(--hover-transition);
     cursor: pointer;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    background: color-mix(in srgb, var(--color-primary) 2%, var(--color-bg));
+    border: 1px solid transparent;
+  }
+
+  .dark .quick-fact-card {
+    background: color-mix(in srgb, var(--color-primary) 4%, var(--color-bg));
+  }
+
+  .quick-fact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      color-mix(in srgb, var(--color-primary) 8%, transparent) 0%,
+      color-mix(in srgb, var(--color-primary) 4%, transparent) 30%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity var(--hover-transition);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .quick-fact-card:hover::before {
+    opacity: 1;
   }
 
   .quick-fact-card:hover {
-    background-color: var(--color-primary-lighter);
-    transform: translateX(var(--hover-lift));
+    transform: translateY(-2px);
+    box-shadow: 
+      0 8px 25px rgba(0, 0, 0, 0.1),
+      0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent);
   }
 
   .dark .quick-fact-card:hover {
-    background-color: color-mix(in srgb, var(--color-primary) 20%, var(--color-gray-700));
+    box-shadow: 
+      0 8px 25px rgba(0, 0, 0, 0.3),
+      0 0 0 1px color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+
+  .dark .quick-fact-card::before {
+    background: radial-gradient(
+      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      color-mix(in srgb, var(--color-primary) 12%, transparent) 0%,
+      color-mix(in srgb, var(--color-primary) 6%, transparent) 40%,
+      transparent 80%
+    );
   }
 
   /* Icon zoom effect - super simple */

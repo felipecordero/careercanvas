@@ -53,6 +53,27 @@ const Utils = {
     })
 };
 
+// Mouse tracking for quick fact lighting effects
+function initQuickFactLighting() {
+    const quickFactCards = document.querySelectorAll('.quick-fact-card');
+    
+    quickFactCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            card.style.setProperty('--mouse-x', `${x}%`);
+            card.style.setProperty('--mouse-y', `${y}%`);
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.setProperty('--mouse-x', '50%');
+            card.style.setProperty('--mouse-y', '50%');
+        });
+    });
+}
+
 // Main initialization
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof gsap === 'undefined') {
@@ -133,6 +154,9 @@ function initializeHeroAnimations() {
     
     // Initialize typewriter effect
     initTypingEffect();
+    
+    // Initialize quick fact lighting effects
+    initQuickFactLighting();
     
     // Play hero entrance animation
     const tl = gsap.timeline();
