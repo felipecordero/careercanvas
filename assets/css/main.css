@@ -33,20 +33,6 @@
     position: relative;
   }
 
-  .gradient-bg::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 40% 40%, 
-      var(--color-primary) 0%, 
-      var(--color-primary-light) 25%, 
-      var(--color-primary) 45%, 
-      transparent 65%
-    );
-  }
 
   /* Company Link Styling */
   .company-link {
