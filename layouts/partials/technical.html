@@ -24,48 +24,20 @@
               <div class="flex flex-col items-center text-center">
                 {{ if .devicon_name }}
                   <!-- Use explicit devicon_name if provided -->
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/{{ .devicon_name }}/{{ .devicon_name }}-original.svg" 
-                       alt="{{ .name }}" 
-                       width="56" 
-                       height="56" 
-                       class="mb-2"
-                       data-animation="skill-icon" />
-                {{ else if or (eq .icon "python") (eq .icon "js") (eq .icon "typescript") (eq .icon "html5") (eq .icon "css3-alt") (eq .icon "database") (eq .icon "bolt") (eq .icon "atom") (eq .icon "forward") (eq .icon "cube") (eq .icon "chart-line") (eq .icon "window-maximize") (eq .icon "window-restore") (eq .icon "square-root-alt") (eq .icon "table-cells") (eq .icon "chart-bar") (eq .icon "network-wired") (eq .icon "layer-group") (eq .icon "microchip") (eq .icon "eye") (eq .icon "code-branch") (eq .icon "github") (eq .icon "gitlab") (eq .icon "code") (eq .icon "linux") (eq .icon "docker") (eq .icon "laptop-code") (eq .icon "elephant") (eq .icon "leaf") (eq .icon "fire") (eq .icon "cloud") (eq .icon "calculator") }}
-                  <!-- Auto-generate devicon name for known technologies -->
-                  {{ $devicon_name := .icon }}
-                  {{ if eq .icon "js" }}{{ $devicon_name = "javascript" }}{{ end }}
-                  {{ if eq .icon "css3-alt" }}{{ $devicon_name = "css3" }}{{ end }}
-                  {{ if eq .icon "database" }}{{ $devicon_name = "mysql" }}{{ end }}
-                  {{ if eq .icon "bolt" }}{{ $devicon_name = "fastapi" }}{{ end }}
-                  {{ if eq .icon "atom" }}{{ $devicon_name = "react" }}{{ end }}
-                  {{ if eq .icon "forward" }}{{ $devicon_name = "nextjs" }}{{ end }}
-                  {{ if eq .icon "cube" }}{{ $devicon_name = "threejs" }}{{ end }}
-                  {{ if eq .icon "chart-line" }}{{ $devicon_name = "plotly" }}{{ end }}
-                  {{ if eq .icon "window-maximize" }}{{ $devicon_name = "streamlit" }}{{ end }}
-                  {{ if eq .icon "window-restore" }}{{ $devicon_name = "qt" }}{{ end }}
-                  {{ if eq .icon "square-root-alt" }}{{ $devicon_name = "numpy" }}{{ end }}
-                  {{ if eq .icon "table-cells" }}{{ $devicon_name = "pandas" }}{{ end }}
-                  {{ if eq .icon "chart-bar" }}{{ $devicon_name = "matplotlib" }}{{ end }}
-                  {{ if eq .icon "network-wired" }}{{ $devicon_name = "pytorch" }}{{ end }}
-                  {{ if eq .icon "layer-group" }}{{ $devicon_name = "tensorflow" }}{{ end }}
-                  {{ if eq .icon "microchip" }}{{ $devicon_name = "scikitlearn" }}{{ end }}
-                  {{ if eq .icon "eye" }}{{ $devicon_name = "opencv" }}{{ end }}
-                  {{ if eq .icon "code-branch" }}{{ $devicon_name = "git" }}{{ end }}
-                  {{ if eq .icon "laptop-code" }}{{ $devicon_name = "jupyter" }}{{ end }}
-                  {{ if eq .icon "elephant" }}{{ $devicon_name = "postgresql" }}{{ end }}
-                  {{ if eq .icon "leaf" }}{{ $devicon_name = "mongodb" }}{{ end }}
-                  {{ if eq .icon "cloud" }}{{ $devicon_name = "googlecloud" }}{{ end }}
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/{{ $devicon_name }}/{{ $devicon_name }}-original.svg" 
-                       alt="{{ .name }}" 
-                       width="56" 
-                       height="56" 
-                       class="mb-2"
-                       data-animation="skill-icon" />
+                  <div class="h-14 flex items-center justify-center mb-2">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/{{ .devicon_name }}/{{ .devicon_name }}-original.svg" 
+                         alt="{{ .name }}" 
+                         width="56" 
+                         height="56" 
+                         data-animation="skill-icon" />
+                  </div>
                 {{ else }}
                   <!-- Fallback to FontAwesome with random colors -->
                   {{ $colors := slice "text-blue-500" "text-green-500" "text-purple-500" "text-red-500" "text-yellow-500" "text-indigo-500" "text-pink-500" "text-teal-500" "text-orange-500" "text-cyan-500" }}
                   {{ $randomColor := index $colors (mod (add (mul (len $colors) 7) (len .name)) (len $colors)) }}
-                  <i class="fas fa-{{ .icon }} text-5xl mb-2 {{ $randomColor }}" data-animation="skill-icon" aria-hidden="true"></i>
+                  <div class="h-14 flex items-center justify-center mb-2">
+                    <i class="fas fa-{{ .icon }} text-5xl {{ $randomColor }}" data-animation="skill-icon" aria-hidden="true"></i>
+                  </div>
                 {{ end }}
                 <span class="text-sm font-semibold text-text-secondary dark:text-text-secondary">{{ .name }}</span>
               </div>
