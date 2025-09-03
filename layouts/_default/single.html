@@ -1,6 +1,6 @@
 {{ define "main" }}
 <section class="py-12 bg-bg dark:bg-bg">
-  <div class="w-full lg:w-xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col lg:flex-row gap-8">
       <!-- Main Content -->
       <div class="{{ if and .Params.tags (or (eq .Type "engineering") (eq .Type "contributions") (eq .Type "blog")) }}lg:w-3/4{{ else }}w-full{{ end }}">
@@ -25,7 +25,7 @@
           <div class="space-y-4">
             {{ $related := .Site.RegularPages.Related . | first 10 }}
             {{ range $related }}
-            <article class="bg-bg dark:bg-bg-secondary rounded-lg p-4 shadow-sm border border-border-primary dark:border-border-primary">
+            <article class="bg-bg dark:bg-bg-secondary rounded-lg p-4 shadow-sm border border-border-primary dark:border-border-primary card-hover">
               <h3 class="text-lg font-semibold mb-2">
                 <a href="{{ .RelPermalink }}" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200">
                   {{ .Title }}

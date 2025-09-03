@@ -1,6 +1,6 @@
 {{ define "main" }}
 <section class="py-12 bg-bg dark:bg-bg">
-  <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Enhanced header with better styling -->
     <div class="mb-12">
       <h1 class="text-4xl font-bold mb-6 font-heading text-text-primary dark:text-text-primary">{{ .Title }}</h1>
@@ -10,7 +10,7 @@
     </div>
 
     <!-- Enhanced grid with better visual design -->
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
       {{ range .Pages.ByWeight }}
       <a href="{{ .RelPermalink }}" class="block group">
         <article class="bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary rounded-xl shadow-md hover:shadow-xl h-full border border-border-primary dark:border-border-primary overflow-hidden project-card card-hover-interactive" data-animate>
