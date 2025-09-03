@@ -4,8 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -48,26 +46,13 @@
       var(--color-primary) 45%, 
       transparent 65%
     );
-    animation: gradient-shift 15s ease-in-out infinite;
-  }
-
-  @keyframes gradient-shift {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    25% { transform: scale(1.15) rotate(2deg); }
-    50% { transform: scale(1.2) rotate(3deg); }
-    75% { transform: scale(1.15) rotate(2deg); }
   }
 
   /* Company Link Styling */
   .company-link {
     color: inherit;
     text-decoration: none;
-    /* Transitions now handled by GSAP */
     position: relative;
-  }
-
-  .company-link:hover {
-    color: var(--color-primary);
   }
 
   .company-link::after {
@@ -78,11 +63,6 @@
     bottom: -2px;
     left: 0;
     background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
-    /* Transitions now handled by GSAP */
-  }
-
-  .company-link:hover::after {
-    width: 100%;
   }
 
   /* Skill Pills - All use main color variations */
@@ -90,35 +70,9 @@
     background: var(--color-primary);
     color: var(--color-white);
     border-color: var(--color-primary-light);
-    /* Transitions now handled by GSAP */
-  }
-
-  /* Light mode skill pills - better contrast */
-  .skill-pill {
-    background: var(--color-primary);
-    color: var(--color-white);
-    border-color: var(--color-primary-light);
-  }
-
-  .skill-pill:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px -2px var(--color-primary);
   }
 
   /* Experience Timeline */
-  .timeline-item {
-    /* Transitions now handled by GSAP */
-  }
-
-  .timeline-item:hover {
-    transform: translateY(-2px);
-  }
-
-  .timeline-item:hover .timeline-bullet {
-    transform: translateX(-50%) scale(1.2);
-    box-shadow: 0 0 20px var(--color-primary);
-  }
-
   .timeline-line {
     background: linear-gradient(to bottom, var(--color-second-light) 0%, var(--color-second) 50%, var(--color-second-light) 100%);
   }
@@ -130,7 +84,6 @@
 
   /* Company Cards */
   .company-card {
-    /* Transitions now handled by GSAP */
     position: relative;
     overflow: hidden;
   }
@@ -149,30 +102,33 @@
     height: 3px;
     background: linear-gradient(90deg, var(--color-third), var(--color-third-dark));
     transform: scaleX(0);
-    transition: transform 0.3s ease;
   }
 
-  .company-card:hover::before {
-    transform: scaleX(1);
+  /* Contact Cards - Semantically correct styling */
+  .contact-card {
+    position: relative;
+    overflow: hidden;
   }
 
-  .company-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px -5px var(--color-shadow-light), 0 4px 6px -2px var(--color-shadow-lighter);
+  /* Ensure contact card has proper dark mode background */
+  .dark .contact-card {
+    background-color: var(--color-gray-600) !important;
   }
 
-  /* Dark mode specific company card hover */
-  .dark .company-card:hover {
-    box-shadow: 0 10px 25px -5px var(--color-shadow-dark), 0 4px 6px -2px var(--color-shadow-lighter);
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+    transform: scaleX(0);
   }
 
   /* Footer social media icons - ensure third color in dark mode */
   .dark footer .fab {
     color: var(--color-white) !important;
-  }
-
-  .dark footer .fab:hover {
-    color: var(--color-third-light) !important;
   }
 
   /* Footer collaboration tags - ensure proper dark mode styling */
@@ -182,10 +138,15 @@
     color: var(--color-white) !important;
   }
 
-
-
   /* Lighter card backgrounds for dark mode */
   .dark .company-card {
+    background: linear-gradient(to bottom right, 
+      color-mix(in srgb, var(--color-primary) 15%, var(--color-gray-800)),
+      color-mix(in srgb, var(--color-primary) 10%, var(--color-gray-700))
+    ) !important;
+  }
+
+  .dark .contact-card {
     background: linear-gradient(to bottom right, 
       color-mix(in srgb, var(--color-primary) 15%, var(--color-gray-800)),
       color-mix(in srgb, var(--color-primary) 10%, var(--color-gray-700))
@@ -199,32 +160,30 @@
     ) !important;
   }
 
-
-
-
-
-
-
-
-
   /* Navigation */
+  /* Custom underline effect using semantic colors */
   .nav-link {
     position: relative;
   }
-
+  
   .nav-link::after {
     content: '';
     position: absolute;
     width: 0;
     height: 2px;
-    bottom: -2px;
+    bottom: 0;
     left: 0;
-    background-color: var(--color-primary);
-    /* Transitions now handled by GSAP */
+    background-color: var(--color-third);
+    transition: width 0.3s ease;
+    z-index: 1;
   }
 
   .nav-link:hover::after {
     width: 100%;
+  }
+
+  .nav-link:hover {
+    color: var(--color-third);
   }
 
   .active-nav {
@@ -233,10 +192,6 @@
   }
 
   /* Hero Section */
-  .hero-image {
-    /* Animation now handled by GSAP */
-  }
-
   .hero-name {
     background: linear-gradient(135deg, var(--color-white) 0%, var(--color-primary-lighter) 100%);
     -webkit-background-clip: text;
@@ -252,59 +207,9 @@
     height: 100%;
     width: 2px;
     background: var(--color-primary);
-    /* Animation now handled by GSAP */
   }
 
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
 
-  /* Quick Fact Cards */
-  .quick-fact-card {
-    /* Transitions now handled by GSAP */
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    border: 2px solid transparent;
-  }
-
-  .quick-fact-card:hover {
-    /* Hover effects now handled by GSAP */
-    background: var(--color-primary-lighter);
-    border-color: var(--color-primary-light);
-    box-shadow: 0 4px 12px -2px var(--color-primary);
-  }
-
-  .dark .quick-fact-card:hover {
-    background: var(--color-primary-dark);
-    border-color: var(--color-primary);
-    box-shadow: 0 4px 12px -2px var(--color-primary-light);
-  }
-
-  .quick-fact-card:hover h4 {
-    color: var(--color-primary-dark) !important;
-  }
-
-  .quick-fact-card:hover p {
-    color: var(--color-primary-dark) !important;
-  }
-
-  .dark .quick-fact-card:hover h4 {
-    color: var(--color-white) !important;
-  }
-
-  .dark .quick-fact-card:hover p {
-    color: var(--color-white) !important;
-  }
-
-  /* More specific dark mode hover styles */
-  .dark .quick-fact-card:hover .text-text-primary {
-    color: var(--color-white) !important;
-  }
-
-  .dark .quick-fact-card:hover .text-text-tertiary {
-    color: var(--color-gray-100) !important;
-  }
 
   /* Collaboration Tags */
   .collab-tag {
@@ -319,28 +224,68 @@
     font-weight: 600;
     text-shadow: 0 1px 2px var(--color-shadow-dark);
   }
+
+  /* Simple, DRY hover effects using CSS variables */
+  :root {
+    --hover-scale: 1.15;
+    --hover-transition: 0.3s ease;
+    --hover-lift: 4px;
+  }
+
+  /* Card hover - simple lift effect */
+  .card-hover {
+    transition: all var(--hover-transition);
+    cursor: pointer;
+  }
+
+  .card-hover:hover {
+    transform: translateY(calc(-1 * var(--hover-lift)));
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .dark .card-hover:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Button hover - no movement, just highlight */
+  .button-hover:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    filter: brightness(1.1);
+  }
+
+  .dark .button-hover:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    filter: brightness(1.15);
+  }
+
+  /* Quick fact hover - simple slide effect */
+  .quick-fact-card {
+    transition: all var(--hover-transition);
+    cursor: pointer;
+  }
+
+  .quick-fact-card:hover {
+    background-color: var(--color-primary-lighter);
+    transform: translateX(var(--hover-lift));
+  }
+
+  .dark .quick-fact-card:hover {
+    background-color: color-mix(in srgb, var(--color-primary) 20%, var(--color-gray-700));
+  }
+
+  /* Icon zoom effect - super simple */
+  .tech-skill-card img,
+  .tech-skill-card .fas {
+    transition: transform var(--hover-transition);
+  }
+
+  .tech-skill-card:hover img,
+  .tech-skill-card:hover .fas {
+    transform: scale(var(--hover-scale));
+  }
 }
 
 @layer utilities {
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
-  }
-
-  @keyframes slide-in-up {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-
-
   section[id] {
     scroll-margin-top: 3rem;
   }
@@ -602,40 +547,24 @@
   background: linear-gradient(135deg, var(--color-third-lighter), var(--color-third-light)) !important;
 }
 
-/* Typewriter effect */
+/* Typewriter effect - Base styles only */
 .typewriter {
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
   border-right: 2px solid var(--color-primary-light);
-  animation: typing 8s steps(40, end) 0s infinite, blink-cursor 0.7s step-end infinite;
   font-family: inherit;
   font-size: inherit;
   vertical-align: bottom;
+  color: transparent;
 }
 
-@keyframes typing {
-  0% { width: 0; }
-  25% { width: 100%; }
-  75% { width: 100%; }
-  100% { width: 0; }
-}
-
-@keyframes blink-cursor {
-  from, to { border-color: var(--color-primary-light); }
-  50% { border-color: transparent; }
-}
-
-/* Custom glow animation with theme colors */
-@keyframes glow-theme {
-  0%, 100% { 
-    box-shadow: 0 0 20px var(--color-primary-light);
-  }
-  50% { 
-    box-shadow: 0 0 30px var(--color-primary);
-  }
-}
-
-.animate-glow-theme {
-  animation: glow-theme 2s ease-in-out infinite;
+/* Typing cursor */
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background-color: var(--color-primary-light);
+  margin-left: 2px;
+  vertical-align: text-bottom;
 }

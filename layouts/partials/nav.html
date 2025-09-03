@@ -1,4 +1,4 @@
-<nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50 transition-colors duration-200">
+<nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       <div class="flex items-center">
@@ -8,54 +8,54 @@
         {{ range .Site.Menus.main }}
           {{ if .HasChildren }}
           <div class="relative group">
-            <a href="{{ .URL }}" class="nav-link text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light flex items-center">
+            <a href="{{ .URL }}" class="nav-link text-text-primary dark:text-text-primary flex items-center">
               {{ .Pre | safeHTML }}{{ .Name }}
               <i class="fas fa-chevron-down ml-2 text-sm"></i>
             </a>
-            <div class="submenu absolute left-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[10rem] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200">
+            <div class="submenu absolute left-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[10rem] opacity-0 invisible">
               {{ range .Children }}
-                <a href="{{ .URL }}" class="block px-4 py-2 text-sm text-text-primary dark:text-text-primary hover:bg-bg-secondary dark:hover:bg-bg-secondary">
+                <a href="{{ .URL }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary">
                   {{ .Name }}
                 </a>
               {{ end }}
             </div>
           </div>
           {{ else }}
-            {{ if hasPrefix .URL "#" }}
-              <!-- Section links that should scroll on home page or navigate to home on other pages -->
-              <a href="{{ .URL }}" class="nav-link section-link text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light" data-section="{{ .URL }}">{{ .Name }}</a>
-            {{ else }}
-              <!-- Regular page links -->
-              <a href="{{ .URL }}" class="nav-link text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light">{{ .Name }}</a>
-            {{ end }}
+                      {{ if hasPrefix .URL "#" }}
+            <!-- Section links that should scroll on home page or navigate to home on other pages -->
+            <a href="{{ .URL }}" class="nav-link section-link text-text-primary dark:text-text-primary" data-section="{{ .URL }}">{{ .Name }}</a>
+          {{ else }}
+            <!-- Regular page links -->
+            <a href="{{ .URL }}" class="nav-link text-text-primary dark:text-text-primary">{{ .Name }}</a>
+          {{ end }}
           {{ end }}
         {{ end }}
         <!-- Social Media Icons -->
         <div class="flex items-center space-x-4" data-animation="social">
           {{ if .Site.Params.linkedin_url }}
-          <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light">
+          <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
             <i class="fab fa-linkedin-in text-xl"></i>
           </a>
           {{ end }}
           {{ if .Site.Params.github_url }}
-          <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light">
+          <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
             <i class="fab fa-github text-xl"></i>
           </a>
           {{ end }}
         </div>
         <!-- Dark Mode Toggle -->
-        <button id="darkModeToggle" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light focus:outline-none">
+        <button id="darkModeToggle" class="text-text-primary dark:text-text-primary focus:outline-none">
           <i class="fas fa-toggle-on dark:hidden"></i>
           <i class="fas fa-toggle-off hidden dark:block"></i>
         </button>
       </div>
       <div class="md:hidden flex items-center space-x-4">
         <!-- Dark Mode Toggle Mobile -->
-        <button id="darkModeToggleMobile" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light focus:outline-none">
+        <button id="darkModeToggleMobile" class="text-text-primary dark:text-text-primary focus:outline-none">
           <i class="fas fa-toggle-on dark:hidden"></i>
           <i class="fas fa-toggle-off hidden dark:block"></i>
         </button>
-        <button id="menu-btn" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light">
+        <button id="menu-btn" class="text-text-primary dark:text-text-primary">
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
@@ -68,27 +68,27 @@
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
           <!-- Section links that should scroll on home page or navigate to home on other pages -->
-          <a href="{{ .URL }}" class="section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light hover:bg-bg-secondary dark:hover:bg-bg-secondary" data-section="{{ .URL }}">
+          <a href="{{ .URL }}" class="nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary" data-section="{{ .URL }}">
             {{ .Name }}
           </a>
         {{ else }}
           <!-- Regular page links -->
-          <a href="{{ .URL }}" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light hover:bg-bg-secondary dark:hover:bg-bg-secondary">
+          <a href="{{ .URL }}" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary">
             {{ .Name }}
           </a>
         {{ end }}
         {{ if .HasChildren }}
           {{ range .Children }}
-            <a href="{{ .URL }}" class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary hover:text-primary dark:hover:text-primary-light">{{ .Name }}</a>
+            <a href="{{ .URL }}" class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary">{{ .Name }}</a>
           {{ end }}
         {{ end }}
       {{ end }}
       <!-- Mobile Social Media Icons -->
       <div class="flex items-center space-x-6 px-3 py-3 border-t border-border-primary dark:border-border-primary mt-2" data-animation="social">
-        <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light">
+        <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
           <i class="fab fa-linkedin-in text-2xl"></i>
         </a>
-        <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light">
+        <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
           <i class="fab fa-github text-2xl"></i>
         </a>
       </div>
@@ -217,6 +217,8 @@
         document.getElementById('mobile-menu').classList.add('hidden');
       });
     });
+
+
   </script>
 </nav>
 

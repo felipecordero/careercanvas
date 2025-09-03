@@ -21,7 +21,9 @@
   --color-gray-50: color-mix(in srgb, var(--color-primary) 5%, white);
   --color-gray-100: color-mix(in srgb, var(--color-primary) 10%, white);
   --color-gray-300: color-mix(in srgb, var(--color-primary) 20%, white);
+  --color-gray-400: color-mix(in srgb, var(--color-primary) 30%, white);
   --color-gray-500: color-mix(in srgb, var(--color-primary) 40%, white);
+  --color-gray-600: color-mix(in srgb, var(--color-primary) 50%, black);
   --color-gray-700: color-mix(in srgb, var(--color-primary) 60%, black);
   --color-gray-800: color-mix(in srgb, var(--color-primary) 80%, black);
   --color-gray-900: color-mix(in srgb, var(--color-primary) 90%, black);
@@ -34,6 +36,11 @@
   --color-shadow-light: rgba(0, 0, 0, 0.1);
   --color-shadow-lighter: rgba(0, 0, 0, 0.05);
   --color-shadow-dark: rgba(0, 0, 0, 0.3);
+  
+  /* Additional colors needed for hover effects */
+  --color-text-muted: var(--color-gray-500);
+  --color-border-secondary: var(--color-gray-300);
+  --color-success: var(--color-second);
   
   /* Light Mode */
   --color-bg: var(--color-white);
@@ -51,5 +58,7 @@
   --color-text-primary: var(--color-gray-50);
   --color-text-secondary: var(--color-gray-300);
   --color-border: var(--color-gray-700);
+  --color-text-muted: var(--color-gray-400);
+  --color-border-secondary: var(--color-gray-600);
 }
 </style>

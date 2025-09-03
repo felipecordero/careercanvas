@@ -11,4 +11,5 @@
         // See gsap-animations.js ScrollTrigger system and initExperienceAnimations()
 
         // Company card and achievements card hover effects are now handled by GSAP
-        // See gsap-animations.js initCardHoverEffects() function
+// See gsap-animations.js initCardHoverEffects() function
+

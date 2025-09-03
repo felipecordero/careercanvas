@@ -13,7 +13,7 @@
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {{ range .Pages.ByWeight }}
       <a href="{{ .RelPermalink }}" class="block group">
-        <article class="bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary rounded-xl shadow-md hover:shadow-xl h-full border border-border-primary dark:border-border-primary overflow-hidden project-card" data-animate>
+        <article class="bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary rounded-xl shadow-md hover:shadow-xl h-full border border-border-primary dark:border-border-primary overflow-hidden project-card card-hover-interactive" data-animate>
           {{ if .Params.featured_image }}
           <div class="relative overflow-hidden">
             <img 

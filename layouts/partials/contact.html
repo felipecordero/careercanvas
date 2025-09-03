@@ -5,7 +5,7 @@
     <div class="flex flex-col lg:flex-row justify-center gap-12">
       <!-- Contact Form -->
       <div class="lg:w-1/2">
-        <div class="company-card bg-bg dark:bg-bg p-8 rounded-lg shadow-lg border border-border-primary dark:border-border-primary">
+        <div class="contact-card bg-bg dark:bg-bg p-8 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
           <h3 class="text-xl font-semibold mb-6 text-text-primary dark:text-text-primary">Send me a message</h3>
           <form id="contact-form" action="{{ .Site.Params.formspree_endpoint }}" method="POST" class="space-y-6">
             <input type="text" name="_gotcha" style="display:none">
@@ -28,7 +28,7 @@
               <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-border-primary dark:border-border-primary rounded-lg focus-ring-primary border-primary dark:bg-bg dark:text-text-primary" required></textarea>
             </div>
                         <div class="text-center">
-              <button type="submit" class="bg-gradient-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-dark dark:hover:bg-primary-dark transition duration-300">
+              <button type="submit" class="bg-gradient-primary text-white px-6 py-3 rounded-lg font-medium shadow-lg button-hover">
                 Send Message
               </button>
             </div>
@@ -39,7 +39,7 @@
       <!-- Contact Info -->
       <div class="lg:w-1/2">
         {{ with .Site.GetPage "contact" }}
-        <div class="company-card bg-bg dark:bg-bg p-8 rounded-lg shadow-lg border border-border-primary dark:border-border-primary h-full">
+        <div class="contact-card bg-bg dark:bg-bg p-8 rounded-lg shadow-lg border border-border-primary dark:border-border-primary h-full card-hover">
           <h3 class="text-xl font-semibold mb-6 text-text-primary dark:text-text-primary">Contact Information</h3>
           <p class="mb-6 text-gray-700 dark:text-text-secondary">{{ .Params.intro }}</p>
           <div class="markdown-content text-gray-700 dark:text-text-secondary">
@@ -53,7 +53,7 @@
               </div>
               <div>
                 <h4 class="font-medium text-text-primary dark:text-text-primary">Email</h4>
-                <a href="mailto:{{ .Site.Params.email }}" class="text-primary dark:text-white hover:underline">{{ .Site.Params.email }}</a>
+                <a href="mailto:{{ .Site.Params.email }}" class="text-primary dark:text-white">{{ .Site.Params.email }}</a>
               </div>
             </div>
             {{ end }}
@@ -65,7 +65,7 @@
               </div>
               <div>
                 <h4 class="font-medium text-text-primary dark:text-text-primary">LinkedIn</h4>
-                <a href="{{ .Site.Params.linkedin_url }}" target="_blank" class="text-primary dark:text-white hover:underline">{{ .Site.Params.linkedin_text }}</a>
+                <a href="{{ .Site.Params.linkedin_url }}" target="_blank" class="text-primary dark:text-white">{{ .Site.Params.linkedin_text }}</a>
               </div>
             </div>
             {{ end }}
@@ -77,7 +77,7 @@
               </div>
               <div>
                 <h4 class="font-medium text-text-primary dark:text-text-primary">GitHub</h4>
-                <a href="{{ .Site.Params.github_url }}" target="_blank" class="text-primary dark:text-white hover:underline">{{ .Site.Params.github_text }}</a>
+                <a href="{{ .Site.Params.github_url }}" target="_blank" class="text-primary dark:text-white">{{ .Site.Params.github_text }}</a>
               </div>
             </div>
             {{ end }}
@@ -89,7 +89,7 @@
               </div>
               <div>
                 <h4 class="font-medium text-text-primary dark:text-text-primary">Priority Contact</h4>
-                <a href="mailto:{{ .Site.Params.emergency_contact }}" class="text-third dark:text-third-light hover:underline font-medium">{{ .Site.Params.emergency_contact }}</a>
+                <a href="mailto:{{ .Site.Params.emergency_contact }}" class="text-third dark:text-third-light font-medium">{{ .Site.Params.emergency_contact }}</a>
               </div>
             </div>
             {{ end }}

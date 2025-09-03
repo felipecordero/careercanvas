@@ -10,7 +10,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {{ range $i, $group := .Params.technical_groups }}
         {{ $isAdvanced := or (in $group.title "Advanced") (in $group.title "Expert") (in $group.title "Specialized") }}
-        <div class="bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary tech-skill-card"
+        <div class="bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary tech-skill-card card-hover"
              data-animate>
           <div class="project-inner">
             <!-- Card header with title only -->
@@ -59,7 +59,8 @@
                        alt="{{ .name }}" 
                        width="56" 
                        height="56" 
-                       class="mb-2" />
+                       class="mb-2"
+                       data-animation="skill-icon" />
                 {{ else }}
                   <!-- Fallback to FontAwesome with random colors -->
                   {{ $colors := slice "text-blue-500" "text-green-500" "text-purple-500" "text-red-500" "text-yellow-500" "text-indigo-500" "text-pink-500" "text-teal-500" "text-orange-500" "text-cyan-500" }}

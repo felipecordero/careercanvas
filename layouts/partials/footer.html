@@ -8,12 +8,12 @@
         <p class="text-text-secondary dark:text-text-muted mt-1">
           <i class="fas fa-map-marker-alt mr-2"></i>{{ .Site.Params.location }}
         </p>
-        <a href="mailto:{{ .Site.Params.email }}" class="text-text-secondary dark:text-text-muted hover:text-primary dark:hover:text-primary-light mt-1 inline-block">
+        <a href="mailto:{{ .Site.Params.email }}" class="text-text-secondary dark:text-text-muted text-primary dark:text-primary-light mt-1 inline-block">
           <i class="fas fa-envelope mr-2"></i>{{ .Site.Params.email }}
         </a>
         <div class="flex space-x-8 mt-6" data-animation="social">
           {{ range .Site.Params.social }}
-          <a href="{{ .url }}" target="_blank" class="text-text-secondary dark:text-text-muted hover:text-third dark:hover:text-third-light transition-colors duration-200">
+          <a href="{{ .url }}" target="_blank" class="text-text-secondary dark:text-text-muted text-third dark:text-third-light transition-transform duration-300 hover:scale-125">
             <i class="fab fa-{{ .icon }} text-3xl text-text-primary dark:text-text-primary"></i>
           </a>
           {{ end }}
@@ -23,7 +23,7 @@
         <div class="flex flex-wrap gap-2 justify-end">
           {{ range .Site.Params.collab_tags }}
           {{ $isPriority := or (eq . "Urgent") (eq . "Priority") (eq . "Leadership") (eq . "Management") }}
-          <span class="{{ if $isPriority }}bg-third text-text-primary{{ else }}bg-bg-tertiary dark:bg-bg-tertiary text-text-primary{{ end }} px-3 py-1 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity duration-200 shadow-md">{{ . }}</span>
+          <span class="{{ if $isPriority }}bg-third text-text-primary{{ else }}bg-bg-tertiary dark:bg-bg-tertiary text-text-primary{{ end }} px-3 py-1 rounded-full text-sm font-semibold shadow-md">{{ . }}</span>
           {{ end }}
         </div>
       </div>

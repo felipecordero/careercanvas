@@ -8,7 +8,7 @@
 
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {{ range $i, $domain := .Params.domains }}
-        <div class="bg-bg dark:bg-bg p-6 rounded-xl shadow-md skill-card border border-border-primary dark:border-border-primary" data-animate>
+        <div class="bg-bg dark:bg-bg p-6 rounded-xl shadow-md skill-card border border-border-primary dark:border-border-primary card-hover" data-animate>
           <div class="flex items-center mb-4">
             {{ $colors := slice "text-primary" "text-second" "text-third" "text-success" "text-warning" "text-error" "text-primary-light" "text-second-light" "text-third-light" "text-primary-dark" }}
             {{ $randomColor := index $colors (mod (add (mul (len $colors) 7) (len $domain.title)) (len $colors)) }}

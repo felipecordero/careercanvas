@@ -8,13 +8,13 @@
     <div class="text-center mb-12">
       <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center items-center">
         {{ $resumeLabel := .Params.resume_label }}
-        {{ $buttonClass := "flex items-center justify-center bg-gradient-primary text-white text-sm sm:text-lg px-4 sm:px-6 py-4 rounded-lg font-semibold shadow-lg hover:bg-primary-dark transition-all duration-300 transform hover:scale-105 w-auto sm:w-auto" }}
+        {{ $buttonClass := "flex items-center justify-center bg-gradient-primary text-white text-sm sm:text-lg px-4 sm:px-6 py-4 rounded-lg font-semibold shadow-lg w-auto sm:w-auto" }}
         
-        <a href="{{ .Params.resume_url_en }}" target="_blank" rel="noopener noreferrer" class="{{ $buttonClass }}">
+        <a href="{{ .Params.resume_url_en }}" target="_blank" rel="noopener noreferrer" class="{{ $buttonClass }} button-hover">
           <i class="fas fa-file-pdf text-2xl mr-3"></i>
           {{ $resumeLabel }} (EN)
         </a>
-        <a href="{{ .Params.resume_url_fr }}" target="_blank" rel="noopener noreferrer" class="{{ $buttonClass }}">
+        <a href="{{ .Params.resume_url_fr }}" target="_blank" rel="noopener noreferrer" class="{{ $buttonClass }} button-hover">
           <i class="fas fa-file-pdf text-2xl mr-3"></i>
           {{ $resumeLabel }} (FR)
         </a>
@@ -45,12 +45,12 @@
             <div class="md:w-1/2 px-4 flex justify-end">
               <div class="max-w-sm w-full">
                 <!-- Company info -->
-                <div class="company-card bg-bg dark:bg-bg p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary">
+                <div class="company-card bg-bg dark:bg-bg p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
                   <h3 class="text-xl font-heading font-bold text-text-primary dark:text-text-primary mb-2">
                     {{ if $exp.company_url }}
                     <a href="{{ $exp.company_url }}" target="_blank" rel="noopener noreferrer" class="company-link group">
                       {{ $exp.company }}
-                      <i class="fas fa-external-link-alt ml-2 text-primary dark:text-primary-light opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-sm"></i>
+                      <i class="fas fa-external-link-alt ml-2 text-primary dark:text-primary-light opacity-0 text-sm"></i>
                     </a>
                     {{ else }}
                     {{ $exp.company }}
@@ -94,7 +94,7 @@
                 <i class="fas fa-calendar-alt mr-2"></i>{{ $exp.period }}
               </div>
               
-              <div class="achievements-card bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary">
+              <div class="achievements-card bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
                 <div class="flex items-center mb-4">
                   <i class="fas fa-tasks text-third dark:text-third-light mr-3 text-lg"></i>
                   <h5 class="text-lg font-semibold text-text-primary dark:text-text-primary">Key Achievements</h5>
