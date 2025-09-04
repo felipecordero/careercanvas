@@ -4,7 +4,7 @@
       <div class="flex items-center">
         <a href="{{ .Site.Home.RelPermalink }}" class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">{{ .Site.Params.name }}</a>
       </div>
-      <div class="hidden md:flex items-center space-x-8">
+      <div class="hidden lg:flex items-center space-x-8">
         {{ range .Site.Menus.main }}
           {{ if .HasChildren }}
           <div class="relative group">
@@ -36,7 +36,7 @@
         {{/* Determine current language flag */}}
         {{ $cur := $.Site.Language.Lang }}
         {{ $currentFlag := "🏳️" }}
-        {{ if eq $cur "en" }}{{ $currentFlag = "🇺🇸" }}{{ end }}
+        {{ if eq $cur "en" }}{{ $currentFlag = "🇬🇧" }}{{ end }}
         {{ if eq $cur "es" }}{{ $currentFlag = "🇨🇱" }}{{ end }}
         {{ if eq $cur "fr" }}{{ $currentFlag = "🇫🇷" }}{{ end }}
         <div class="relative group">
@@ -45,15 +45,19 @@
             <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </a>
           <div class="submenu absolute right-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[8rem] opacity-0 invisible">
-            {{ range $homes }}
-              {{ $lang := .Language.Lang }}
-              {{ $flag := "🏳️" }}
-              {{ if eq $lang "en" }}{{ $flag = "🇺🇸" }}{{ end }}
-              {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
-              {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
-              <a href="{{ .RelPermalink }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
-                <span class="mr-2">{{ $flag }}</span>{{ .Language.LanguageName }}
-              </a>
+            {{ $order := slice "fr" "en" "es" }}
+            {{ range $order }}
+              {{ $code := . }}
+              {{ range where $homes "Language.Lang" $code }}
+                {{ $lang := .Language.Lang }}
+                {{ $flag := "🏳️" }}
+                {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
+                {{ if eq $lang "en" }}{{ $flag = "🇬🇧" }}{{ end }}
+                {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
+                <a href="{{ .RelPermalink }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
+                  <span class="mr-2">{{ $flag }}</span>{{ .Language.LanguageName }}
+                </a>
+              {{ end }}
             {{ end }}
           </div>
         </div>
@@ -78,7 +82,7 @@
           <i class="fas fa-toggle-off hidden dark:block"></i>
         </button>
       </div>
-      <div class="md:hidden flex items-center space-x-4">
+      <div class="lg:hidden flex items-center space-x-4">
         <!-- Dark Mode Toggle Mobile -->
         <button id="darkModeToggleMobile" class="text-text-primary dark:text-text-primary focus:outline-none">
           <i class="fas fa-toggle-on dark:hidden"></i>
@@ -92,7 +96,7 @@
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden md:hidden bg-bg dark:bg-bg shadow-lg">
+  <div id="mobile-menu" class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
@@ -112,33 +116,25 @@
           {{ end }}
         {{ end }}
       {{ end }}
-      <!-- Mobile Language Switcher (Dropdown-like) -->
+      <!-- Mobile Language Switcher (Inline flags) -->
       {{ $homes := $.Site.Home.AllTranslations }}
       {{ if gt (len $homes) 1 }}
-      {{ $cur := $.Site.Language.Lang }}
-      {{ $currentFlag := "🏳️" }}
-      {{ if eq $cur "en" }}{{ $currentFlag = "🇺🇸" }}{{ end }}
-      {{ if eq $cur "es" }}{{ $currentFlag = "🇨🇱" }}{{ end }}
-      {{ if eq $cur "fr" }}{{ $currentFlag = "🇫🇷" }}{{ end }}
       <div class="px-3 py-2 border-t border-border-primary dark:border-border-primary">
-        <div class="relative group">
-          <a href="#" class="nav-link flex items-center text-text-primary dark:text-text-primary">
-            <span class="mr-2">{{ $currentFlag }}</span>
-            <span class="font-medium">{{ i18n "language" }}</span>
-            <i class="fas fa-chevron-down ml-2 text-sm"></i>
-          </a>
-          <div class="submenu mt-2 bg-bg dark:bg-bg shadow rounded-lg z-50 opacity-0 invisible">
-            {{ range $homes }}
+        <div class="flex items-center space-x-3">
+          {{ $order := slice "fr" "en" "es" }}
+          {{ range $order }}
+            {{ $code := . }}
+            {{ range where $homes "Language.Lang" $code }}
               {{ $lang := .Language.Lang }}
               {{ $flag := "🏳️" }}
-              {{ if eq $lang "en" }}{{ $flag = "🇺🇸" }}{{ end }}
-              {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
               {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
-              <a href="{{ .RelPermalink }}" class="block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
-                <span class="mr-2">{{ $flag }}</span>{{ .Language.LanguageName }}
+              {{ if eq $lang "en" }}{{ $flag = "🇬🇧" }}{{ end }}
+              {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
+              <a href="{{ .RelPermalink }}" class="px-2 py-1 text-xl {{ if eq .Language.Lang $.Site.Language.Lang }}opacity-100 font-semibold{{ else }}opacity-70 hover:opacity-100{{ end }}" aria-label="Switch to {{ .Language.LanguageName }}">
+                <span aria-hidden="true">{{ $flag }}</span>
               </a>
             {{ end }}
-          </div>
+          {{ end }}
         </div>
       </div>
       {{ end }}
@@ -239,8 +235,8 @@
       });
     });
     
-    // Submenu toggle
-    document.querySelectorAll('.group > a.nav-link').forEach(link => {
+    // Submenu toggle (desktop + mobile button triggers)
+    document.querySelectorAll('.group > a.nav-link, .group > button.nav-link').forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
         const group = this.closest('.group');
@@ -272,9 +268,9 @@
     document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
     document.getElementById('darkModeToggleMobile').addEventListener('click', toggleDarkMode);
 
-    // Close mobile menu when clicking menu items
+    // Close mobile menu when clicking menu items (language trigger is a button, so ignored)
     document.querySelectorAll('#mobile-menu a').forEach(link => {
-      link.addEventListener('click', function() {
+      link.addEventListener('click', function(e) {
         document.getElementById('mobile-menu').classList.add('hidden');
       });
     });
