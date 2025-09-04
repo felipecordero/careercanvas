@@ -3,10 +3,10 @@
     <div class="flex flex-col md:flex-row justify-between items-center">
       <div class="mb-4 md:mb-0">
         <a href="/#home" class="text-xl font-bold text-text-primary font-heading">{{ .Site.Params.name }}</a>
-        <p class="text-text-secondary dark:text-text-muted mt-1">{{ .Site.Params.tagline }}</p>
-        <p class="text-text-secondary dark:text-text-muted mt-2">{{ .Site.Params.description }}</p>
+        <p class="text-text-secondary dark:text-text-muted mt-1">{{ .Site.Language.Params.tagline }}</p>
+        <p class="text-text-secondary dark:text-text-muted mt-2">{{ .Site.Language.Params.hero_description }}</p>
         <p class="text-text-secondary dark:text-text-muted mt-1">
-          <i class="fas fa-map-marker-alt mr-2"></i>{{ .Site.Params.location }}
+          <i class="fas fa-map-marker-alt mr-2"></i>{{ .Site.Language.Params.hero_location }}
         </p>
         <a href="mailto:{{ .Site.Params.email }}" class="text-text-secondary dark:text-text-muted text-primary dark:text-primary-light mt-1 inline-block">
           <i class="fas fa-envelope mr-2"></i>{{ .Site.Params.email }}
@@ -21,7 +21,7 @@
       </div>
       <div class="flex flex-col items-end">
         <div class="flex flex-wrap gap-2 justify-end">
-          {{ range .Site.Params.collab_tags }}
+          {{ range .Site.Language.Params.collab_tags }}
           {{ $isPriority := or (eq . "Urgent") (eq . "Priority") (eq . "Leadership") (eq . "Management") }}
           <span class="{{ if $isPriority }}bg-third text-text-primary{{ else }}bg-bg-tertiary dark:bg-bg-tertiary text-text-primary{{ end }} px-3 py-1 rounded-full text-sm font-semibold shadow-md">{{ . }}</span>
           {{ end }}
