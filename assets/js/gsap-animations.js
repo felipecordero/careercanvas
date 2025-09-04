@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeHeroAnimations();
 });
 
+
 // GSAP loader with fallback
 function loadGSAP() {
     const loadScript = (src, fallback, onLoad) => {
@@ -113,7 +114,9 @@ function loadGSAP() {
 
     loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js', 
         'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js',
-        initializeHeroAnimations);
+        () => {
+            initializeHeroAnimations();
+        });
 }
 
 // Main initialization function - Hero only (optimized)

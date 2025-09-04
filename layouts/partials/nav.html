@@ -209,7 +209,7 @@
             console.log('Target element found:', !!targetElement);
             if (targetElement) {
               targetElement.scrollIntoView({
-                behavior: 'smooth',
+                behavior: 'instant',
                 block: 'start'
               });
             }
@@ -232,7 +232,7 @@
             setTimeout(() => {
               console.log('Scrolling to hash target');
               targetElement.scrollIntoView({
-                behavior: 'smooth',
+                behavior: 'instant',
                 block: 'start'
               });
             }, 100);
