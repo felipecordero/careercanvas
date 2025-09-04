@@ -1,6 +1,6 @@
 <section id="about" class="py-12 bg-bg dark:bg-bg relative about-section">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <h2 class="text-3xl font-bold text-center mb-12 font-heading text-text-primary dark:text-text-primary about-text-element">About Me</h2>
+    <h2 class="text-3xl font-bold text-center mb-12 font-heading text-text-primary dark:text-text-primary about-text-element">{{ i18n "aboutMe" }}</h2>
     <div class="flex flex-col lg:flex-row gap-8">
       <div class="flex-1 about-text-element">
         <div class="bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-xl shadow-lg border border-border-primary dark:border-border-primary">
@@ -10,7 +10,7 @@
           <div class="mt-6">
             <a href="{{ $.Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center bg-gradient-primary text-white px-4 py-2 rounded-lg shadow-lg about-button button-hover">
               <i class="fab fa-linkedin-in mr-3 text-lg"></i> 
-              Connect on LinkedIn
+              {{ i18n "connectOnLinkedIn" }}
             </a>
           </div>
         </div>
@@ -20,11 +20,11 @@
         <div class="flex items-center justify-between mb-6 border-b border-border-primary dark:border-border-primary pb-3">
           <h3 class="text-xl font-semibold font-heading text-text-primary dark:text-text-primary flex items-center about-text-element">
             <i class="fas fa-info-circle mr-3 text-primary dark:text-white"></i>
-            Quick Facts
+            {{ i18n "quickFacts" }}
           </h3>
           <button id="aboutModalBtn" class="bg-gradient-primary text-white px-6 py-2 rounded-lg shadow-lg font-semibold flex items-center about-button text-sm button-hover">
             <i class="fas fa-book-open mr-2"></i>
-            More
+            {{ i18n "more" }}
           </button>
         </div>
         <div class="space-y-2">
@@ -34,7 +34,12 @@
                 <i class="fas fa-{{ $fact.icon }} text-primary dark:text-white text-lg mr-3"></i>
                 <div class="flex-1">
                   <h4 class="font-bold text-gray-900 dark:text-text-primary mb-1 text-lg">{{ $fact.title }}</h4>
-                  {{ if or (eq $fact.title "Interests") (eq $fact.title "Languages") }}
+                  {{ $titleLower := lower $fact.title }}
+                  {{ $i18nInterests := lower (i18n "interests") }}
+                  {{ $i18nLanguages := lower (i18n "languages") }}
+                  {{ $isInterests := or (eq $fact.kind "interests") (eq $fact.title "Interests") (eq $titleLower $i18nInterests) }}
+                  {{ $isLanguages := or (eq $fact.kind "languages") (eq $fact.title "Languages") (eq $titleLower $i18nLanguages) }}
+                  {{ if or $isInterests $isLanguages }}
                     <div class="flex flex-wrap gap-2">
                       {{ $items := split $fact.value "\n" }}
                       {{ range $items }}
@@ -63,7 +68,7 @@
     <div class="bg-bg dark:bg-bg rounded-xl shadow-2xl w-full max-w-4xl max-h-[70vh] overflow-y-auto">
       <div class="p-8">
         <div class="flex justify-between items-center mb-6">
-          <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary">About {{ .Site.Params.name }}</h3>
+          <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary">{{ i18n "aboutName" }} {{ .Site.Params.name }}</h3>
           <button id="closeAboutModal" class="text-text-muted text-text-secondary dark:text-text-muted text-2xl font-bold">
             <i class="fas fa-times"></i>
           </button>

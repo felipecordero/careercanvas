@@ -12,11 +12,11 @@
         
         <a href="{{ .Params.resume_url_en }}" target="_blank" rel="noopener noreferrer" class="{{ $buttonClass }} button-hover">
           <i class="fas fa-file-pdf text-2xl mr-3"></i>
-          {{ $resumeLabel }} (EN)
+          {{ i18n "downloadResume" }} (EN)
         </a>
         <a href="{{ .Params.resume_url_fr }}" target="_blank" rel="noopener noreferrer" class="{{ $buttonClass }} button-hover">
           <i class="fas fa-file-pdf text-2xl mr-3"></i>
-          {{ $resumeLabel }} (FR)
+          {{ i18n "downloadResume" }} (FR)
         </a>
       </div>
     </div>
@@ -97,7 +97,7 @@
               <div class="achievements-card bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
                 <div class="flex items-center mb-4">
                   <i class="fas fa-tasks text-third dark:text-third-light mr-3 text-lg"></i>
-                  <h5 class="text-lg font-semibold text-text-primary dark:text-text-primary">Key Achievements</h5>
+                  <h5 class="text-lg font-semibold text-text-primary dark:text-text-primary">{{ i18n "keyAchievements" }}</h5>
                 </div>
                 <ul class="space-y-3 text-gray-700 dark:text-text-secondary">
                   {{ range $exp.bullet_points }}

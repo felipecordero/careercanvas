@@ -7,14 +7,14 @@
             {{ .Site.Params.fourofour_name | default "404" }}
           </h1>
           <h2 class="text-2xl md:text-3xl mb-6 text-text-primary">
-            {{ .Site.Params.fourofour_tagline | default "Page Not Found" }}
+            {{ .Site.Params.fourofour_tagline | default (i18n "pageNotFound") }}
           </h2>
           <p class="text-lg mb-8 max-w-lg text-text-secondary">
-            {{ .Site.Params.fourofour_subtitle | default "The page you are looking for does not exist." }}
+            {{ .Site.Params.fourofour_subtitle | default (i18n "pageNotFoundSubtitle") }}
           </p>
           <div class="flex space-x-4">
-            <a href="{{ .Site.BaseURL }}" class="bg-bg dark:bg-bg text-primary dark:text-primary-light px-6 py-3 rounded-lg font-medium hover:bg-bg-secondary dark:hover:bg-bg-secondary transition duration-300">{{ .Site.Params.fourofour_gohome | default "Go home" }}</a>
-            <a href="{{ .Site.Params.resume_url_en }}" target="_blank" rel="noopener" class="bg-primary text-text-primary px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition duration-300">{{ .Site.Params.resume_label }}</a>
+            <a href="{{ .Site.Home.RelPermalink }}" class="bg-bg dark:bg-bg text-primary dark:text-primary-light px-6 py-3 rounded-lg font-medium hover:bg-bg-secondary dark:hover:bg-bg-secondary transition duration-300">{{ .Site.Params.fourofour_gohome | default (i18n "goHome") }}</a>
+            <a href="{{ .Site.Params.resume_url_en }}" target="_blank" rel="noopener" class="bg-primary text-text-primary px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition duration-300">{{ i18n "viewCV" }}</a>
           </div>
         </div>
         {{ if .Site.Params.fourofour_image }}
@@ -26,7 +26,7 @@
               </div>
             </div>
             <div class="absolute -bottom-5 -right-5 bg-second text-white px-4 py-2 rounded-lg font-medium shadow-lg">
-              <i class="fas fa-map-marker-alt mr-2"></i> {{ .Site.Params.fourofour_location | default "Certainly, not Here" }}
+              <i class="fas fa-map-marker-alt mr-2"></i> {{ .Site.Params.fourofour_location | default (i18n "certainlyNotHere") }}
             </div>
           </div>
         </div>

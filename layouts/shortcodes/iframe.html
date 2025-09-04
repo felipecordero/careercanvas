@@ -1,6 +1,6 @@
 {{ $id := .Get "id" }}
 {{ if not $id }}
-  <div style="color: red; font-weight: bold;">Error: 'id' parameter is required for the iframe shortcode.</div>
+  <div style="color: red; font-weight: bold;">{{ i18n "iframeIdRequired" }}</div>
 {{ else }}
 <div class="relative">
     <div class="aspect-video">
@@ -16,7 +16,7 @@
     <button
       class="absolute top-2 right-2 bg-bg/80 text-text-primary text-sm px-2 py-1 rounded shadow hover:bg-bg"
       onclick="document.getElementById('iframe-{{ $id }}').requestFullscreen();">
-      ⛶ Fullscreen
+      ⛶ {{ i18n "fullscreen" }}
     </button>
   </div>
 {{ end }}

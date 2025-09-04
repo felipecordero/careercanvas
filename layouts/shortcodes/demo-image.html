@@ -1,4 +1,4 @@
-{{ $alt := .Get "alt" | default "Demo Image" }}
+{{ $alt := .Get "alt" | default (i18n "demoImageAlt") }}
 {{ $caption := .Get "caption" | default "" }}
 {{ $width := .Get "width" | default "auto" }}
 {{ $height := .Get "height" | default "auto" }}

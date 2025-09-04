@@ -21,7 +21,7 @@
       <!-- Sidebar with Related Content -->
       <div class="lg:w-1/4">
         <div class="sticky top-8">
-          <h2 class="text-2xl font-bold mb-4 text-text-primary dark:text-text-primary">Related Content</h2>
+          <h2 class="text-2xl font-bold mb-4 text-text-primary dark:text-text-primary">{{ i18n "relatedContent" }}</h2>
           <div class="space-y-4">
             {{ $related := .Site.RegularPages.Related . | first 10 }}
             {{ range $related }}

@@ -2,19 +2,19 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       <div class="flex items-center">
-        <a href="{{ .Site.BaseURL }}" class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">{{ .Site.Params.name }}</a>
+        <a href="{{ .Site.Home.RelPermalink }}" class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">{{ .Site.Params.name }}</a>
       </div>
       <div class="hidden md:flex items-center space-x-8">
         {{ range .Site.Menus.main }}
           {{ if .HasChildren }}
           <div class="relative group">
-            <a href="{{ .URL }}" class="nav-link text-text-primary dark:text-text-primary flex items-center">
+            <a href="{{ .URL | relLangURL }}" class="nav-link text-text-primary dark:text-text-primary flex items-center">
               {{ .Pre | safeHTML }}{{ .Name }}
               <i class="fas fa-chevron-down ml-2 text-sm"></i>
             </a>
             <div class="submenu absolute left-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[10rem] opacity-0 invisible">
               {{ range .Children }}
-                <a href="{{ .URL }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary">
+                <a href="{{ .URL | relLangURL }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary">
                   {{ .Name }}
                 </a>
               {{ end }}
@@ -23,13 +23,42 @@
           {{ else }}
                       {{ if hasPrefix .URL "#" }}
             <!-- Section links that should scroll on home page or navigate to home on other pages -->
-            <a href="{{ .URL }}" class="nav-link section-link text-text-primary dark:text-text-primary" data-section="{{ .URL }}">{{ .Name }}</a>
+            <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}" class="nav-link section-link text-text-primary dark:text-text-primary" data-section="{{ .URL }}">{{ .Name }}</a>
           {{ else }}
             <!-- Regular page links -->
-            <a href="{{ .URL }}" class="nav-link text-text-primary dark:text-text-primary">{{ .Name }}</a>
+            <a href="{{ .URL | relLangURL }}" class="nav-link text-text-primary dark:text-text-primary">{{ .Name }}</a>
           {{ end }}
           {{ end }}
         {{ end }}
+        <!-- Language Switcher (Dropdown) -->
+        {{ $homes := $.Site.Home.AllTranslations }}
+        {{ if gt (len $homes) 1 }}
+        {{/* Determine current language flag */}}
+        {{ $cur := $.Site.Language.Lang }}
+        {{ $currentFlag := "🏳️" }}
+        {{ if eq $cur "en" }}{{ $currentFlag = "🇺🇸" }}{{ end }}
+        {{ if eq $cur "es" }}{{ $currentFlag = "🇨🇱" }}{{ end }}
+        {{ if eq $cur "fr" }}{{ $currentFlag = "🇫🇷" }}{{ end }}
+        <div class="relative group">
+          <a href="#" class="nav-link text-text-primary dark:text-text-primary flex items-center" aria-label="Language switcher">
+            <span class="text-lg mr-1">{{ $currentFlag }}</span>
+            <i class="fas fa-chevron-down ml-1 text-sm"></i>
+          </a>
+          <div class="submenu absolute right-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[8rem] opacity-0 invisible">
+            {{ range $homes }}
+              {{ $lang := .Language.Lang }}
+              {{ $flag := "🏳️" }}
+              {{ if eq $lang "en" }}{{ $flag = "🇺🇸" }}{{ end }}
+              {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
+              {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
+              <a href="{{ .RelPermalink }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
+                <span class="mr-2">{{ $flag }}</span>{{ .Language.LanguageName }}
+              </a>
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+
         <!-- Social Media Icons -->
         <div class="flex items-center space-x-4" data-animation="social">
           {{ if .Site.Params.linkedin_url }}
@@ -68,21 +97,52 @@
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
           <!-- Section links that should scroll on home page or navigate to home on other pages -->
-          <a href="{{ .URL }}" class="nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary" data-section="{{ .URL }}">
+          <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}" class="nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary" data-section="{{ .URL }}">
             {{ .Name }}
           </a>
         {{ else }}
           <!-- Regular page links -->
-          <a href="{{ .URL }}" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary">
+          <a href="{{ .URL | relLangURL }}" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary">
             {{ .Name }}
           </a>
         {{ end }}
         {{ if .HasChildren }}
           {{ range .Children }}
-            <a href="{{ .URL }}" class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary">{{ .Name }}</a>
+            <a href="{{ .URL | relLangURL }}" class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary">{{ .Name }}</a>
           {{ end }}
         {{ end }}
       {{ end }}
+      <!-- Mobile Language Switcher (Dropdown-like) -->
+      {{ $homes := $.Site.Home.AllTranslations }}
+      {{ if gt (len $homes) 1 }}
+      {{ $cur := $.Site.Language.Lang }}
+      {{ $currentFlag := "🏳️" }}
+      {{ if eq $cur "en" }}{{ $currentFlag = "🇺🇸" }}{{ end }}
+      {{ if eq $cur "es" }}{{ $currentFlag = "🇨🇱" }}{{ end }}
+      {{ if eq $cur "fr" }}{{ $currentFlag = "🇫🇷" }}{{ end }}
+      <div class="px-3 py-2 border-t border-border-primary dark:border-border-primary">
+        <div class="relative group">
+          <a href="#" class="nav-link flex items-center text-text-primary dark:text-text-primary">
+            <span class="mr-2">{{ $currentFlag }}</span>
+            <span class="font-medium">{{ i18n "language" }}</span>
+            <i class="fas fa-chevron-down ml-2 text-sm"></i>
+          </a>
+          <div class="submenu mt-2 bg-bg dark:bg-bg shadow rounded-lg z-50 opacity-0 invisible">
+            {{ range $homes }}
+              {{ $lang := .Language.Lang }}
+              {{ $flag := "🏳️" }}
+              {{ if eq $lang "en" }}{{ $flag = "🇺🇸" }}{{ end }}
+              {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
+              {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
+              <a href="{{ .RelPermalink }}" class="block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
+                <span class="mr-2">{{ $flag }}</span>{{ .Language.LanguageName }}
+              </a>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+      {{ end }}
+
       <!-- Mobile Social Media Icons -->
       <div class="flex items-center space-x-6 px-3 py-3 border-t border-border-primary dark:border-border-primary mt-2" data-animation="social">
         <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
@@ -111,6 +171,7 @@
       
       const sectionLinks = document.querySelectorAll('.section-link');
       console.log('Found section links:', sectionLinks.length);
+      const homePath = '{{ .Site.Home.RelPermalink }}';
       
       sectionLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -118,7 +179,7 @@
           console.log('Section link clicked:', this.getAttribute('data-section'));
           
           const section = this.getAttribute('data-section');
-          const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html' || window.location.pathname === '';
+          const isHomePage = window.location.pathname === homePath || window.location.pathname === homePath + 'index.html' || window.location.pathname === homePath.replace(/\/$/, '');
           console.log('Is home page:', isHomePage);
           
           if (isHomePage) {
@@ -133,8 +194,8 @@
             }
           } else {
             // On other pages, navigate to home page with section
-            console.log('Navigating to:', '/' + section);
-            window.location.href = '/' + section;
+            console.log('Navigating to:', homePath + section);
+            window.location.href = homePath + section;
           }
         });
       });
@@ -221,4 +282,6 @@
 
   </script>
 </nav>
+
+
 
