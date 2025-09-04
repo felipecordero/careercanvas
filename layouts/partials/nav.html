@@ -54,7 +54,19 @@
                 {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
                 {{ if eq $lang "en" }}{{ $flag = "🇬🇧" }}{{ end }}
                 {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
-                <a href="{{ .RelPermalink }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
+                {{/* Check if current page has a translation in this language */}}
+                {{ $targetURL := .RelPermalink }}
+                {{ $hasTranslation := false }}
+                {{ if $.Page.IsTranslated }}
+                  {{ range $.Page.Translations }}
+                    {{ if eq .Language.Lang $lang }}
+                      {{ $targetURL = .RelPermalink }}
+                      {{ $hasTranslation = true }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+                
+                <a href="{{ $targetURL }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
                   <span class="mr-2">{{ $flag }}</span>{{ .Language.LanguageName }}
                 </a>
               {{ end }}
@@ -130,7 +142,20 @@
               {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
               {{ if eq $lang "en" }}{{ $flag = "🇬🇧" }}{{ end }}
               {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
-              <a href="{{ .RelPermalink }}" class="px-2 py-1 text-xl {{ if eq .Language.Lang $.Site.Language.Lang }}opacity-100 font-semibold{{ else }}opacity-70 hover:opacity-100{{ end }}" aria-label="Switch to {{ .Language.LanguageName }}">
+              
+              {{/* Check if current page has a translation in this language */}}
+              {{ $targetURL := .RelPermalink }}
+              {{ $hasTranslation := false }}
+              {{ if $.Page.IsTranslated }}
+                {{ range $.Page.Translations }}
+                  {{ if eq .Language.Lang $lang }}
+                    {{ $targetURL = .RelPermalink }}
+                    {{ $hasTranslation = true }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+              
+              <a href="{{ $targetURL }}" class="px-2 py-1 text-xl {{ if eq .Language.Lang $.Site.Language.Lang }}opacity-100 font-semibold{{ else }}opacity-70 hover:opacity-100{{ end }}" aria-label="Switch to {{ .Language.LanguageName }}{{ if $hasTranslation }} (has translation){{ else }} (go to home){{ end }}">
                 <span aria-hidden="true">{{ $flag }}</span>
               </a>
             {{ end }}
