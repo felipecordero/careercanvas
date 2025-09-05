@@ -3,7 +3,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col lg:flex-row gap-8">
       <!-- Main Content -->
-      <div class="{{ if and .Params.tags (or (eq .Type "engineering") (eq .Type "contributions") (eq .Type "blog")) }}lg:w-3/4{{ else }}w-full{{ end }}">
+      <div class="{{ if or (and .Params.tags (or (eq .Type "engineering") (eq .Type "contributions") (eq .Type "blog"))) (and .Content (gt (len .Content) 500)) }}lg:w-2/3{{ else }}w-full{{ end }}">
         <h1 class="text-3xl font-bold text-center mb-12 font-heading text-text-primary dark:text-text-primary">{{ .Title }}</h1>
         {{ if eq .Type "blog" }}
         <div class="text-center text-text-secondary dark:text-text-secondary mb-8">
@@ -15,33 +15,61 @@
         </div>
       </div>
 
-      {{ if and .Params.tags (or (eq .Type "engineering") (eq .Type "contributions") (eq .Type "blog")) }}
+      {{ if or (and .Params.tags (or (eq .Type "engineering") (eq .Type "contributions") (eq .Type "blog"))) (and .Content (gt (len .Content) 500)) }}
       <!-- Sidebar with Related Content -->
-      <div class="lg:w-1/4">
-        <div class="sticky top-8">
-          <h2 class="text-2xl font-bold mb-4 text-text-primary dark:text-text-primary">{{ i18n "relatedContent" }}</h2>
-          <div class="space-y-4">
-            {{ $related := .Site.RegularPages.Related . | first 10 }}
+      <div class="lg:w-1/3">
+        <div class="sticky top-24 max-h-[calc(100vh-8rem)] flex flex-col">
+          <h2 class="text-xl font-bold mb-4 text-text-primary dark:text-text-primary flex-shrink-0">{{ i18n "relatedContent" }}</h2>
+          <div class="space-y-3 pr-2 overflow-y-auto flex-1 sidebar-scroll">
+            {{ $related := .Site.RegularPages.Related . | first 8 }}
             {{ range $related }}
-            <article class="bg-bg dark:bg-bg-secondary rounded-lg p-4 shadow-sm border border-border-primary dark:border-border-primary card-hover">
-              <h3 class="text-lg font-semibold mb-2">
-                <a href="{{ .RelPermalink }}" class="text-text-primary dark:text-text-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200">
-                  {{ .Title }}
-                </a>
-              </h3>
-              {{ if .Description }}
-              <p class="text-sm text-text-secondary dark:text-text-secondary">{{ .Description }}</p>
-              {{ end }}
-              {{ if .Params.tags }}
-              <div class="flex flex-wrap gap-1 mt-2">
-                {{ range .Params.tags }}
-                <span class="bg-bg-secondary dark:bg-bg-tertiary text-text-primary dark:text-text-primary px-2 py-0.5 rounded-full text-xs border border-border-primary dark:border-border-primary">
-                  {{ . }}
-                </span>
+            <a href="{{ .RelPermalink }}" class="block group">
+              <article class="bg-bg-secondary dark:bg-bg-tertiary rounded-md p-3 shadow-sm border border-border-primary dark:border-border-primary hover:shadow-md transition-shadow duration-200">
+                <!-- First row: Image and text in 2 columns -->
+                <div class="flex gap-3 mb-2">
+                  <!-- Image on the left -->
+                  <div class="w-16 flex-shrink-0">
+                    {{ if .Params.featured_image }}
+                    <div class="relative overflow-hidden">
+                      <img 
+                        src="{{ .Params.featured_image }}" 
+                        alt="{{ .Title }}" 
+                        class="w-full h-16 object-contain bg-transparent transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      >
+                      <div class="absolute inset-0 bg-gradient-to-t from-text-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    {{ else }}
+                    <div class="h-16 bg-gradient-primary-lighter flex items-center justify-center">
+                      <i class="fas fa-project-diagram text-lg text-primary"></i>
+                    </div>
+                    {{ end }}
+                  </div>
+                  
+                  <!-- Text content -->
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold mb-1 text-text-primary dark:text-text-primary group-hover:text-primary dark:group-hover:text-primary-light transition-colors duration-300">
+                      {{ .Title }}
+                    </h3>
+                    
+                    {{ if .Description }}
+                    <p class="text-xs text-text-secondary dark:text-text-secondary leading-relaxed line-clamp-2">{{ .Description }}</p>
+                    {{ end }}
+                  </div>
+                </div>
+                
+                <!-- Second row: Tags full width -->
+                {{ if .Params.tags }}
+                <div class="flex flex-wrap gap-1">
+                  {{ range first 3 .Params.tags }}
+                  <span class="bg-bg dark:bg-bg-secondary text-text-primary dark:text-text-primary px-1.5 py-0.5 rounded text-xs border border-border-primary dark:border-border-primary">
+                    {{ . }}
+                  </span>
+                  {{ end }}
+                </div>
                 {{ end }}
-              </div>
-              {{ end }}
-            </article>
+              </article>
+            </a>
             {{ end }}
           </div>
         </div>

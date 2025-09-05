@@ -1,10 +1,80 @@
 {{ define "main" }}
 <section class="pt-8 pb-12 bg-bg dark:bg-bg" data-animate>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {{ if and .Content (gt (len .Content) 200) }}
+    <!-- Content with sidebar layout -->
+    <div class="flex flex-col lg:flex-row gap-8 mb-12">
+      <div class="w-full lg:w-2/3">
+        <h1 class="text-3xl font-bold text-center mb-12 font-heading text-text-primary dark:text-text-primary">{{ .Title }}</h1>
+        <div class="prose prose-lg markdown-content dark:prose-invert prose-gray">
+          {{ .Content }}
+        </div>
+      </div>
+      
+      <!-- Sidebar with compact cards -->
+      <div class="hidden lg:block lg:w-1/3">
+        <div class="sticky top-8 max-h-[calc(100vh-4rem)] flex flex-col">
+          <div class="space-y-3 pr-2 overflow-y-auto flex-1 sidebar-scroll">
+            {{ range .Pages.ByWeight }}
+            <a href="{{ .RelPermalink }}" class="block group">
+              <article class="bg-bg-secondary dark:bg-bg-tertiary rounded-md p-3 shadow-sm border border-border-primary dark:border-border-primary hover:shadow-lg hover:bg-bg-tertiary dark:hover:bg-bg transition-all duration-200">
+                <!-- First row: Image and text in 2 columns -->
+                <div class="flex gap-3 mb-2">
+                  <!-- Image on the left -->
+                  <div class="w-16 flex-shrink-0">
+                    {{ if .Params.featured_image }}
+                    <div class="relative overflow-hidden">
+                      <img 
+                        src="{{ .Params.featured_image }}" 
+                        alt="{{ .Title }}" 
+                        class="w-full h-16 object-contain bg-transparent"
+                        loading="lazy"
+                      >
+                      <div class="absolute inset-0 bg-gradient-to-t from-text-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    {{ else }}
+                    <div class="h-16 bg-gradient-primary-lighter flex items-center justify-center">
+                      <i class="fas fa-project-diagram text-lg text-primary"></i>
+                    </div>
+                    {{ end }}
+                  </div>
+                  
+                  <!-- Text content -->
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold mb-1 text-text-primary dark:text-text-primary group-hover:text-primary dark:group-hover:text-primary-light transition-colors duration-300">
+                      {{ .Title }}
+                    </h3>
+                    
+                    {{ if .Description }}
+                    <p class="text-xs text-text-secondary dark:text-text-secondary leading-relaxed line-clamp-2">{{ .Description }}</p>
+                    {{ end }}
+                  </div>
+                </div>
+                
+                <!-- Second row: Tags full width -->
+                {{ if .Params.tags }}
+                <div class="flex flex-wrap gap-1">
+                  {{ range first 2 .Params.tags }}
+                  <span class="bg-gradient-to-r from-primary-lighter to-primary-light dark:from-primary-dark dark:to-primary text-text-primary dark:text-text-primary px-2 py-0.5 rounded-full text-xs font-medium border border-primary-light dark:border-primary">
+                    {{ . }}
+                  </span>
+                  {{ end }}
+                </div>
+                {{ end }}
+              </article>
+            </a>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ else }}
+    <!-- Content without sidebar -->
     <h1 class="text-3xl font-bold text-center mb-12 font-heading text-text-primary dark:text-text-primary">{{ .Title }}</h1>
     <div class="prose prose-lg markdown-content dark:prose-invert prose-gray mb-12">
       {{ .Content }}
     </div>
+    {{ end }}
 
     <!-- Enhanced grid with better visual design -->
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
