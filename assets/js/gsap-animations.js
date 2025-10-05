@@ -57,6 +57,8 @@ const Utils = {
 function initQuickFactLighting() {
     const quickFactCards = document.querySelectorAll('.quick-fact-card');
     
+    if (quickFactCards.length === 0) return;
+    
     quickFactCards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
@@ -131,9 +133,22 @@ function initializeHeroAnimations() {
     // Set initial states for all animated elements
     const animatedElements = heroSection.querySelectorAll('[data-animation]');
     const bgDecorations = heroSection.querySelectorAll('.absolute.opacity-10 > div');
+    const quickFactCards = document.querySelectorAll('.quick-fact-card');
+    const locationBadge = heroSection.querySelector('[data-animation="location-badge"]');
     
-    gsap.set(animatedElements, { opacity: 0, y: 50, rotationX: -15 });
-    gsap.set(bgDecorations, { opacity: 0, scale: 0.5, rotation: -180 });
+    // Only animate elements that exist
+    if (animatedElements.length > 0) {
+        gsap.set(animatedElements, { opacity: 0, y: 50, rotationX: -15 });
+    }
+    if (bgDecorations.length > 0) {
+        gsap.set(bgDecorations, { opacity: 0, scale: 0.5, rotation: -180 });
+    }
+    if (quickFactCards.length > 0) {
+        gsap.set(quickFactCards, { opacity: 0, y: 20, scale: 0.95 });
+    }
+    if (locationBadge) {
+        gsap.set(locationBadge, { opacity: 0, y: 20 });
+    }
     
     // Initialize floating background animations
     bgDecorations.forEach((circle, index) => {
@@ -164,25 +179,51 @@ function initializeHeroAnimations() {
     // Play hero entrance animation
     const tl = gsap.timeline();
     
-    tl.to(animatedElements, { 
-        opacity: 1, 
-        y: 0, 
-        rotationX: 0, 
-        scale: 1,
-        duration: 0.8, 
-        stagger: 0.1,
-        ease: "back.out(1.7)" 
-    })
-    .to(bgDecorations, { 
-        opacity: 0.1, 
-        scale: 1, 
-        rotation: 0, 
-        duration: 1, 
-        stagger: 0.1 
-    }, "-=0.6");
+    // Only animate elements that exist
+    if (animatedElements.length > 0) {
+        tl.to(animatedElements, { 
+            opacity: 1, 
+            y: 0, 
+            rotationX: 0, 
+            scale: 1,
+            duration: 0.8, 
+            stagger: 0.1,
+            ease: "back.out(1.7)" 
+        });
+    }
+    
+    if (bgDecorations.length > 0) {
+        tl.to(bgDecorations, { 
+            opacity: 0.1, 
+            scale: 1, 
+            rotation: 0, 
+            duration: 1, 
+            stagger: 0.1 
+        }, "-=0.6");
+    }
+    
+    if (quickFactCards.length > 0) {
+        tl.to(quickFactCards, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out"
+        }, "-=0.4");
+    }
+    
+    if (locationBadge) {
+        tl.to(locationBadge, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "back.out(1.7)"
+        }, "-=0.3");
+    }
 }
 
-// Enhanced typewriter effect
+// Enhanced typewriter effect with multiple concepts
 let typingEffectInitialized = false;
 
 function initTypingEffect() {
@@ -191,7 +232,10 @@ function initTypingEffect() {
     const typewriterElement = document.querySelector('.typewriter');
     if (!typewriterElement) return;
 
-    const text = typewriterElement.textContent;
+    // Get the concepts from the HTML element (which comes from Hugo i18n)
+    const originalText = typewriterElement.getAttribute('data-original-text') || typewriterElement.textContent;
+    const concepts = originalText.split('. ').map(concept => concept.trim()).filter(concept => concept.length > 0);
+    let currentConceptIndex = 0;
     
     typewriterElement.textContent = '';
     typewriterElement.style.color = 'transparent';
@@ -209,6 +253,7 @@ function initTypingEffect() {
     
     typewriterElement.appendChild(cursor);
 
+    // Cursor blinking animation
     gsap.to(cursor, {
         opacity: 0,
         duration: 0.7,
@@ -217,44 +262,58 @@ function initTypingEffect() {
         repeat: -1
     });
 
-    const chars = text.split('');
-    const timeline = gsap.timeline({ 
-        delay: 1.0,
-        repeat: -1,
-        onRepeat: () => {
-            typewriterElement.textContent = '';
-            typewriterElement.appendChild(cursor);
-            typewriterElement.style.color = 'transparent';
-        }
-    });
+    function typeConcept(concept, onComplete) {
+        const chars = concept.split('');
+        const timeline = gsap.timeline();
+        
+        // Type the concept
+        chars.forEach((char, index) => {
+            timeline.to(typewriterElement, {
+                duration: 0.08,
+                onUpdate: function() {
+                    const textContent = chars.slice(0, index + 1).join('');
+                    typewriterElement.textContent = textContent;
+                    typewriterElement.appendChild(cursor);
+                    typewriterElement.style.color = 'inherit';
+                }
+            });
+        });
+        
+        // Pause after typing
+        timeline.to(typewriterElement, { duration: 1.5 });
+        
+        // Erase the concept
+        const reversedChars = [...chars].reverse();
+        reversedChars.forEach((char, index) => {
+            timeline.to(typewriterElement, {
+                duration: 0.04,
+                onUpdate: function() {
+                    const textContent = reversedChars.slice(index + 1).reverse().join('');
+                    typewriterElement.textContent = textContent;
+                    typewriterElement.appendChild(cursor);
+                }
+            });
+        });
+        
+        // Pause before next concept
+        timeline.to(typewriterElement, { duration: 0.5 });
+        
+        timeline.call(onComplete);
+    }
 
-    chars.forEach((char, index) => {
-        timeline.to(typewriterElement, {
-            duration: 0.05,
-            onUpdate: function() {
-                const textContent = chars.slice(0, index + 1).join('');
-                typewriterElement.textContent = textContent;
-                typewriterElement.appendChild(cursor);
-                typewriterElement.style.color = 'inherit';
-            }
+    function startTypingLoop() {
+        if (currentConceptIndex >= concepts.length) {
+            currentConceptIndex = 0;
+        }
+        
+        typeConcept(concepts[currentConceptIndex], () => {
+            currentConceptIndex++;
+            setTimeout(startTypingLoop, 200);
         });
-    });
-    
-    timeline.to(typewriterElement, { duration: 2 });
-    
-    const reversedChars = [...chars].reverse();
-    reversedChars.forEach((char, index) => {
-        timeline.to(typewriterElement, {
-            duration: 0.03,
-            onUpdate: function() {
-                const textContent = reversedChars.slice(index + 1).reverse().join('');
-                typewriterElement.textContent = textContent;
-                typewriterElement.appendChild(cursor);
-            }
-        });
-    });
-    
-    timeline.to(typewriterElement, { duration: 1 });
+    }
+
+    // Start the typing effect after a delay
+    setTimeout(startTypingLoop, 1000);
     
     typingEffectInitialized = true;
 }
@@ -408,7 +467,10 @@ function createAndAnimateSplineCurves(container, options = {}) {
 
 function initSectionBackgroundAnimations(sectionSelector, options = {}) {
     const section = document.querySelector(sectionSelector);
-    if (!section) return;
+    if (!section) {
+        console.warn(`Section with selector "${sectionSelector}" not found. Skipping background animations.`);
+        return;
+    }
 
     const shapesContainer = Utils.createContainer(section, '.morphing-shapes', 'morphing-shapes absolute inset-0 pointer-events-none overflow-hidden');
 

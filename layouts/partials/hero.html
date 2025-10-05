@@ -20,8 +20,8 @@
 
             <!-- Location badge -->
             <div class="absolute -bottom-4 -right-4" data-animation="location-badge">
-              <div class="inline-flex items-center bg-black/80 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-xl border border-white/20">
-                <i class="fas fa-map-marker-alt mr-2 text-primary-light"></i>
+              <div class="flex items-center bg-black/80 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-xl border border-white/20 min-w-fit whitespace-nowrap">
+                <i class="fas fa-map-marker-alt mr-2 text-primary-light flex-shrink-0"></i>
                 <span class="font-semibold text-sm">{{ .Site.Params.hero_location }}</span>
               </div>
             </div>
@@ -29,7 +29,7 @@
         </div>
       </div>
       <!-- Right content -->
-      <div class="lg:w-1/2 text-center lg:text-left w-full mt-8 md:mt-0">
+      <div class="text-center lg:text-left mt-8 md:mt-0" style="width: 100%; max-width: 600px; min-width: 300px;">
         <!-- Greeting -->
         <div class="mb-4 mt-4 md:mt-0 hero-text-element" data-animation="greeting">
           <span class="hero-text-accent font-medium text-lg block">{{ i18n "helloIm" }}</span>
@@ -40,10 +40,10 @@
         </h1>
         <!-- Tagline with typing effect -->
         <h2 class="text-2xl md:text-3xl lg:text-4xl mb-6 font-light hero-text-accent hero-text-element" data-animation="tagline">
-          <span class="typewriter">{{ .Site.Params.tagline }}</span>
+          <span class="typewriter" data-original-text="{{ .Site.Params.tagline }}">{{ .Site.Params.tagline }}</span>
         </h2>
         <!-- Description -->
-        <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0 hero-text-muted leading-relaxed hero-text-element" data-animation="description">
+        <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0 hero-text-muted leading-relaxed hero-text-element px-4 py-3 rounded-lg" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px);" data-animation="description">
           {{ .Site.Params.hero_description }}
         </p>
 
@@ -52,17 +52,19 @@
           <a href="#contact" class="bg-bg text-primary dark:text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
             {{ i18n "getInTouch" }}
           </a>
-          <a href="{{ .Site.Params.resume_url_en }}" target="_blank" rel="noopener" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
+          <a href="{{ .Site.Params.resume_url_en }}" target="_blank" rel="noopener" class="bg-bg text-primary dark:text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
             {{ i18n "viewCV" }}
           </a>
         </div>
         <!-- Social links -->
-        <div class="flex justify-center lg:justify-end space-x-6 mt-8 mb-8 md:mb-0 hero-text-element" data-animation="social">
-          {{ range .Site.Params.social }}
-          <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="text-white text-primary-light transition-transform duration-300 hover:scale-125">
-            <i class="fab fa-{{ .icon }} text-2xl"></i>
-          </a>
-          {{ end }}
+        <div class="flex justify-center lg:justify-end mt-8 mb-8 md:mb-0 hero-text-element" data-animation="social">
+          <div class="flex space-x-4 px-4 py-3 rounded-lg" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);">
+            {{ range .Site.Params.social }}
+            <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="text-white transition-transform duration-300 hover:scale-125">
+              <i class="fab fa-{{ .icon }} text-3xl"></i>
+            </a>
+            {{ end }}
+          </div>
         </div>
       </div>
     </div>

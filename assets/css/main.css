@@ -29,6 +29,36 @@
     position: relative;
   }
 
+  /* Hide gradient initially to prevent flash, JavaScript will show it if needed */
+  .hero-section.gradient-bg {
+    background: transparent;
+  }
+
+  /* Pexels Background */
+  .pexels-bg {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  /* Ensure animations stay above background */
+  .pexels-bg .morphing-shapes {
+    z-index: 2;
+  }
+
+  .pexels-bg .morphing-shapes > div {
+    z-index: 2;
+  }
+
+  /* Ensure content stays above overlay */
+  .pexels-bg .max-w-7xl {
+    position: relative;
+    z-index: 10;
+  }
+
+
 
   /* Company Link Styling */
   .company-link {
@@ -229,6 +259,19 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   }
 
+  /* Hero buttons - ensure proper sizing */
+  .hero-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    min-height: 48px;
+    transition: all var(--hover-transition);
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+
   /* Button hover - no movement, just highlight */
   .button-hover:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
@@ -251,6 +294,11 @@
     --mouse-y: 50%;
     background: color-mix(in srgb, var(--color-primary) 2%, var(--color-bg));
     border: 1px solid transparent;
+    min-height: 4rem;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
   }
 
   .dark .quick-fact-card {

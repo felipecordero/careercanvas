@@ -14,7 +14,7 @@
     {{ partial "color-variables.html" . }}
     
     {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./postcss.config.js") }}
-    {{ if hugo.IsProduction }}
+    {{ if eq hugo.Environment "production" }}
       {{ $styles = $styles | minify | fingerprint }}
     {{ end }}
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}?v={{ now.Unix }}" data-version="{{ now.Unix }}">
@@ -41,12 +41,16 @@
 
     {{ $scripts := resources.Get "js/scripts.js" }}
     {{ $gsap := resources.Get "js/gsap-animations.js" }}
-    {{ if hugo.IsProduction }}
+    {{ $pexels := resources.Get "js/pexels-background.js" }}
+    {{ if eq hugo.Environment "production" }}
       {{ $scripts = $scripts | minify | fingerprint }}
       {{ $gsap = $gsap | minify | fingerprint }}
+      {{ $pexels = $pexels | minify | fingerprint }}
     {{ end }}
+    {{ partial "pexels-config.html" . }}
     <script src="{{ $scripts.RelPermalink }}"></script>
     <script src="{{ $gsap.RelPermalink }}"></script>
+    <script src="{{ $pexels.RelPermalink }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
 
     <!-- Dark mode toggle script -->

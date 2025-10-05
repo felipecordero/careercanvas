@@ -1,0 +1,65 @@
+{{/* 
+Pexels API Configuration
+This partial provides the API key and queries to the frontend JavaScript.
+
+SECURITY NOTE: 
+- API key is fetched securely at runtime from a serverless function
+- No sensitive data is exposed in the HTML source
+- Queries are safe to expose as they're just search terms
+*/}}
+
+{{/* Set Pexels queries from Hugo config (safe to expose) */}}
+{{ $pexelsQueries := .Site.Params.pexels.queries }}
+{{ if not $pexelsQueries }}
+  {{ errorf "Pexels queries not configured in config.toml under [params.pexels.queries]" }}
+{{ end }}
+<div id="pexels-config" data-queries="{{ $pexelsQueries | jsonify }}" style="display: none;"></div>
+
+<script>
+  // Initialize configuration - API key will be fetched at runtime
+  window.PEXELS_API_KEY = null; // Will be set by fetchConfig()
+  
+  // Load queries from data attribute (configured in config.toml)
+  const configElement = document.getElementById('pexels-config');
+  if (configElement) {
+    try {
+      window.PEXELS_QUERIES = JSON.parse(configElement.getAttribute('data-queries'));
+    } catch (error) {
+      console.error('Error parsing Pexels queries from config.toml:', error);
+      // No fallback - queries must be configured in config.toml
+      window.PEXELS_QUERIES = [];
+    }
+  } else {
+    console.error('Pexels config element not found');
+    window.PEXELS_QUERIES = [];
+  }
+
+  // Function to fetch secure configuration at runtime
+  async function fetchConfig() {
+    try {
+      // Use local development server if running on localhost
+      const apiUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:3001/api/config' 
+        : '/api/config';
+        
+      const response = await fetch(apiUrl);
+      if (response.ok) {
+        const config = await response.json();
+        window.PEXELS_API_KEY = config.pexelsApiKey;
+        window.FORMSPREE_ENDPOINT = config.formspreeEndpoint;
+        console.log('Configuration loaded securely');
+      } else {
+        console.warn('Failed to load configuration, using fallback');
+      }
+    } catch (error) {
+      console.warn('Error loading configuration:', error);
+    }
+  }
+
+  // Load configuration when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fetchConfig);
+  } else {
+    fetchConfig();
+  }
+</script>
