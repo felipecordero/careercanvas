@@ -42,13 +42,17 @@
     {{ $scripts := resources.Get "js/scripts.js" }}
     {{ $gsap := resources.Get "js/gsap-animations.js" }}
     {{ $pexels := resources.Get "js/pexels-background.js" }}
+    {{ $colors := resources.Get "js/dynamic-colors.js" }}
     {{ if eq hugo.Environment "production" }}
       {{ $scripts = $scripts | minify | fingerprint }}
       {{ $gsap = $gsap | minify | fingerprint }}
       {{ $pexels = $pexels | minify | fingerprint }}
+      {{ $colors = $colors | minify | fingerprint }}
     {{ end }}
     {{ partial "pexels-config.html" . }}
+    {{ partial "color-config.html" . }}
     <script src="{{ $scripts.RelPermalink }}"></script>
+    <script src="{{ $colors.RelPermalink }}"></script>
     <script src="{{ $gsap.RelPermalink }}"></script>
     <script src="{{ $pexels.RelPermalink }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>

@@ -1,0 +1,20 @@
+{{/* Color Configuration Partial */}}
+{{/* This partial injects the color palettes from config.toml into the JavaScript */}}
+<script>
+  // Color palettes from Hugo config
+  window.HUGO_COLOR_PALETTES = [
+    {{ range $index, $palette := .Site.Params.color_palettes.palette }}
+    {
+      name: "{{ $palette.name }}",
+      main_color: "{{ $palette.main_color }}",
+      second_color: "{{ $palette.second_color }}",
+      third_color: "{{ $palette.third_color }}"
+    }{{ if lt $index (sub (len $.Site.Params.color_palettes.palette) 1) }},{{ end }}
+    {{ end }}
+  ];
+  
+  // Override the static palettes in dynamic-colors.js if Hugo palettes are available
+  if (window.HUGO_COLOR_PALETTES && window.HUGO_COLOR_PALETTES.length > 0) {
+    console.log('🎨 Using color palettes from Hugo config:', window.HUGO_COLOR_PALETTES.length, 'palettes');
+  }
+</script>

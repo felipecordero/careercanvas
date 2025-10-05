@@ -15,6 +15,15 @@
     font-family: 'Montserrat', 'Nunito Sans', sans-serif;
   }
 
+  /* Dynamic Color Transitions */
+  .color-transition * {
+    transition: color 1s ease, background-color 1s ease, border-color 1s ease, box-shadow 1s ease !important;
+  }
+  
+  .color-transition {
+    transition: --color-main 1s ease, --color-second 1s ease, --color-third 1s ease !important;
+  }
+
   /* Gradient Background */
   .gradient-bg {
     background: linear-gradient(135deg, 

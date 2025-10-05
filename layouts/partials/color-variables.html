@@ -1,18 +1,27 @@
 <style>
-/* Ultra-Simple Color Variables - Everything derived from main and second colors */
+/* Dynamic Color Variables - Will be overridden by JavaScript */
 :root {
-  /* Theme Colors - From config.toml */
-  --color-primary: {{ .Site.Params.colors.main_color | default "#1e3a8a" }};
+  /* Default Theme Colors - First palette from config.toml or fallback */
+  {{ $defaultPalette := index .Site.Params.color_palettes.palette 0 }}
+  {{ if $defaultPalette }}
+  --color-primary: {{ $defaultPalette.main_color }};
+  --color-second: {{ $defaultPalette.second_color }};
+  --color-third: {{ $defaultPalette.third_color }};
+  {{ else }}
+  --color-primary: #474A51;
+  --color-second: #E52521;
+  --color-third: #3CB043;
+  {{ end }}
+  
+  /* Color variations - derived from base colors */
   --color-primary-light: color-mix(in srgb, var(--color-primary) 80%, white);
   --color-primary-dark: color-mix(in srgb, var(--color-primary) 80%, black);
   --color-primary-lighter: color-mix(in srgb, var(--color-primary) 20%, white);
   
-  --color-second: {{ .Site.Params.colors.second_color | default "#22c55e" }};
   --color-second-light: color-mix(in srgb, var(--color-second) 80%, white);
   --color-second-dark: color-mix(in srgb, var(--color-second) 80%, black);
   --color-second-lighter: color-mix(in srgb, var(--color-second) 20%, white);
   
-  --color-third: {{ .Site.Params.colors.third_color | default "#f59e0b" }};
   --color-third-light: color-mix(in srgb, var(--color-third) 80%, white);
   --color-third-dark: color-mix(in srgb, var(--color-third) 80%, black);
   --color-third-lighter: color-mix(in srgb, var(--color-third) 20%, white);
