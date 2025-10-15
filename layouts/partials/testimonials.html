@@ -1,0 +1,41 @@
+<!-- Testimonials Section -->
+<section id="testimonials"
+    class="py-12 bg-bg-secondary dark:bg-bg-secondary testimonials-section border-t border-border-primary" data-animate>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{ with .Site.GetPage "testimonials" }}
+        <!-- Section heading -->
+        <h2 class="text-3xl font-bold text-center mb-4 font-heading text-text-primary dark:text-text-primary">{{ .Title }}</h2>
+        <p class="text-lg text-center mb-12 text-text-secondary dark:text-text-tertiary italic">{{ .Params.intro }}</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {{ range $index, $exp := .Params.references }}
+            <div class="bg-bg dark:bg-bg p-6 rounded-xl shadow-md testimonial-card border border-border-primary dark:border-border-primary card-hover"
+                data-animate>
+                <div class="flex flex-col h-full">
+                    <blockquote class="flex-grow italic space-y-3 text-gray-700 dark:text-gray-300">
+                        "{{ $exp.quote }}"
+                    </blockquote>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-left mt-6 space-x-3 rtl:space-x-reverse">
+                            <img src="{{ $exp.photo }}" alt="{{ $exp.name }} - {{ $exp.role }} at {{ $exp.company }}"
+                                class="img-round grayscale w-24 rounded-full">
+
+                            <div class="pe-3">
+                                <span class="font-medium text-text-secondary dark:text-text-tertiary text-base leading-relaxed">
+                                    {{ $exp.name }}
+                                </span>
+                                <br>
+                                <span class="text-sm text-text-secondary dark:text-text-tertiary text-base leading-relaxed">
+                                    {{ $exp.role }} at {{ $exp.company }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+
+        {{ end }}
+    </div>
+</section>
