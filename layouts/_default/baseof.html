@@ -1,8 +1,10 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html
   lang="{{ .Site.Language.Lang }}"
-  class="{{ if eq (.Site.Params.theme | default "light") "dark" }}dark{{ end }}"
+  class="{{ if eq (.Site.Params.colorMode | default "light") "dark" }}dark{{ end }}"
 >
+
 <head>
     {{ partial "head.html" . }}
 
