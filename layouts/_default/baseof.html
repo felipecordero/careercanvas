@@ -1,33 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html
+  lang="{{ .Site.Language.Lang }}"
+  class="{{ if eq (.Site.Params.theme | default "light") "dark" }}dark{{ end }}"
+>
 <head>
-    <!-- Prevent dark mode flash -->
-    <script>
-        // Set dark mode as default unless explicitly set to light
-        if (localStorage.getItem('darkMode') !== 'false') {
-            document.documentElement.classList.add('dark');
-        }
-    </script>
     {{ partial "head.html" . }}
-    
+
     <!-- Color Variables - Load first to ensure CSS custom properties are available -->
     {{ partial "color-variables.html" . }}
-    
+
     {{ $styles := resources.Get "css/main.css" | postCSS (dict "config" "./postcss.config.js") }}
     {{ if eq hugo.Environment "production" }}
       {{ $styles = $styles | minify | fingerprint }}
     {{ end }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}?v={{ now.Unix }}" data-version="{{ now.Unix }}">
+    <link
+      rel="stylesheet"
+      href="{{ $styles.RelPermalink }}?v={{ now.Unix }}"
+      data-version="{{ now.Unix }}"
+    >
+
+    <!-- Prevent FOUC -->
     <style>
-        /* Critical CSS to prevent FOUC */
         body {
             visibility: hidden;
         }
-        .dark body {
-            visibility: hidden;
+        body.loaded {
+            visibility: visible;
         }
     </style>
 </head>
+
 <body class="bg-bg dark:bg-bg text-text-primary dark:text-text-primary flex flex-col min-h-screen transition-colors duration-200">
 
     {{ partial "nav.html" . }}
@@ -49,26 +51,20 @@
       {{ $pexels = $pexels | minify | fingerprint }}
       {{ $colors = $colors | minify | fingerprint }}
     {{ end }}
+
     {{ partial "pexels-config.html" . }}
     {{ partial "color-config.html" . }}
+
     <script src="{{ $scripts.RelPermalink }}"></script>
     <script src="{{ $colors.RelPermalink }}"></script>
     <script src="{{ $gsap.RelPermalink }}"></script>
     <script src="{{ $pexels.RelPermalink }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/fslightbox/index.js"></script>
 
-    <!-- Dark mode toggle script -->
+    <!-- Reveal page after load -->
     <script>
-        // Set dark mode as default unless explicitly set to light
-        if (localStorage.getItem('darkMode') !== 'false') {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-
-        // Show content after styles are loaded
-        window.addEventListener('load', function() {
-            document.body.style.visibility = 'visible';
+        window.addEventListener('load', function () {
+            document.body.classList.add('loaded');
         });
     </script>
 </body>
