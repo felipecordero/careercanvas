@@ -1,9 +1,9 @@
 {{/* 
 Pexels API Configuration
-This partial provides the API key, queries, and default image to the frontend JavaScript.
+This partial provides configuration from environment variables (CI/CD) or config.toml fallbacks.
 SECURITY NOTE: 
-- API key is fetched securely at runtime from a serverless function
-- No sensitive data is exposed in the HTML source
+- API keys and endpoints are injected from GitLab CI/CD environment variables
+- Fallback to config.toml for local development
 - Queries are safe to expose as they're just search terms
 */}}
 
@@ -16,64 +16,66 @@ SECURITY NOTE:
 {{/* Set default hero image from Hugo config */}}
 {{ $defaultHeroImage := .Site.Params.default_hero_image | default "/images/hero-default-bg.jpg" }}
 
+{{/* Get Formspree endpoint from environment variable or config fallback */}}
+{{ $formspreeEndpoint := getenv "FORMSPREE_ENDPOINT" }}
+{{ if not $formspreeEndpoint }}
+  {{ $formspreeEndpoint = .Site.Params.formspree_endpoint }}
+{{ end }}
+
+{{/* Get Pexels API key from environment variable or config fallback */}}
+{{ $pexelsApiKey := getenv "PEXELS_API_KEY" }}
+{{ if not $pexelsApiKey }}
+  {{ $pexelsApiKey = .Site.Params.pexels_api_key }}
+{{ end }}
+
 <div id="pexels-config" 
      data-queries="{{ $pexelsQueries | jsonify }}" 
      data-default-image="{{ $defaultHeroImage }}"
+     data-formspree-endpoint="{{ $formspreeEndpoint }}"
+     data-pexels-api-key="{{ $pexelsApiKey }}"
      style="display: none;">
 </div>
 
 <script>
-  // Initialize configuration - API key will be fetched at runtime
-  window.PEXELS_API_KEY = null; // Will be set by fetchConfig()
+  // Load configuration from build-time embedded data attributes
+  // Values are set during Hugo build from CI/CD environment variables
   
-  // Load queries from data attribute (configured in config.toml)
   const configElement = document.getElementById('pexels-config');
+  
   if (configElement) {
+    // Load Pexels queries
     try {
       window.PEXELS_QUERIES = JSON.parse(configElement.getAttribute('data-queries'));
+      console.log('✓ Pexels queries loaded:', window.PEXELS_QUERIES.length, 'queries');
     } catch (error) {
       console.error('Error parsing Pexels queries from config.toml:', error);
-      // No fallback - queries must be configured in config.toml
       window.PEXELS_QUERIES = [];
     }
     
-    // Load default hero image from data attribute
+    // Load default hero image
     window.DEFAULT_HERO_IMAGE = configElement.getAttribute('data-default-image');
-    console.log('Default hero image configured:', window.DEFAULT_HERO_IMAGE);
+    console.log('✓ Default hero image:', window.DEFAULT_HERO_IMAGE);
+    
+    // Load Formspree endpoint
+    window.FORMSPREE_ENDPOINT = configElement.getAttribute('data-formspree-endpoint');
+    if (window.FORMSPREE_ENDPOINT) {
+      console.log('✅ Formspree endpoint configured');
+    } else {
+      console.warn('⚠️ Formspree endpoint not configured');
+    }
+    
+    // Load Pexels API key (optional)
+    window.PEXELS_API_KEY = configElement.getAttribute('data-pexels-api-key');
+    if (window.PEXELS_API_KEY) {
+      console.log('✅ Pexels API key configured');
+    } else {
+      console.log('ℹ️ No Pexels API key - using default image');
+    }
   } else {
     console.error('Pexels config element not found');
     window.PEXELS_QUERIES = [];
-    window.DEFAULT_HERO_IMAGE = '/images/hero-default-bg.jpg'; // Fallback
-  }
-
-  // Function to fetch secure configuration at runtime
-  async function fetchConfig() {
-    try {
-      // Use local development server if running on localhost
-      const apiUrl = window.location.hostname === 'localhost' 
-        ? 'http://localhost:3001/api/config' 
-        : '/api/config';
-        
-      const response = await fetch(apiUrl);
-      if (response.ok) {
-        const config = await response.json();
-        window.PEXELS_API_KEY = config.pexelsApiKey;
-        window.FORMSPREE_ENDPOINT = config.formspreeEndpoint;
-        console.log('Configuration loaded securely');
-      } else {
-        console.warn('Failed to load configuration from API, will use default image');
-        // Don't set PEXELS_API_KEY, let the background script use default image
-      }
-    } catch (error) {
-      console.warn('Error loading configuration:', error, '- will use default image');
-      // Don't set PEXELS_API_KEY, let the background script use default image
-    }
-  }
-
-  // Load configuration when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', fetchConfig);
-  } else {
-    fetchConfig();
+    window.DEFAULT_HERO_IMAGE = '/images/hero-default-bg.jpg';
+    window.FORMSPREE_ENDPOINT = null;
+    window.PEXELS_API_KEY = null;
   }
 </script>
