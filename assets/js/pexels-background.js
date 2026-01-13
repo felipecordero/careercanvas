@@ -1,5 +1,6 @@
 // Pexels Background Image System
 // Fetches random landscape images from Pexels API for hero background
+// Enhanced with default image fallback support
 
 class PexelsBackground {
     constructor() {
@@ -7,6 +8,7 @@ class PexelsBackground {
         this.queries = this.getQueries();
         this.currentImage = null;
         this.usedImages = new Set(); // Track used images to avoid repeats
+        this.defaultImage = this.getDefaultImage(); // NEW: Default fallback image
         this.fallbackGradient = 'linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 20%, var(--color-primary-light) 40%, var(--color-primary) 60%, var(--color-primary-dark) 75%, var(--color-primary-dark) 90%, var(--color-primary) 100%)';
         
         // Hide gradient immediately to prevent flash
@@ -16,14 +18,36 @@ class PexelsBackground {
         this.waitForConfig();
     }
 
+    // NEW: Get default image from configuration
+    getDefaultImage() {
+        // Get default image from Hugo config
+        if (window.DEFAULT_HERO_IMAGE) {
+            return window.DEFAULT_HERO_IMAGE;
+        }
+        // Fallback to a common path
+        return '/images/hero-default-bg.jpg';
+    }
+
     waitForConfig() {
         const checkConfig = () => {
+            // Check if API key is available
             if (window.PEXELS_API_KEY) {
                 this.apiKey = window.PEXELS_API_KEY;
                 this.init();
             } else {
-                // Wait a bit more for the configuration to load
-                setTimeout(checkConfig, 100);
+                // Check if we've waited long enough (max 2 seconds)
+                if (!this.configCheckStartTime) {
+                    this.configCheckStartTime = Date.now();
+                }
+                
+                if (Date.now() - this.configCheckStartTime > 2000) {
+                    // No API key found after 2 seconds, use fallback
+                    console.log('No Pexels API key configured, using default image');
+                    this.useDefaultImage();
+                } else {
+                    // Wait a bit more for the configuration to load
+                    setTimeout(checkConfig, 100);
+                }
             }
         };
         
@@ -39,7 +63,6 @@ class PexelsBackground {
             heroSection.style.transition = 'background 0.3s ease-in-out';
         }
     }
-
 
     getQueries() {
         // Get queries from Hugo config, with fallback to default list
@@ -65,8 +88,39 @@ class PexelsBackground {
             await this.loadRandomBackground();
         } catch (error) {
             console.error('Failed to load Pexels background:', error);
+            // NEW: Try default image before falling back to gradient
+            this.useDefaultImage();
+        }
+    }
+
+    // NEW: Method to use default image
+    async useDefaultImage() {
+        try {
+            // Check if default image exists
+            const imageExists = await this.checkImageExists(this.defaultImage);
+            
+            if (imageExists) {
+                console.log('Using default background image:', this.defaultImage);
+                this.currentImage = this.defaultImage;
+                this.applyBackgroundImage(true); // Pass true to indicate it's default image
+            } else {
+                console.warn('Default image not found, using gradient fallback');
+                this.useFallbackBackground();
+            }
+        } catch (error) {
+            console.error('Error loading default image:', error);
             this.useFallbackBackground();
         }
+    }
+
+    // NEW: Check if image exists
+    checkImageExists(imageUrl) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = imageUrl;
+        });
     }
 
     async loadRandomBackground() {
@@ -107,13 +161,14 @@ class PexelsBackground {
                 this.usedImages.add(randomPhoto.id);
             }
             
-            this.applyBackgroundImage();
+            this.applyBackgroundImage(false); // Pass false to indicate it's from Pexels
         } else {
             throw new Error('No photos found');
         }
     }
 
-    applyBackgroundImage() {
+    // MODIFIED: Added isDefaultImage parameter
+    applyBackgroundImage(isDefaultImage = false) {
         const heroSection = document.querySelector('.hero-section');
         if (!heroSection) return;
 
@@ -132,6 +187,8 @@ class PexelsBackground {
         `;
 
         // Create overlay to maintain text readability
+        // NEW: Use lighter overlay for default image if needed
+        const overlayOpacity = isDefaultImage ? 0.3 : 0.2;
         const overlay = document.createElement('div');
         overlay.className = 'pexels-overlay';
         overlay.style.cssText = `
@@ -143,9 +200,9 @@ class PexelsBackground {
             background: linear-gradient(
                 135deg,
                 rgba(0, 0, 0, 0.4) 0%,
-                rgba(0, 0, 0, 0.2) 25%,
+                rgba(0, 0, 0, ${overlayOpacity}) 25%,
                 rgba(0, 0, 0, 0.3) 50%,
-                rgba(0, 0, 0, 0.2) 75%,
+                rgba(0, 0, 0, ${overlayOpacity}) 75%,
                 rgba(0, 0, 0, 0.4) 100%
             );
             z-index: 1;
@@ -164,10 +221,10 @@ class PexelsBackground {
             content.style.position = 'relative';
             content.style.zIndex = '10';
             
-            // Find the right side content container (text content) - more specific selector
+            // Find the right side content container (text content)
             const flexContainer = content.querySelector('.flex');
             if (flexContainer) {
-                const rightContent = flexContainer.children[1]; // Second child (right content)
+                const rightContent = flexContainer.children[1];
                 if (rightContent && rightContent.classList.contains('lg:w-1/2')) {
                     // Add blurred background to the right side text container
                     rightContent.style.background = 'rgba(255, 255, 255, 0.02)';
@@ -195,11 +252,22 @@ class PexelsBackground {
             heroSection.classList.remove('gradient-bg');
             heroSection.classList.add('pexels-bg');
             
+            // NEW: Add class to indicate default image
+            if (isDefaultImage) {
+                heroSection.classList.add('default-bg');
+            }
+            
             // Simple fade-in effect for background and overlay only
             setTimeout(() => {
                 bgContainer.style.opacity = '1';
                 overlay.style.opacity = '1';
             }, 50);
+        };
+        
+        // NEW: Handle image load error
+        img.onerror = () => {
+            console.error('Failed to load image:', this.currentImage);
+            this.useFallbackBackground();
         };
         
         img.src = this.currentImage;
@@ -209,11 +277,14 @@ class PexelsBackground {
         const heroSection = document.querySelector('.hero-section');
         if (!heroSection) return;
 
+        console.log('Using gradient fallback');
+
         // Restore gradient background
         heroSection.style.background = this.fallbackGradient;
         heroSection.style.backgroundImage = 'none';
         heroSection.classList.add('gradient-bg');
         heroSection.classList.remove('pexels-bg');
+        heroSection.classList.remove('default-bg'); // NEW: Remove default-bg class
         
         // Remove any existing background container and overlay
         const existingBgContainer = heroSection.querySelector('.pexels-bg-container');
@@ -230,7 +301,7 @@ class PexelsBackground {
         if (content) {
             const flexContainer = content.querySelector('.flex');
             if (flexContainer) {
-                const rightContent = flexContainer.children[1]; // Second child (right content)
+                const rightContent = flexContainer.children[1];
                 if (rightContent && rightContent.classList.contains('lg:w-1/2')) {
                     rightContent.style.background = '';
                     rightContent.style.backdropFilter = '';
@@ -250,6 +321,8 @@ class PexelsBackground {
                 await this.loadRandomBackground();
             } catch (error) {
                 console.error('Failed to refresh background:', error);
+                // NEW: Try default image on refresh failure
+                this.useDefaultImage();
             }
         }
     }
