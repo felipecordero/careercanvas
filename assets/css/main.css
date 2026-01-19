@@ -704,3 +704,34 @@
 .dark .sidebar-scroll {
   scrollbar-color: color-mix(in srgb, var(--color-primary-light) 40%, transparent) transparent;
 }
+
+/* =========================
+   PAGE LOADER
+========================= */
+
+#page-loader {
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+#page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-spinner {
+  width: 52px;
+  height: 52px;
+  border: 4px solid rgba(0,0,0,0.15);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.dark .loader-spinner {
+  border-color: rgba(255,255,255,0.2);
+  border-top-color: var(--color-primary);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
