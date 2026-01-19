@@ -92,22 +92,51 @@
 
       <!-- Mobile menu button -->
       <div class="lg:hidden flex items-center">
-        <button id="menu-btn" class="text-text-primary dark:text-text-primary">
-          <i class="fas fa-bars text-2xl"></i>
+        <button id="menu-btn" 
+                class="text-text-primary dark:text-text-primary p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+                aria-label="Toggle menu"
+                aria-expanded="false">
+          <i id="menu-icon" class="fas fa-bars text-2xl"></i>
         </button>
       </div>
     </div>
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg">
+  <div id="mobile-menu" 
+       class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg border-t border-gray-200 dark:border-gray-700"
+       style="position: relative; z-index: 9999;">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       {{ range .Site.Menus.main }}
-        <a href="{{ .URL | relLangURL }}"
-           class="nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary">
+        {{ if hasPrefix .URL "#" }}
+        <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
+           class="mobile-nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+           data-section="{{ .URL }}">
           {{ .Name }}
         </a>
+        {{ else }}
+        <a href="{{ .URL | relLangURL }}"
+           class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+          {{ .Name }}
+        </a>
+        {{ end }}
       {{ end }}
+      
+      <!-- Mobile social icons -->
+      <div class="flex items-center space-x-6 px-3 py-4 border-t border-gray-200 dark:border-gray-700 mt-2">
+        {{ if .Site.Params.linkedin_url }}
+        <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+           class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+          <i class="fab fa-linkedin-in text-2xl"></i>
+        </a>
+        {{ end }}
+        {{ if .Site.Params.github_url }}
+        <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer"
+           class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+          <i class="fab fa-github text-2xl"></i>
+        </a>
+        {{ end }}
+      </div>
     </div>
   </div>
 
@@ -117,50 +146,140 @@
       opacity: 1 !important;
       visibility: visible !important;
     }
+    
+    /* Ensure mobile menu appears above everything */
+    #mobile-menu {
+      position: relative;
+      z-index: 9999 !important;
+    }
+    
+    /* Smooth transitions */
+    #mobile-menu {
+      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    
+    #mobile-menu:not(.hidden) {
+      max-height: 500px;
+      opacity: 1;
+    }
   </style>
 
-  <!-- Navigation JS (NO theme logic) -->
+  <!-- Navigation JS -->
   <script>
-    // Desktop submenu toggle
-    document.querySelectorAll('.group > a.nav-link').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const group = this.closest('.group');
-        const isOpen = group.classList.contains('open');
+    (function() {
+      console.log('Navigation script initializing...');
+      
+      // Desktop submenu toggle
+      document.querySelectorAll('.group > a.nav-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const group = this.closest('.group');
+          const isOpen = group.classList.contains('open');
 
-        document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
-        if (!isOpen) group.classList.add('open');
+          document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
+          if (!isOpen) group.classList.add('open');
+        });
       });
-    });
 
-    // Close submenus when clicking outside
-    document.addEventListener('click', function (event) {
-      document.querySelectorAll('.group').forEach(group => {
-        if (!group.contains(event.target)) {
-          group.classList.remove('open');
-        }
+      // Close submenus when clicking outside
+      document.addEventListener('click', function (event) {
+        document.querySelectorAll('.group').forEach(group => {
+          if (!group.contains(event.target)) {
+            group.classList.remove('open');
+          }
+        });
       });
-    });
 
-    // Mobile menu toggle
-    document.getElementById('menu-btn').addEventListener('click', function () {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
+      // Mobile menu toggle
+      const menuBtn = document.getElementById('menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      
+      console.log('Menu button:', menuBtn);
+      console.log('Mobile menu:', mobileMenu);
+      console.log('Menu icon:', menuIcon);
+      
+      if (!menuBtn || !mobileMenu || !menuIcon) {
+        console.error('Mobile menu elements not found!');
+        return;
+      }
 
-    // Intelligent section navigation
-    document.querySelectorAll('.section-link').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const section = this.dataset.section;
-        const home = '{{ .Site.Home.RelPermalink }}';
-
-        if (window.location.pathname === home) {
-          const el = document.querySelector(section);
-          if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      function toggleMobileMenu() {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        console.log('Toggle called, currently hidden:', isHidden);
+        
+        mobileMenu.classList.toggle('hidden');
+        
+        // Update aria-expanded
+        menuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+        
+        // Toggle icon between hamburger and close
+        if (isHidden) {
+          menuIcon.classList.remove('fa-bars');
+          menuIcon.classList.add('fa-times');
+          console.log('Menu opened, icon changed to X');
         } else {
-          window.location.href = home + section;
+          menuIcon.classList.remove('fa-times');
+          menuIcon.classList.add('fa-bars');
+          console.log('Menu closed, icon changed to hamburger');
+        }
+      }
+
+      menuBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Menu button clicked');
+        toggleMobileMenu();
+      });
+
+      // Close mobile menu when clicking a link
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      console.log('Mobile nav links found:', mobileNavLinks.length);
+      
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          console.log('Mobile nav link clicked, closing menu');
+          if (!mobileMenu.classList.contains('hidden')) {
+            toggleMobileMenu();
+          }
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!menuBtn.contains(event.target) && 
+            !mobileMenu.contains(event.target) && 
+            !mobileMenu.classList.contains('hidden')) {
+          console.log('Clicked outside, closing menu');
+          toggleMobileMenu();
         }
       });
-    });
+
+      // Intelligent section navigation
+      document.querySelectorAll('.section-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const section = this.dataset.section;
+          const home = '{{ .Site.Home.RelPermalink }}';
+
+          console.log('Section link clicked:', section);
+
+          if (window.location.pathname === home || window.location.pathname === home + 'index.html') {
+            const el = document.querySelector(section);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              console.log('Scrolled to section:', section);
+            }
+          } else {
+            window.location.href = home + section;
+          }
+        });
+      });
+      
+      console.log('Navigation script initialized successfully');
+    })();
   </script>
 </nav>
