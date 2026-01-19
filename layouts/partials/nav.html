@@ -92,22 +92,15 @@
 
       <!-- Mobile menu button -->
       <div class="lg:hidden flex items-center">
-        <button id="menu-btn" 
-                type="button"
-                class="text-text-primary dark:text-text-primary p-2 focus:outline-none"
-                aria-label="Toggle menu"
-                aria-expanded="false"
-                style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
+        <button id="menu-btn" class="text-text-primary dark:text-text-primary relative z-[100]">
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Mobile menu -->
-  <div id="mobile-menu" 
-       class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg"
-       style="touch-action: manipulation;">
+  <!-- Mobile menu - CRITICAL: Must be OUTSIDE the container and with highest z-index -->
+  <div id="mobile-menu" class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg absolute top-16 left-0 right-0 w-full">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
@@ -131,9 +124,6 @@
     </div>
   </div>
 
-  <!-- Prevent zoom on double-tap -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
   <!-- Submenu styles -->
   <style>
     .group.open .submenu {
@@ -141,27 +131,39 @@
       visibility: visible !important;
     }
     
-    /* Prevent iOS zoom on tap */
-    button, a {
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
+    /* CRITICAL: Force mobile menu to appear above everything */
+    nav {
+      position: fixed !important;
+      z-index: 9999 !important;
     }
     
-    /* Ensure mobile menu is above everything */
     #mobile-menu {
-      position: relative;
-      z-index: 10000;
+      position: absolute !important;
+      z-index: 99999 !important;
+      display: none;
+    }
+    
+    #mobile-menu:not(.hidden) {
+      display: block !important;
+    }
+    
+    /* Ensure the pexels background doesn't cover the nav */
+    .pexels-bg-container,
+    .pexels-overlay {
+      z-index: 0 !important;
+    }
+    
+    .hero-section {
+      z-index: 1 !important;
     }
   </style>
 
-  <!-- Navigation JS - ERROR PROOF -->
+  <!-- Navigation JS (NO theme logic) -->
   <script>
     (function() {
       'use strict';
       
-      // Prevent this script from running multiple times
       if (window.__navInitialized) {
-        console.log('Navigation already initialized, skipping');
         return;
       }
       
@@ -169,7 +171,6 @@
       
       function initNavigation() {
         try {
-          // Get elements
           const menuBtn = document.getElementById('menu-btn');
           const mobileMenu = document.getElementById('mobile-menu');
           
@@ -180,28 +181,27 @@
           
           console.log('✅ Navigation elements found');
           
-          // Mobile menu toggle - CRITICAL: Prevent default and stop propagation
+          // Mobile menu toggle
           menuBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
             
-            console.log('Menu button clicked');
+            const wasHidden = mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden');
+            menuBtn.setAttribute('aria-expanded', wasHidden ? 'true' : 'false');
             
-            try {
-              const wasHidden = mobileMenu.classList.contains('hidden');
-              mobileMenu.classList.toggle('hidden');
-              menuBtn.setAttribute('aria-expanded', wasHidden ? 'true' : 'false');
-              
-              console.log('Menu toggled:', wasHidden ? 'opened' : 'closed');
-            } catch (err) {
-              console.error('Error toggling menu:', err);
-            }
+            console.log('Menu toggled. Is now visible:', wasHidden);
             
-            return false;
+            // Debug info
+            setTimeout(() => {
+              console.log('Menu display:', window.getComputedStyle(mobileMenu).display);
+              console.log('Menu z-index:', window.getComputedStyle(mobileMenu).zIndex);
+              console.log('Menu height:', mobileMenu.offsetHeight);
+              console.log('Menu position:', window.getComputedStyle(mobileMenu).position);
+            }, 50);
           }, {passive: false, capture: true});
           
-          // Prevent any touch/click events from bubbling
           menuBtn.addEventListener('touchstart', function(e) {
             e.stopPropagation();
           }, {passive: true});
@@ -291,14 +291,12 @@
         }
       }
       
-      // Initialize with multiple fallbacks
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initNavigation);
       } else {
         initNavigation();
       }
       
-      // Backup initialization
       setTimeout(initNavigation, 1000);
       
     })();
