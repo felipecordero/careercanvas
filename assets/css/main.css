@@ -735,3 +735,42 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* =========================
+   HERO BACKGROUND LOADER
+========================= */
+
+/* Loader hidden by default */
+.bg-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* Visible ONLY while background is loading */
+.hero-section.bg-loading .bg-loader {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Spinner */
+.bg-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255,255,255,0.25);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+/* Ensure loader never blocks nav */
+.bg-loader {
+  pointer-events: none;
+}
