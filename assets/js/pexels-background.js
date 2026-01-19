@@ -1,93 +1,71 @@
 class PexelsBackground {
-    constructor() {
-        this.apiKey = null;
-        this.currentImage = null;
-        this.defaultImage = window.DEFAULT_HERO_IMAGE || '/images/hero-default-bg.jpg';
-        this.fallbackGradient =
-          'linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 20%, var(--color-primary-light) 40%, var(--color-primary) 60%, var(--color-primary-dark) 75%, var(--color-primary-dark) 90%, var(--color-primary) 100%)';
+  constructor() {
+    this.hero = document.querySelector('.hero-section');
+    this.defaultImage = window.DEFAULT_HERO_IMAGE || '/images/hero-default-bg.jpg';
 
-        this.waitForConfig();
-    }
+    if (!this.hero) return;
 
-    /* ------------------------
-       Loader state helpers
-    ------------------------ */
-    startLoading(hero) {
-        hero.classList.add('bg-loading');
-    }
+    // 🔒 FAILSAFE: loader can NEVER stay forever
+    setTimeout(() => {
+      this.hideLoader();
+    }, 3000);
 
-    stopLoading(hero) {
-        hero.classList.remove('bg-loading');
-        hero.classList.add('bg-loaded');
-    }
+    this.showLoader();
+    this.loadBackground();
+  }
 
-    waitForConfig() {
-        setTimeout(() => {
-            if (window.PEXELS_API_KEY) {
-                this.apiKey = window.PEXELS_API_KEY;
-                this.loadRandomBackground();
-            } else {
-                this.useDefaultImage();
-            }
-        }, 100);
-    }
+  showLoader() {
+    this.hero.classList.add('bg-loading');
+  }
 
-    async loadRandomBackground() {
-        // You already fallback without API key
-        this.useDefaultImage();
-    }
+  hideLoader() {
+    this.hero.classList.remove('bg-loading');
+    this.hero.classList.add('bg-loaded');
+  }
 
-    useDefaultImage() {
-        const hero = document.querySelector('.hero-section');
-        if (!hero) return;
+  loadBackground() {
+    const img = new Image();
+    img.src = this.defaultImage;
 
-        this.startLoading(hero);
-        this.currentImage = this.defaultImage;
-        this.applyBackground(hero);
-    }
+    img.onload = () => {
+      this.applyImage(img);
+    };
 
-    applyBackground(hero) {
-        this.startLoading(hero);
+    img.onerror = () => {
+      this.useGradientFallback();
+    };
+  }
 
-        const bgContainer = document.createElement('div');
-        bgContainer.className = 'pexels-bg-container';
-        bgContainer.style.cssText = `
-          position:absolute;
-          inset:0;
-          z-index:0;
-          opacity:0;
-          transition:opacity .8s ease;
-        `;
+  applyImage(img) {
+    const container = document.createElement('div');
+    container.className = 'pexels-bg-container';
+    container.style.cssText = `
+      position:absolute;
+      inset:0;
+      z-index:0;
+      background-image:url(${img.src});
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      opacity:0;
+      transition:opacity .6s ease;
+    `;
 
-        hero.appendChild(bgContainer);
+    this.hero.appendChild(container);
 
-        const img = new Image();
-        img.src = this.currentImage;
+    requestAnimationFrame(() => {
+      container.style.opacity = '1';
+      this.hideLoader();
+    });
+  }
 
-        img.onload = () => {
-            img.style.cssText = `
-              width:100%;
-              height:100%;
-              object-fit:cover;
-              position:absolute;
-              top:0;
-              left:0;
-            `;
-            bgContainer.appendChild(img);
-
-            requestAnimationFrame(() => {
-                bgContainer.style.opacity = '1';
-                this.stopLoading(hero);
-            });
-        };
-
-        img.onerror = () => {
-            hero.style.background = this.fallbackGradient;
-            this.stopLoading(hero);
-        };
-    }
+  useGradientFallback() {
+    this.hero.style.background =
+      'linear-gradient(135deg, var(--color-primary-dark), var(--color-primary))';
+    this.hideLoader();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    window.pexelsBackground = new PexelsBackground();
+  new PexelsBackground();
 });
