@@ -1,9 +1,23 @@
-<section id="home" class="min-h-screen flex flex-col items-center justify-start md:flex-row md:items-center md:justify-center gradient-bg text-white relative overflow-hidden hero-section">
+<section
+  id="home"
+  class="min-h-screen flex flex-col items-center justify-start
+         md:flex-row md:items-center md:justify-center
+         gradient-bg text-white relative overflow-hidden hero-section"
+>
+
+  <!-- 🔵 HERO BACKGROUND LOADER -->
+  <!-- Hidden by default, shown only while bg is loading -->
+  <div class="bg-loader">
+    <div class="bg-spinner"></div>
+  </div>
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
     <div class="flex flex-col lg:flex-row items-center justify-between gap-12 mt-8 md:mt-0 w-full">
+
       <!-- Left content - Profile image -->
       <div class="lg:w-1/2 flex justify-center lg:justify-start mt-8 md:mt-0 lg:transform lg:-translate-y-8">
         <div class="relative" data-animation="profile-image">
+
           <!-- Main image container -->
           <div class="relative">
             <div class="w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full bg-gradient-primary p-1 shadow-2xl">
@@ -22,52 +36,114 @@
             <div class="absolute -bottom-4 -right-4" data-animation="location-badge">
               <div class="flex items-center bg-black/80 backdrop-blur-sm text-white px-4 py-2 rounded-full shadow-xl border border-white/20 min-w-fit whitespace-nowrap">
                 <i class="fas fa-map-marker-alt mr-2 text-primary-light flex-shrink-0"></i>
-                <span class="font-semibold text-sm">{{ .Site.Params.hero_location }}</span>
+                <span class="font-semibold text-sm">
+                  {{ .Site.Params.hero_location }}
+                </span>
               </div>
             </div>
+
           </div>
         </div>
       </div>
+
       <!-- Right content -->
-      <div class="text-center lg:text-left mt-8 md:mt-0" style="width: 100%; max-width: 600px; min-width: 300px;">
+      <div
+        class="text-center lg:text-left mt-8 md:mt-0"
+        style="width: 100%; max-width: 600px; min-width: 300px;"
+      >
+
         <!-- Greeting -->
         <div class="mb-4 mt-4 md:mt-0 hero-text-element" data-animation="greeting">
-          <span class="hero-text-accent font-medium text-lg block">{{ i18n "helloIm" }}</span>
+          <span class="hero-text-accent font-medium text-lg block">
+            {{ i18n "helloIm" }}
+          </span>
         </div>
+
         <!-- Name -->
-        <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 font-heading leading-tight hero-name hero-text-element" data-animation="name">
+        <h1
+          class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6
+                 font-heading leading-tight hero-name hero-text-element"
+          data-animation="name"
+        >
           {{ .Site.Params.name }}
         </h1>
-        <!-- Tagline with typing effect -->
-        <h2 class="text-2xl md:text-3xl lg:text-4xl mb-6 font-light hero-text-accent hero-text-element" data-animation="tagline">
-          <span class="typewriter" data-original-text="{{ .Site.Params.tagline }}">{{ .Site.Params.tagline }}</span>
+
+        <!-- Tagline -->
+        <h2
+          class="text-2xl md:text-3xl lg:text-4xl mb-6 font-light
+                 hero-text-accent hero-text-element"
+          data-animation="tagline"
+        >
+          <span
+            class="typewriter"
+            data-original-text="{{ .Site.Params.tagline }}"
+          >
+            {{ .Site.Params.tagline }}
+          </span>
         </h2>
+
         <!-- Description -->
-        <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0 hero-text-muted leading-relaxed hero-text-element px-4 py-3 rounded-lg" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px);" data-animation="description">
+        <p
+          class="text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0
+                 hero-text-muted leading-relaxed hero-text-element
+                 px-4 py-3 rounded-lg"
+          style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px);"
+          data-animation="description"
+        >
           {{ .Site.Params.hero_description }}
         </p>
 
         <!-- Action buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-end hero-text-element" data-animation="buttons">
-          <a href="#contact" class="bg-bg text-primary dark:text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
+        <div
+          class="flex flex-col sm:flex-row gap-4 justify-center
+                 lg:justify-end hero-text-element"
+          data-animation="buttons"
+        >
+          <a
+            href="#contact"
+            class="bg-bg text-primary dark:text-white
+                   px-8 py-4 rounded-lg font-semibold
+                   hero-button button-hover"
+          >
             {{ i18n "getInTouch" }}
           </a>
-          <a href="{{ .Site.Params.resume_url_en }}" target="_blank" rel="noopener" class="bg-bg text-primary dark:text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
+
+          <a
+            href="{{ .Site.Params.resume_url_en }}"
+            target="_blank"
+            rel="noopener"
+            class="bg-bg text-primary dark:text-white
+                   px-8 py-4 rounded-lg font-semibold
+                   hero-button button-hover"
+          >
             {{ i18n "viewCV" }}
           </a>
         </div>
+
         <!-- Social links -->
-        <div class="flex justify-center lg:justify-end mt-8 mb-8 md:mb-0 hero-text-element" data-animation="social">
-          <div class="flex space-x-4 px-4 py-3 rounded-lg" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);">
+        <div
+          class="flex justify-center lg:justify-end mt-8 mb-8 md:mb-0
+                 hero-text-element"
+          data-animation="social"
+        >
+          <div
+            class="flex space-x-4 px-4 py-3 rounded-lg"
+            style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);"
+          >
             {{ range .Site.Params.social }}
-            <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="text-white transition-transform duration-300 hover:scale-125">
+            <a
+              href="{{ .url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-white transition-transform duration-300 hover:scale-125"
+            >
               <i class="fab fa-{{ .icon }} text-3xl"></i>
             </a>
             {{ end }}
           </div>
         </div>
+
       </div>
     </div>
   </div>
 </section>
-  
