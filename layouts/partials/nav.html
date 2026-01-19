@@ -97,12 +97,13 @@
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
+
     </div>
   </div>
 
   <!-- Mobile menu -->
   <div id="mobile-menu"
-       class="hidden lg:hidden absolute top-16 left-0 right-0 w-full bg-bg dark:bg-bg shadow-lg z-[9999]">
+       class="hidden lg:hidden absolute top-16 left-0 right-0 w-full bg-bg dark:bg-bg shadow-lg z-[99999]">
     <div class="px-4 pt-4 pb-6 space-y-2">
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
@@ -117,6 +118,7 @@
           {{ .Name }}
         </a>
         {{ end }}
+
         {{ if .HasChildren }}
           {{ range .Children }}
             <a href="{{ .URL | relLangURL }}"
@@ -129,7 +131,7 @@
     </div>
   </div>
 
-  <!-- Submenu styles -->
+  <!-- Styles -->
   <style>
     .group.open .submenu {
       opacity: 1;
@@ -138,16 +140,14 @@
 
     nav {
       position: fixed;
-      z-index: 9999;
+      z-index: 99999;
     }
 
+    /* 🔥 CRITICAL FIX: prevent Pexels layers from blocking taps */
     .pexels-bg-container,
+    .pexels-bg-container img,
     .pexels-overlay {
-      z-index: 0 !important;
-    }
-
-    .hero-section {
-      z-index: 1 !important;
+      pointer-events: none !important;
     }
   </style>
 
@@ -175,7 +175,7 @@
         });
       });
 
-      // Desktop submenu
+      // Desktop submenu toggle
       document.querySelectorAll('.group > a.nav-link').forEach(link => {
         link.addEventListener('click', function (e) {
           e.preventDefault();
