@@ -1,6 +1,7 @@
 <nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
+
       <!-- Logo -->
       <div class="flex items-center">
         <a href="{{ .Site.Home.RelPermalink }}"
@@ -74,16 +75,14 @@
         {{ end }}
 
         <!-- Social icons -->
-        <div class="flex items-center space-x-4" data-animation="social">
+        <div class="flex items-center space-x-4">
           {{ if .Site.Params.linkedin_url }}
-          <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-             class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+          <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-linkedin-in text-xl"></i>
           </a>
           {{ end }}
           {{ if .Site.Params.github_url }}
-          <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer"
-             class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+          <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-github text-xl"></i>
           </a>
           {{ end }}
@@ -92,32 +91,38 @@
 
       <!-- Mobile menu button -->
       <div class="lg:hidden flex items-center">
-        <button id="menu-btn" class="text-text-primary dark:text-text-primary relative z-[100]">
+        <button id="menu-btn"
+                aria-expanded="false"
+                class="text-text-primary dark:text-text-primary">
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Mobile menu - CRITICAL: Must be OUTSIDE the container and with highest z-index -->
-  <div id="mobile-menu" class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg absolute top-16 left-0 right-0 w-full">
-    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+  <!-- Mobile menu -->
+  <div id="mobile-menu"
+       class="hidden lg:hidden absolute top-16 left-0 right-0 w-full bg-bg dark:bg-bg shadow-lg z-[9999]">
+    <div class="px-4 pt-4 pb-6 space-y-2">
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
-          <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
-             class="nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary"
-             data-section="{{ .URL }}">
-            {{ .Name }}
-          </a>
+        <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
+           class="section-link block px-3 py-2 text-base text-text-primary dark:text-text-primary"
+           data-section="{{ .URL }}">
+          {{ .Name }}
+        </a>
         {{ else }}
-          <a href="{{ .URL | relLangURL }}"
-             class="nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary">
-            {{ .Name }}
-          </a>
+        <a href="{{ .URL | relLangURL }}"
+           class="block px-3 py-2 text-base text-text-primary dark:text-text-primary">
+          {{ .Name }}
+        </a>
         {{ end }}
         {{ if .HasChildren }}
           {{ range .Children }}
-            <a href="{{ .URL | relLangURL }}" class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary">{{ .Name }}</a>
+            <a href="{{ .URL | relLangURL }}"
+               class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary">
+              {{ .Name }}
+            </a>
           {{ end }}
         {{ end }}
       {{ end }}
@@ -127,178 +132,67 @@
   <!-- Submenu styles -->
   <style>
     .group.open .submenu {
-      opacity: 1 !important;
-      visibility: visible !important;
+      opacity: 1;
+      visibility: visible;
     }
-    
-    /* CRITICAL: Force mobile menu to appear above everything */
+
     nav {
-      position: fixed !important;
-      z-index: 9999 !important;
+      position: fixed;
+      z-index: 9999;
     }
-    
-    #mobile-menu {
-      position: absolute !important;
-      z-index: 99999 !important;
-      display: none;
-    }
-    
-    #mobile-menu:not(.hidden) {
-      display: block !important;
-    }
-    
-    /* Ensure the pexels background doesn't cover the nav */
+
     .pexels-bg-container,
     .pexels-overlay {
       z-index: 0 !important;
     }
-    
+
     .hero-section {
       z-index: 1 !important;
     }
   </style>
 
-  <!-- Navigation JS (NO theme logic) -->
+  <!-- Navigation JS -->
   <script>
-    (function() {
-      'use strict';
-      
-      if (window.__navInitialized) {
-        return;
-      }
-      
-      console.log('🚀 Navigation initialization starting...');
-      
-      function initNavigation() {
-        try {
-          const menuBtn = document.getElementById('menu-btn');
-          const mobileMenu = document.getElementById('mobile-menu');
-          
-          if (!menuBtn || !mobileMenu) {
-            console.error('Navigation elements not found:', {menuBtn, mobileMenu});
-            return;
-          }
-          
-          console.log('✅ Navigation elements found');
-          
-          // Mobile menu toggle
-          menuBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            
-            const wasHidden = mobileMenu.classList.contains('hidden');
-            mobileMenu.classList.toggle('hidden');
-            menuBtn.setAttribute('aria-expanded', wasHidden ? 'true' : 'false');
-            
-            console.log('Menu toggled. Is now visible:', wasHidden);
-            
-            // Debug info
-            setTimeout(() => {
-              console.log('Menu display:', window.getComputedStyle(mobileMenu).display);
-              console.log('Menu z-index:', window.getComputedStyle(mobileMenu).zIndex);
-              console.log('Menu height:', mobileMenu.offsetHeight);
-              console.log('Menu position:', window.getComputedStyle(mobileMenu).position);
-            }, 50);
-          }, {passive: false, capture: true});
-          
-          menuBtn.addEventListener('touchstart', function(e) {
-            e.stopPropagation();
-          }, {passive: true});
-          
-          menuBtn.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-          }, {passive: false});
-          
-          console.log('✅ Menu button listeners attached');
-          
-          // Desktop submenu toggle
-          try {
-            document.querySelectorAll('.group > a.nav-link').forEach(link => {
-              link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const group = this.closest('.group');
-                const isOpen = group.classList.contains('open');
+    document.addEventListener('DOMContentLoaded', function () {
+      const menuBtn = document.getElementById('menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
 
-                document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
-                if (!isOpen) group.classList.add('open');
-              });
-            });
-            
-            console.log('✅ Desktop submenu initialized');
-          } catch (err) {
-            console.error('Error initializing desktop submenu:', err);
-          }
+      if (!menuBtn || !mobileMenu) return;
 
-          // Close submenus when clicking outside
-          try {
-            document.addEventListener('click', function (event) {
-              document.querySelectorAll('.group').forEach(group => {
-                if (!group.contains(event.target)) {
-                  group.classList.remove('open');
-                }
-              });
-            });
-          } catch (err) {
-            console.error('Error setting up outside click handler:', err);
-          }
+      menuBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        mobileMenu.classList.toggle('hidden');
+        const isOpen = !mobileMenu.classList.contains('hidden');
+        menuBtn.setAttribute('aria-expanded', isOpen.toString());
+        document.body.classList.toggle('overflow-hidden', isOpen);
+      });
 
-          // Close mobile menu when clicking menu items
-          try {
-            document.querySelectorAll('#mobile-menu a').forEach(link => {
-              link.addEventListener('click', function () {
-                console.log('Menu link clicked, closing menu');
-                mobileMenu.classList.add('hidden');
-                menuBtn.setAttribute('aria-expanded', 'false');
-              });
-            });
-            
-            console.log('✅ Menu close on click initialized');
-          } catch (err) {
-            console.error('Error setting up menu close:', err);
-          }
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          document.body.classList.remove('overflow-hidden');
+        });
+      });
 
-          // Intelligent section navigation
-          try {
-            document.querySelectorAll('.section-link').forEach(link => {
-              link.addEventListener('click', function (e) {
-                e.preventDefault();
-                const section = this.dataset.section;
-                const home = '{{ .Site.Home.RelPermalink }}';
+      // Desktop submenu
+      document.querySelectorAll('.group > a.nav-link').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const group = this.closest('.group');
+          const isOpen = group.classList.contains('open');
+          document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
+          if (!isOpen) group.classList.add('open');
+        });
+      });
 
-                if (window.location.pathname === home || window.location.pathname === home + 'index.html') {
-                  const el = document.querySelector(section);
-                  if (el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                } else {
-                  window.location.href = home + section;
-                }
-              });
-            });
-            
-            console.log('✅ Section navigation initialized');
-          } catch (err) {
-            console.error('Error setting up section navigation:', err);
+      document.addEventListener('click', function (e) {
+        document.querySelectorAll('.group').forEach(group => {
+          if (!group.contains(e.target)) {
+            group.classList.remove('open');
           }
-          
-          window.__navInitialized = true;
-          console.log('✅ Navigation fully initialized');
-          
-        } catch (error) {
-          console.error('Fatal error in navigation initialization:', error);
-        }
-      }
-      
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initNavigation);
-      } else {
-        initNavigation();
-      }
-      
-      setTimeout(initNavigation, 1000);
-      
-    })();
+        });
+      });
+    });
   </script>
 </nav>
