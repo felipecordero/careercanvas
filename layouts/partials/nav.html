@@ -1,310 +1,308 @@
 <nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
-      <!-- Logo -->
       <div class="flex items-center">
-        <a href="{{ .Site.Home.RelPermalink }}"
-           class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">
-          {{ .Site.Params.name }}
-        </a>
+        <a href="{{ .Site.Home.RelPermalink }}" class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">{{ .Site.Params.name }}</a>
       </div>
-
-      <!-- Desktop navigation -->
       <div class="hidden lg:flex items-center space-x-8">
         {{ range .Site.Menus.main }}
           {{ if .HasChildren }}
           <div class="relative group">
-            <a href="{{ .URL | relLangURL }}"
-               class="nav-link text-text-primary dark:text-text-primary flex items-center">
+            <a href="{{ .URL | relLangURL }}" class="nav-link text-text-primary dark:text-text-primary flex items-center">
               {{ .Pre | safeHTML }}{{ .Name }}
               <i class="fas fa-chevron-down ml-2 text-sm"></i>
             </a>
-            <div
-              class="submenu absolute left-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[10rem] opacity-0 invisible">
+            <div class="submenu absolute left-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[10rem] opacity-0 invisible">
               {{ range .Children }}
-                <a href="{{ .URL | relLangURL }}"
-                   class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary">
+                <a href="{{ .URL | relLangURL }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary">
                   {{ .Name }}
                 </a>
               {{ end }}
             </div>
           </div>
           {{ else }}
-            {{ if hasPrefix .URL "#" }}
-            <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
-               class="nav-link section-link text-text-primary dark:text-text-primary"
-               data-section="{{ .URL }}">
-              {{ .Name }}
-            </a>
-            {{ else }}
-            <a href="{{ .URL | relLangURL }}"
-               class="nav-link text-text-primary dark:text-text-primary">
-              {{ .Name }}
-            </a>
-            {{ end }}
+                      {{ if hasPrefix .URL "#" }}
+            <!-- Section links that should scroll on home page or navigate to home on other pages -->
+            <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}" class="nav-link section-link text-text-primary dark:text-text-primary" data-section="{{ .URL }}">{{ .Name }}</a>
+          {{ else }}
+            <!-- Regular page links -->
+            <a href="{{ .URL | relLangURL }}" class="nav-link text-text-primary dark:text-text-primary">{{ .Name }}</a>
+          {{ end }}
           {{ end }}
         {{ end }}
-
-        <!-- Language switcher -->
+        <!-- Language Switcher (Dropdown) -->
         {{ $homes := $.Site.Home.AllTranslations }}
         {{ if gt (len $homes) 1 }}
+        {{/* Determine current language flag */}}
         {{ $cur := $.Site.Language.Lang }}
         {{ $currentFlag := "🏳️" }}
         {{ if eq $cur "en" }}{{ $currentFlag = "🇬🇧" }}{{ end }}
         {{ if eq $cur "es" }}{{ $currentFlag = "🇨🇱" }}{{ end }}
         {{ if eq $cur "fr" }}{{ $currentFlag = "🇫🇷" }}{{ end }}
-
         <div class="relative group">
-          <a href="#"
-             class="nav-link text-text-primary dark:text-text-primary flex items-center"
-             aria-label="Language switcher">
+          <a href="#" class="nav-link text-text-primary dark:text-text-primary flex items-center" aria-label="Language switcher">
             <span class="text-lg mr-1">{{ $currentFlag }}</span>
             <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </a>
-          <div
-            class="submenu absolute right-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[8rem] opacity-0 invisible">
-            {{ range $homes }}
-            <a href="{{ .RelPermalink }}"
-               class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
-              {{ .Language.LanguageName }}
-            </a>
+          <div class="submenu absolute right-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[8rem] opacity-0 invisible">
+            {{ $order := slice "fr" "en" "es" }}
+            {{ range $order }}
+              {{ $code := . }}
+              {{ range where $homes "Language.Lang" $code }}
+                {{ $lang := .Language.Lang }}
+                {{ $flag := "🏳️" }}
+                {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
+                {{ if eq $lang "en" }}{{ $flag = "🇬🇧" }}{{ end }}
+                {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
+                {{/* Check if current page has a translation in this language */}}
+                {{ $targetURL := .RelPermalink }}
+                {{ $hasTranslation := false }}
+                {{ if $.Page.IsTranslated }}
+                  {{ range $.Page.Translations }}
+                    {{ if eq .Language.Lang $lang }}
+                      {{ $targetURL = .RelPermalink }}
+                      {{ $hasTranslation = true }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+                
+                <a href="{{ $targetURL }}" class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
+                  <span class="mr-2">{{ $flag }}</span>{{ .Language.LanguageName }}
+                </a>
+              {{ end }}
             {{ end }}
           </div>
         </div>
         {{ end }}
 
-        <!-- Social icons -->
+        <!-- Social Media Icons -->
         <div class="flex items-center space-x-4" data-animation="social">
           {{ if .Site.Params.linkedin_url }}
-          <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-             class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+          <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
             <i class="fab fa-linkedin-in text-xl"></i>
           </a>
           {{ end }}
           {{ if .Site.Params.github_url }}
-          <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer"
-             class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+          <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
             <i class="fab fa-github text-xl"></i>
           </a>
           {{ end }}
         </div>
+        <!-- Dark Mode Toggle -->
+        <button id="darkModeToggle" class="text-text-primary dark:text-text-primary focus:outline-none">
+          <i class="fas fa-toggle-on dark:hidden"></i>
+          <i class="fas fa-toggle-off hidden dark:block"></i>
+        </button>
       </div>
-
-      <!-- Mobile menu button -->
-      <div class="lg:hidden flex items-center">
-        <button id="menu-btn" 
-                class="text-text-primary dark:text-text-primary p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
-                aria-label="Toggle menu"
-                aria-expanded="false">
-          <i id="menu-icon" class="fas fa-bars text-2xl"></i>
+      <div class="lg:hidden flex items-center space-x-4">
+        <!-- Dark Mode Toggle Mobile -->
+        <button id="darkModeToggleMobile" class="text-text-primary dark:text-text-primary focus:outline-none">
+          <i class="fas fa-toggle-on dark:hidden"></i>
+          <i class="fas fa-toggle-off hidden dark:block"></i>
+        </button>
+        <button id="menu-btn" class="text-text-primary dark:text-text-primary">
+          <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
     </div>
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" 
-       class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg border-t border-gray-200 dark:border-gray-700"
-       style="position: relative; z-index: 9999;">
+  <div id="mobile-menu" class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
-        <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
-           class="mobile-nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-           data-section="{{ .URL }}">
-          {{ .Name }}
-        </a>
+          <!-- Section links that should scroll on home page or navigate to home on other pages -->
+          <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}" class="nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary" data-section="{{ .URL }}">
+            {{ .Name }}
+          </a>
         {{ else }}
-        <a href="{{ .URL | relLangURL }}"
-           class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-          {{ .Name }}
-        </a>
+          <!-- Regular page links -->
+          <a href="{{ .URL | relLangURL }}" class="nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary">
+            {{ .Name }}
+          </a>
+        {{ end }}
+        {{ if .HasChildren }}
+          {{ range .Children }}
+            <a href="{{ .URL | relLangURL }}" class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary">{{ .Name }}</a>
+          {{ end }}
         {{ end }}
       {{ end }}
-      
-      <!-- Mobile social icons -->
-      <div class="flex items-center space-x-6 px-3 py-4 border-t border-gray-200 dark:border-gray-700 mt-2">
-        {{ if .Site.Params.linkedin_url }}
-        <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-           class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+      <!-- Mobile Language Switcher (Inline flags) -->
+      {{ $homes := $.Site.Home.AllTranslations }}
+      {{ if gt (len $homes) 1 }}
+      <div class="px-3 py-2 border-t border-border-primary dark:border-border-primary">
+        <div class="flex items-center space-x-3">
+          {{ $order := slice "fr" "en" "es" }}
+          {{ range $order }}
+            {{ $code := . }}
+            {{ range where $homes "Language.Lang" $code }}
+              {{ $lang := .Language.Lang }}
+              {{ $flag := "🏳️" }}
+              {{ if eq $lang "fr" }}{{ $flag = "🇫🇷" }}{{ end }}
+              {{ if eq $lang "en" }}{{ $flag = "🇬🇧" }}{{ end }}
+              {{ if eq $lang "es" }}{{ $flag = "🇨🇱" }}{{ end }}
+              
+              {{/* Check if current page has a translation in this language */}}
+              {{ $targetURL := .RelPermalink }}
+              {{ $hasTranslation := false }}
+              {{ if $.Page.IsTranslated }}
+                {{ range $.Page.Translations }}
+                  {{ if eq .Language.Lang $lang }}
+                    {{ $targetURL = .RelPermalink }}
+                    {{ $hasTranslation = true }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+              
+              <a href="{{ $targetURL }}" class="px-2 py-1 text-xl {{ if eq .Language.Lang $.Site.Language.Lang }}opacity-100 font-semibold{{ else }}opacity-70 hover:opacity-100{{ end }}" aria-label="Switch to {{ .Language.LanguageName }}{{ if $hasTranslation }} (has translation){{ else }} (go to home){{ end }}">
+                <span aria-hidden="true">{{ $flag }}</span>
+              </a>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+
+      <!-- Mobile Social Media Icons -->
+      <div class="flex items-center space-x-6 px-3 py-3 border-t border-border-primary dark:border-border-primary mt-2" data-animation="social">
+        <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
           <i class="fab fa-linkedin-in text-2xl"></i>
         </a>
-        {{ end }}
-        {{ if .Site.Params.github_url }}
-        <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer"
-           class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
+        <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
           <i class="fab fa-github text-2xl"></i>
         </a>
-        {{ end }}
       </div>
     </div>
   </div>
 
-  <!-- Submenu styles -->
+  <!-- Additional styles -->
   <style>
     .group.open .submenu {
       opacity: 1 !important;
       visibility: visible !important;
     }
-    
-    /* Ensure mobile menu appears above everything including Pexels background */
-    nav {
-      z-index: 50 !important;
-    }
-    
-    #mobile-menu {
-      position: relative;
-      z-index: 9999 !important;
-    }
-    
-    /* Smooth transitions */
-    #mobile-menu {
-      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-    }
-    
-    #mobile-menu:not(.hidden) {
-      max-height: 500px;
-      opacity: 1;
-    }
   </style>
 
-  <!-- Navigation JS - Isolated and Safe -->
+  <!-- JavaScript to manage submenu toggle, dark mode, and intelligent navigation -->
   <script>
-    (function() {
-      'use strict';
+    // Intelligent navigation for section links
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Navigation script loaded');
       
-      // Namespace for navigation to avoid conflicts
-      window.CareerCanvasNav = window.CareerCanvasNav || {};
+      const sectionLinks = document.querySelectorAll('.section-link');
+      console.log('Found section links:', sectionLinks.length);
+      const homePath = '{{ .Site.Home.RelPermalink }}';
       
-      console.log('🔧 Navigation script initializing...');
-      
-      // Wait for DOM to be fully ready
-      function initNavigation() {
-        // Desktop submenu toggle
-        document.querySelectorAll('.group > a.nav-link').forEach(link => {
-          link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const group = this.closest('.group');
-            const isOpen = group.classList.contains('open');
-
-            document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
-            if (!isOpen) group.classList.add('open');
-          });
-        });
-
-        // Close submenus when clicking outside
-        document.addEventListener('click', function (event) {
-          document.querySelectorAll('.group').forEach(group => {
-            if (!group.contains(event.target)) {
-              group.classList.remove('open');
-            }
-          });
-        });
-
-        // Mobile menu elements
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIcon = document.getElementById('menu-icon');
-        
-        if (!menuBtn || !mobileMenu || !menuIcon) {
-          console.error('❌ Mobile menu elements not found!');
-          console.log('menuBtn:', menuBtn);
-          console.log('mobileMenu:', mobileMenu);
-          console.log('menuIcon:', menuIcon);
-          return;
-        }
-        
-        console.log('✅ Mobile menu elements found');
-
-        // Mobile menu toggle function
-        function toggleMobileMenu() {
-          const isHidden = mobileMenu.classList.contains('hidden');
-          
-          mobileMenu.classList.toggle('hidden');
-          menuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-          
-          // Toggle icon
-          if (isHidden) {
-            menuIcon.classList.remove('fa-bars');
-            menuIcon.classList.add('fa-times');
-          } else {
-            menuIcon.classList.remove('fa-times');
-            menuIcon.classList.add('fa-bars');
-          }
-        }
-
-        // Click handler for menu button
-        menuBtn.addEventListener('click', function(e) {
+      sectionLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
           e.preventDefault();
-          e.stopPropagation();
-          toggleMobileMenu();
-        });
-
-        // Close menu when clicking links
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-        mobileNavLinks.forEach(link => {
-          link.addEventListener('click', function() {
-            if (!mobileMenu.classList.contains('hidden')) {
-              toggleMobileMenu();
+          console.log('Section link clicked:', this.getAttribute('data-section'));
+          
+          const section = this.getAttribute('data-section');
+          const isHomePage = window.location.pathname === homePath || window.location.pathname === homePath + 'index.html' || window.location.pathname === homePath.replace(/\/$/, '');
+          console.log('Is home page:', isHomePage);
+          
+          if (isHomePage) {
+            // On home page, scroll to section
+            const targetElement = document.querySelector(section);
+            console.log('Target element found:', !!targetElement);
+            if (targetElement) {
+              targetElement.scrollIntoView({
+                behavior: 'instant',
+                block: 'start'
+              });
             }
-          });
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-          if (!menuBtn.contains(event.target) && 
-              !mobileMenu.contains(event.target) && 
-              !mobileMenu.classList.contains('hidden')) {
-            toggleMobileMenu();
+          } else {
+            // On other pages, navigate to home page with section
+            console.log('Navigating to:', homePath + section);
+            window.location.href = homePath + section;
           }
         });
-
-        // Handle window resize - close mobile menu when switching to desktop
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(function() {
-            // Close mobile menu if viewport is now desktop size (>= 1024px for lg breakpoint)
-            if (window.innerWidth >= 1024 && !mobileMenu.classList.contains('hidden')) {
-              toggleMobileMenu();
-            }
-          }, 250);
-        });
-
-        // Intelligent section navigation
-        document.querySelectorAll('.section-link').forEach(link => {
-          link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const section = this.dataset.section;
-            const home = '{{ .Site.Home.RelPermalink }}';
-
-            if (window.location.pathname === home || window.location.pathname === home + 'index.html') {
-              const el = document.querySelector(section);
-              if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            } else {
-              window.location.href = home + section;
-            }
-          });
-        });
-        
-        console.log('✅ Navigation initialized successfully');
-        
-        // Store reference for external access if needed
-        window.CareerCanvasNav.toggleMobileMenu = toggleMobileMenu;
+      });
+      
+      // Handle hash fragments when page loads
+      function handleHashScroll() {
+        console.log('Checking for hash:', window.location.hash);
+        if (window.location.hash) {
+          const targetElement = document.querySelector(window.location.hash);
+          console.log('Hash target element found:', !!targetElement);
+          if (targetElement) {
+            // Small delay to ensure page is fully loaded
+            setTimeout(() => {
+              console.log('Scrolling to hash target');
+              targetElement.scrollIntoView({
+                behavior: 'instant',
+                block: 'start'
+              });
+            }, 100);
+          }
+        }
       }
       
-      // Initialize when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initNavigation);
-      } else {
-        initNavigation();
-      }
+      // Handle hash on page load
+      handleHashScroll();
       
-    })();
+      // Also try after a longer delay in case page is still loading
+      setTimeout(handleHashScroll, 500);
+      setTimeout(handleHashScroll, 1000);
+      
+      // Handle hash changes (for browser back/forward)
+      window.addEventListener('hashchange', function() {
+        console.log('Hash changed to:', window.location.hash);
+        handleHashScroll();
+      });
+      
+      // Fallback: check for hash on window load as well
+      window.addEventListener('load', function() {
+        console.log('Window loaded, checking hash');
+        setTimeout(handleHashScroll, 200);
+      });
+    });
+    
+    // Submenu toggle (desktop + mobile button triggers)
+    document.querySelectorAll('.group > a.nav-link, .group > button.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const group = this.closest('.group');
+        const isOpen = group.classList.contains('open');
+
+        // Close all other submenus
+        document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
+
+        // Toggle current submenu
+        if (!isOpen) {
+          group.classList.add('open');
+        }
+      });
+
+      document.addEventListener('click', function(event) {
+        const group = link.closest('.group');
+        if (!group.contains(event.target)) {
+          group.classList.remove('open');
+        }
+      });
+    });
+
+    // Dark mode toggle
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDark);
+    }
+
+    document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+    document.getElementById('darkModeToggleMobile').addEventListener('click', toggleDarkMode);
+
+    // *** CRITICAL: Mobile menu toggle - THIS WAS MISSING ***
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking menu items
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        document.getElementById('mobile-menu').classList.add('hidden');
+      });
+    });
   </script>
 </nav>
