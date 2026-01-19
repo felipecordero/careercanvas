@@ -1,36 +1,46 @@
 <nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16">
+
+    <!-- NAV BAR -->
+    <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center py-4 lg:h-16">
 
       <!-- Logo -->
-      <div class="flex items-center">
+      <div class="flex justify-between items-center">
         <a href="{{ .Site.Home.RelPermalink }}"
            class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">
           {{ .Site.Params.name }}
         </a>
       </div>
 
-      <!-- Desktop navigation -->
-      <div class="hidden lg:flex items-center space-x-8">
+      <!-- Navigation (ALWAYS VISIBLE ON MOBILE) -->
+      <div class="mt-4 lg:mt-0 flex flex-col lg:flex-row lg:items-center lg:space-x-8 space-y-2 lg:space-y-0">
+
         {{ range .Site.Menus.main }}
           {{ if .HasChildren }}
-          <div class="relative group">
-            <a href="{{ .URL | relLangURL }}"
-               class="nav-link text-text-primary dark:text-text-primary flex items-center">
-              {{ .Pre | safeHTML }}{{ .Name }}
-              <i class="fas fa-chevron-down ml-2 text-sm"></i>
-            </a>
-            <div
-              class="submenu absolute left-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[10rem] opacity-0 invisible">
-              {{ range .Children }}
-                <a href="{{ .URL | relLangURL }}"
-                   class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary">
-                  {{ .Name }}
-                </a>
-              {{ end }}
+
+            <!-- Parent -->
+            <div class="relative group">
+              <span class="nav-link text-text-primary dark:text-text-primary font-medium">
+                {{ .Name }}
+              </span>
+
+              <!-- Children -->
+              <div class="ml-4 lg:ml-0 lg:absolute lg:left-0 lg:top-full lg:mt-2
+                          bg-bg dark:bg-bg lg:shadow-lg rounded-lg
+                          lg:min-w-[10rem]
+                          flex flex-col space-y-1
+                          lg:opacity-0 lg:invisible group-hover:opacity-100 group-hover:visible">
+                {{ range .Children }}
+                  <a href="{{ .URL | relLangURL }}"
+                     class="block px-3 py-1 text-sm text-text-primary dark:text-text-primary">
+                    {{ .Name }}
+                  </a>
+                {{ end }}
+              </div>
             </div>
-          </div>
+
           {{ else }}
+
             {{ if hasPrefix .URL "#" }}
             <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
                class="nav-link section-link text-text-primary dark:text-text-primary"
@@ -43,39 +53,34 @@
               {{ .Name }}
             </a>
             {{ end }}
+
           {{ end }}
         {{ end }}
 
-        <!-- Language switcher -->
+        <!-- Language Switcher -->
         {{ $homes := $.Site.Home.AllTranslations }}
         {{ if gt (len $homes) 1 }}
-        {{ $cur := $.Site.Language.Lang }}
-        {{ $currentFlag := "🏳️" }}
-        {{ if eq $cur "en" }}{{ $currentFlag = "🇬🇧" }}{{ end }}
-        {{ if eq $cur "es" }}{{ $currentFlag = "🇨🇱" }}{{ end }}
-        {{ if eq $cur "fr" }}{{ $currentFlag = "🇫🇷" }}{{ end }}
-
-        <div class="relative group">
-          <a href="#"
-             class="nav-link text-text-primary dark:text-text-primary flex items-center"
-             aria-label="Language switcher">
-            <span class="text-lg mr-1">{{ $currentFlag }}</span>
-            <i class="fas fa-chevron-down ml-1 text-sm"></i>
-          </a>
-          <div
-            class="submenu absolute right-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg z-50 min-w-[8rem] opacity-0 invisible">
+        <div class="relative group mt-2 lg:mt-0">
+          <span class="nav-link text-text-primary dark:text-text-primary cursor-pointer">
+            🌐 Language
+          </span>
+          <div class="ml-4 lg:ml-0 lg:absolute lg:right-0 lg:top-full lg:mt-2
+                      bg-bg dark:bg-bg lg:shadow-lg rounded-lg
+                      lg:min-w-[8rem]
+                      flex flex-col
+                      lg:opacity-0 lg:invisible group-hover:opacity-100 group-hover:visible">
             {{ range $homes }}
-            <a href="{{ .RelPermalink }}"
-               class="nav-link block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
-              {{ .Language.LanguageName }}
-            </a>
+              <a href="{{ .RelPermalink }}"
+                 class="block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
+                {{ .Language.LanguageName }}
+              </a>
             {{ end }}
           </div>
         </div>
         {{ end }}
 
         <!-- Social icons -->
-        <div class="flex items-center space-x-4">
+        <div class="flex space-x-4 mt-4 lg:mt-0">
           {{ if .Site.Params.linkedin_url }}
           <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-linkedin-in text-xl"></i>
@@ -87,112 +92,23 @@
           </a>
           {{ end }}
         </div>
-      </div>
 
-      <!-- Mobile menu button -->
-      <div class="lg:hidden flex items-center">
-        <button id="menu-btn"
-                aria-expanded="false"
-                class="text-text-primary dark:text-text-primary">
-          <i class="fas fa-bars text-2xl"></i>
-        </button>
       </div>
-
     </div>
   </div>
 
-  <!-- Mobile menu -->
-  <div id="mobile-menu"
-       class="hidden lg:hidden absolute top-16 left-0 right-0 w-full bg-bg dark:bg-bg shadow-lg z-[99999]">
-    <div class="px-4 pt-4 pb-6 space-y-2">
-      {{ range .Site.Menus.main }}
-        {{ if hasPrefix .URL "#" }}
-        <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
-           class="section-link block px-3 py-2 text-base text-text-primary dark:text-text-primary"
-           data-section="{{ .URL }}">
-          {{ .Name }}
-        </a>
-        {{ else }}
-        <a href="{{ .URL | relLangURL }}"
-           class="block px-3 py-2 text-base text-text-primary dark:text-text-primary">
-          {{ .Name }}
-        </a>
-        {{ end }}
-
-        {{ if .HasChildren }}
-          {{ range .Children }}
-            <a href="{{ .URL | relLangURL }}"
-               class="block pl-6 py-1 text-sm text-text-tertiary dark:text-text-tertiary">
-              {{ .Name }}
-            </a>
-          {{ end }}
-        {{ end }}
-      {{ end }}
-    </div>
-  </div>
-
-  <!-- Styles -->
+  <!-- Safety styles -->
   <style>
-    .group.open .submenu {
-      opacity: 1;
-      visibility: visible;
-    }
-
     nav {
       position: fixed;
       z-index: 99999;
     }
 
-    /* 🔥 CRITICAL FIX: prevent Pexels layers from blocking taps */
+    /* Ensure background never blocks nav */
     .pexels-bg-container,
     .pexels-bg-container img,
     .pexels-overlay {
       pointer-events: none !important;
     }
   </style>
-
-  <!-- Navigation JS -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const menuBtn = document.getElementById('menu-btn');
-      const mobileMenu = document.getElementById('mobile-menu');
-
-      if (!menuBtn || !mobileMenu) return;
-
-      menuBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        mobileMenu.classList.toggle('hidden');
-        const isOpen = !mobileMenu.classList.contains('hidden');
-        menuBtn.setAttribute('aria-expanded', isOpen.toString());
-        document.body.classList.toggle('overflow-hidden', isOpen);
-      });
-
-      mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
-          menuBtn.setAttribute('aria-expanded', 'false');
-          document.body.classList.remove('overflow-hidden');
-        });
-      });
-
-      // Desktop submenu toggle
-      document.querySelectorAll('.group > a.nav-link').forEach(link => {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          const group = this.closest('.group');
-          const isOpen = group.classList.contains('open');
-          document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
-          if (!isOpen) group.classList.add('open');
-        });
-      });
-
-      document.addEventListener('click', function (e) {
-        document.querySelectorAll('.group').forEach(group => {
-          if (!group.contains(e.target)) {
-            group.classList.remove('open');
-          }
-        });
-      });
-    });
-  </script>
 </nav>
