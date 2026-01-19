@@ -92,7 +92,12 @@
 
       <!-- Mobile menu button -->
       <div class="lg:hidden flex items-center">
-        <button id="menu-btn" class="text-text-primary dark:text-text-primary">
+        <button id="menu-btn" 
+                type="button"
+                class="text-text-primary dark:text-text-primary p-2 focus:outline-none"
+                aria-label="Toggle menu"
+                aria-expanded="false"
+                style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;">
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
@@ -100,18 +105,18 @@
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg">
+  <div id="mobile-menu" 
+       class="hidden lg:hidden bg-bg dark:bg-bg shadow-lg"
+       style="touch-action: manipulation;">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
       {{ range .Site.Menus.main }}
         {{ if hasPrefix .URL "#" }}
-          <!-- Section links that should scroll on home page or navigate to home on other pages -->
           <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
              class="nav-link section-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary"
              data-section="{{ .URL }}">
             {{ .Name }}
           </a>
         {{ else }}
-          <!-- Regular page links -->
           <a href="{{ .URL | relLangURL }}"
              class="nav-link block px-3 py-2 rounded-md text-base font-medium text-text-primary dark:text-text-primary">
             {{ .Name }}
@@ -126,63 +131,176 @@
     </div>
   </div>
 
+  <!-- Prevent zoom on double-tap -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <!-- Submenu styles -->
   <style>
     .group.open .submenu {
       opacity: 1 !important;
       visibility: visible !important;
     }
+    
+    /* Prevent iOS zoom on tap */
+    button, a {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Ensure mobile menu is above everything */
+    #mobile-menu {
+      position: relative;
+      z-index: 10000;
+    }
   </style>
 
-  <!-- Navigation JS (NO theme logic) -->
+  <!-- Navigation JS - ERROR PROOF -->
   <script>
-    // Desktop submenu toggle
-    document.querySelectorAll('.group > a.nav-link').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const group = this.closest('.group');
-        const isOpen = group.classList.contains('open');
+    (function() {
+      'use strict';
+      
+      // Prevent this script from running multiple times
+      if (window.__navInitialized) {
+        console.log('Navigation already initialized, skipping');
+        return;
+      }
+      
+      console.log('🚀 Navigation initialization starting...');
+      
+      function initNavigation() {
+        try {
+          // Get elements
+          const menuBtn = document.getElementById('menu-btn');
+          const mobileMenu = document.getElementById('mobile-menu');
+          
+          if (!menuBtn || !mobileMenu) {
+            console.error('Navigation elements not found:', {menuBtn, mobileMenu});
+            return;
+          }
+          
+          console.log('✅ Navigation elements found');
+          
+          // Mobile menu toggle - CRITICAL: Prevent default and stop propagation
+          menuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            console.log('Menu button clicked');
+            
+            try {
+              const wasHidden = mobileMenu.classList.contains('hidden');
+              mobileMenu.classList.toggle('hidden');
+              menuBtn.setAttribute('aria-expanded', wasHidden ? 'true' : 'false');
+              
+              console.log('Menu toggled:', wasHidden ? 'opened' : 'closed');
+            } catch (err) {
+              console.error('Error toggling menu:', err);
+            }
+            
+            return false;
+          }, {passive: false, capture: true});
+          
+          // Prevent any touch/click events from bubbling
+          menuBtn.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+          }, {passive: true});
+          
+          menuBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }, {passive: false});
+          
+          console.log('✅ Menu button listeners attached');
+          
+          // Desktop submenu toggle
+          try {
+            document.querySelectorAll('.group > a.nav-link').forEach(link => {
+              link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const group = this.closest('.group');
+                const isOpen = group.classList.contains('open');
 
-        document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
-        if (!isOpen) group.classList.add('open');
-      });
-    });
+                document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
+                if (!isOpen) group.classList.add('open');
+              });
+            });
+            
+            console.log('✅ Desktop submenu initialized');
+          } catch (err) {
+            console.error('Error initializing desktop submenu:', err);
+          }
 
-    // Close submenus when clicking outside
-    document.addEventListener('click', function (event) {
-      document.querySelectorAll('.group').forEach(group => {
-        if (!group.contains(event.target)) {
-          group.classList.remove('open');
+          // Close submenus when clicking outside
+          try {
+            document.addEventListener('click', function (event) {
+              document.querySelectorAll('.group').forEach(group => {
+                if (!group.contains(event.target)) {
+                  group.classList.remove('open');
+                }
+              });
+            });
+          } catch (err) {
+            console.error('Error setting up outside click handler:', err);
+          }
+
+          // Close mobile menu when clicking menu items
+          try {
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+              link.addEventListener('click', function () {
+                console.log('Menu link clicked, closing menu');
+                mobileMenu.classList.add('hidden');
+                menuBtn.setAttribute('aria-expanded', 'false');
+              });
+            });
+            
+            console.log('✅ Menu close on click initialized');
+          } catch (err) {
+            console.error('Error setting up menu close:', err);
+          }
+
+          // Intelligent section navigation
+          try {
+            document.querySelectorAll('.section-link').forEach(link => {
+              link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const section = this.dataset.section;
+                const home = '{{ .Site.Home.RelPermalink }}';
+
+                if (window.location.pathname === home || window.location.pathname === home + 'index.html') {
+                  const el = document.querySelector(section);
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                } else {
+                  window.location.href = home + section;
+                }
+              });
+            });
+            
+            console.log('✅ Section navigation initialized');
+          } catch (err) {
+            console.error('Error setting up section navigation:', err);
+          }
+          
+          window.__navInitialized = true;
+          console.log('✅ Navigation fully initialized');
+          
+        } catch (error) {
+          console.error('Fatal error in navigation initialization:', error);
         }
-      });
-    });
-
-    // *** FIX: Mobile menu toggle ***
-    document.getElementById('menu-btn').addEventListener('click', function () {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
-
-    // Close mobile menu when clicking menu items
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-      link.addEventListener('click', function () {
-        document.getElementById('mobile-menu').classList.add('hidden');
-      });
-    });
-
-    // Intelligent section navigation
-    document.querySelectorAll('.section-link').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const section = this.dataset.section;
-        const home = '{{ .Site.Home.RelPermalink }}';
-
-        if (window.location.pathname === home) {
-          const el = document.querySelector(section);
-          if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
-        } else {
-          window.location.href = home + section;
-        }
-      });
-    });
+      }
+      
+      // Initialize with multiple fallbacks
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNavigation);
+      } else {
+        initNavigation();
+      }
+      
+      // Backup initialization
+      setTimeout(initNavigation, 1000);
+      
+    })();
   </script>
 </nav>
