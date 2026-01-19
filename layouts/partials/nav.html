@@ -1,114 +1,117 @@
-<nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50">
+<nav class="fixed top-0 left-0 right-0 bg-bg dark:bg-bg shadow-md z-[100000]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- NAV BAR -->
-    <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center py-4 lg:h-16">
+    <div class="flex justify-between items-center h-16">
 
       <!-- Logo -->
-      <div class="flex justify-between items-center">
-        <a href="{{ .Site.Home.RelPermalink }}"
-           class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">
-          {{ .Site.Params.name }}
-        </a>
-      </div>
+      <a href="{{ .Site.Home.RelPermalink }}"
+         class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">
+        {{ .Site.Params.name }}
+      </a>
 
-      <!-- Navigation (ALWAYS VISIBLE ON MOBILE) -->
-      <div class="mt-4 lg:mt-0 flex flex-col lg:flex-row lg:items-center lg:space-x-8 space-y-2 lg:space-y-0">
-
+      <!-- Desktop navigation -->
+      <div class="hidden lg:flex items-center space-x-8">
         {{ range .Site.Menus.main }}
           {{ if .HasChildren }}
-
-            <!-- Parent -->
-            <div class="relative group">
-              <span class="nav-link text-text-primary dark:text-text-primary font-medium">
-                {{ .Name }}
-              </span>
-
-              <!-- Children -->
-              <div class="ml-4 lg:ml-0 lg:absolute lg:left-0 lg:top-full lg:mt-2
-                          bg-bg dark:bg-bg lg:shadow-lg rounded-lg
-                          lg:min-w-[10rem]
-                          flex flex-col space-y-1
-                          lg:opacity-0 lg:invisible group-hover:opacity-100 group-hover:visible">
-                {{ range .Children }}
-                  <a href="{{ .URL | relLangURL }}"
-                     class="block px-3 py-1 text-sm text-text-primary dark:text-text-primary">
-                    {{ .Name }}
-                  </a>
-                {{ end }}
-              </div>
+          <div class="relative group">
+            <span class="nav-link flex items-center cursor-pointer">
+              {{ .Name }}
+              <i class="fas fa-chevron-down ml-2 text-sm"></i>
+            </span>
+            <div class="absolute left-0 top-full mt-2 bg-bg dark:bg-bg shadow-lg rounded-lg
+                        opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+              {{ range .Children }}
+                <a href="{{ .URL | relLangURL }}"
+                   class="block px-4 py-2 text-sm">
+                  {{ .Name }}
+                </a>
+              {{ end }}
             </div>
-
-          {{ else }}
-
-            {{ if hasPrefix .URL "#" }}
-            <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
-               class="nav-link section-link text-text-primary dark:text-text-primary"
-               data-section="{{ .URL }}">
-              {{ .Name }}
-            </a>
-            {{ else }}
-            <a href="{{ .URL | relLangURL }}"
-               class="nav-link text-text-primary dark:text-text-primary">
-              {{ .Name }}
-            </a>
-            {{ end }}
-
-          {{ end }}
-        {{ end }}
-
-        <!-- Language Switcher -->
-        {{ $homes := $.Site.Home.AllTranslations }}
-        {{ if gt (len $homes) 1 }}
-        <div class="relative group mt-2 lg:mt-0">
-          <span class="nav-link text-text-primary dark:text-text-primary cursor-pointer">
-            🌐 Language
-          </span>
-          <div class="ml-4 lg:ml-0 lg:absolute lg:right-0 lg:top-full lg:mt-2
-                      bg-bg dark:bg-bg lg:shadow-lg rounded-lg
-                      lg:min-w-[8rem]
-                      flex flex-col
-                      lg:opacity-0 lg:invisible group-hover:opacity-100 group-hover:visible">
-            {{ range $homes }}
-              <a href="{{ .RelPermalink }}"
-                 class="block px-4 py-2 text-sm text-text-primary dark:text-text-primary {{ if eq .Language.Lang $.Site.Language.Lang }}font-semibold{{ end }}">
-                {{ .Language.LanguageName }}
-              </a>
-            {{ end }}
           </div>
-        </div>
+          {{ else }}
+            <a href="{{ .URL | relLangURL }}" class="nav-link">
+              {{ .Name }}
+            </a>
+          {{ end }}
         {{ end }}
-
-        <!-- Social icons -->
-        <div class="flex space-x-4 mt-4 lg:mt-0">
-          {{ if .Site.Params.linkedin_url }}
-          <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer">
-            <i class="fab fa-linkedin-in text-xl"></i>
-          </a>
-          {{ end }}
-          {{ if .Site.Params.github_url }}
-          <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer">
-            <i class="fab fa-github text-xl"></i>
-          </a>
-          {{ end }}
-        </div>
-
       </div>
+
+      <!-- Hamburger -->
+      <button id="menu-btn"
+              class="lg:hidden text-text-primary dark:text-text-primary text-2xl"
+              aria-expanded="false"
+              aria-label="Open menu">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </div>
-
-  <!-- Safety styles -->
-  <style>
-    nav {
-      position: fixed;
-      z-index: 99999;
-    }
-
-    /* Ensure background never blocks nav */
-    .pexels-bg-container,
-    .pexels-bg-container img,
-    .pexels-overlay {
-      pointer-events: none !important;
-    }
-  </style>
 </nav>
+
+<!-- MOBILE MENU OVERLAY (PORTAL) -->
+<div id="mobile-menu-overlay"
+     class="fixed inset-0 bg-bg dark:bg-bg z-[99999] hidden">
+
+  <div class="pt-20 px-6 space-y-4">
+    {{ range .Site.Menus.main }}
+      {{ if hasPrefix .URL "#" }}
+      <a href="{{ printf "%s%s" $.Site.Home.RelPermalink .URL }}"
+         class="block text-lg font-medium section-link"
+         data-section="{{ .URL }}">
+        {{ .Name }}
+      </a>
+      {{ else }}
+      <a href="{{ .URL | relLangURL }}"
+         class="block text-lg font-medium">
+        {{ .Name }}
+      </a>
+      {{ end }}
+
+      {{ if .HasChildren }}
+        {{ range .Children }}
+          <a href="{{ .URL | relLangURL }}"
+             class="block pl-4 text-sm opacity-80">
+            {{ .Name }}
+          </a>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    <!-- Social icons -->
+    <div class="flex space-x-4 pt-6">
+      {{ if .Site.Params.linkedin_url }}
+      <a href="{{ .Site.Params.linkedin_url }}" target="_blank">
+        <i class="fab fa-linkedin-in text-xl"></i>
+      </a>
+      {{ end }}
+      {{ if .Site.Params.github_url }}
+      <a href="{{ .Site.Params.github_url }}" target="_blank">
+        <i class="fab fa-github text-xl"></i>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<!-- NAV JS -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu-overlay');
+
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', () => {
+    const open = menu.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', open);
+    document.body.classList.toggle('overflow-hidden', open);
+  });
+
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      btn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('overflow-hidden');
+    });
+  });
+});
+</script>
