@@ -1,10 +1,8 @@
 class PexelsBackground {
     constructor() {
         this.apiKey = null;
-        this.queries = this.getQueries();
         this.currentImage = null;
-        this.usedImages = new Set();
-        this.defaultImage = this.getDefaultImage();
+        this.defaultImage = window.DEFAULT_HERO_IMAGE || '/images/hero-default-bg.jpg';
         this.fallbackGradient =
           'linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 20%, var(--color-primary-light) 40%, var(--color-primary) 60%, var(--color-primary-dark) 75%, var(--color-primary-dark) 90%, var(--color-primary) 100%)';
 
@@ -12,11 +10,10 @@ class PexelsBackground {
     }
 
     /* ------------------------
-       Loader helpers
+       Loader state helpers
     ------------------------ */
     startLoading(hero) {
         hero.classList.add('bg-loading');
-        hero.classList.remove('bg-loaded');
     }
 
     stopLoading(hero) {
@@ -24,48 +21,32 @@ class PexelsBackground {
         hero.classList.add('bg-loaded');
     }
 
-    getDefaultImage() {
-        return window.DEFAULT_HERO_IMAGE || '/images/hero-default-bg.jpg';
-    }
-
-    getQueries() {
-        return window.PEXELS_QUERIES || ['nature'];
-    }
-
     waitForConfig() {
         setTimeout(() => {
             if (window.PEXELS_API_KEY) {
                 this.apiKey = window.PEXELS_API_KEY;
-                this.init();
+                this.loadRandomBackground();
             } else {
                 this.useDefaultImage();
             }
         }, 100);
     }
 
-    async init() {
-        try {
-            await this.loadRandomBackground();
-        } catch {
-            this.useDefaultImage();
-        }
+    async loadRandomBackground() {
+        // You already fallback without API key
+        this.useDefaultImage();
     }
 
-    async useDefaultImage() {
+    useDefaultImage() {
         const hero = document.querySelector('.hero-section');
         if (!hero) return;
 
         this.startLoading(hero);
         this.currentImage = this.defaultImage;
-        this.applyBackgroundImage(hero, true);
+        this.applyBackground(hero);
     }
 
-    async loadRandomBackground() {
-        // keeping your structure intact
-        throw new Error('No API key, fallback');
-    }
-
-    applyBackgroundImage(hero, isDefaultImage = false) {
+    applyBackground(hero) {
         this.startLoading(hero);
 
         const bgContainer = document.createElement('div');
@@ -73,12 +54,11 @@ class PexelsBackground {
         bgContainer.style.cssText = `
           position:absolute;
           inset:0;
+          z-index:0;
           opacity:0;
           transition:opacity .8s ease;
-          z-index:0;
         `;
 
-        hero.style.position = 'relative';
         hero.appendChild(bgContainer);
 
         const img = new Image();
@@ -95,20 +75,16 @@ class PexelsBackground {
             `;
             bgContainer.appendChild(img);
 
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 bgContainer.style.opacity = '1';
                 this.stopLoading(hero);
-            }, 300);
+            });
         };
 
         img.onerror = () => {
-            this.useFallbackBackground(hero);
+            hero.style.background = this.fallbackGradient;
+            this.stopLoading(hero);
         };
-    }
-
-    useFallbackBackground(hero) {
-        hero.style.background = this.fallbackGradient;
-        this.stopLoading(hero);
     }
 }
 
