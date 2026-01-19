@@ -147,7 +147,11 @@
       visibility: visible !important;
     }
     
-    /* Ensure mobile menu appears above everything */
+    /* Ensure mobile menu appears above everything including Pexels background */
+    nav {
+      z-index: 50 !important;
+    }
+    
     #mobile-menu {
       position: relative;
       z-index: 9999 !important;
@@ -167,119 +171,140 @@
     }
   </style>
 
-  <!-- Navigation JS -->
+  <!-- Navigation JS - Isolated and Safe -->
   <script>
     (function() {
-      console.log('Navigation script initializing...');
+      'use strict';
       
-      // Desktop submenu toggle
-      document.querySelectorAll('.group > a.nav-link').forEach(link => {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          const group = this.closest('.group');
-          const isOpen = group.classList.contains('open');
+      // Namespace for navigation to avoid conflicts
+      window.CareerCanvasNav = window.CareerCanvasNav || {};
+      
+      console.log('🔧 Navigation script initializing...');
+      
+      // Wait for DOM to be fully ready
+      function initNavigation() {
+        // Desktop submenu toggle
+        document.querySelectorAll('.group > a.nav-link').forEach(link => {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const group = this.closest('.group');
+            const isOpen = group.classList.contains('open');
 
-          document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
-          if (!isOpen) group.classList.add('open');
+            document.querySelectorAll('.group').forEach(g => g.classList.remove('open'));
+            if (!isOpen) group.classList.add('open');
+          });
         });
-      });
 
-      // Close submenus when clicking outside
-      document.addEventListener('click', function (event) {
-        document.querySelectorAll('.group').forEach(group => {
-          if (!group.contains(event.target)) {
-            group.classList.remove('open');
-          }
+        // Close submenus when clicking outside
+        document.addEventListener('click', function (event) {
+          document.querySelectorAll('.group').forEach(group => {
+            if (!group.contains(event.target)) {
+              group.classList.remove('open');
+            }
+          });
         });
-      });
 
-      // Mobile menu toggle
-      const menuBtn = document.getElementById('menu-btn');
-      const mobileMenu = document.getElementById('mobile-menu');
-      const menuIcon = document.getElementById('menu-icon');
-      
-      console.log('Menu button:', menuBtn);
-      console.log('Mobile menu:', mobileMenu);
-      console.log('Menu icon:', menuIcon);
-      
-      if (!menuBtn || !mobileMenu || !menuIcon) {
-        console.error('Mobile menu elements not found!');
-        return;
-      }
-
-      function toggleMobileMenu() {
-        const isHidden = mobileMenu.classList.contains('hidden');
-        console.log('Toggle called, currently hidden:', isHidden);
+        // Mobile menu elements
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
         
-        mobileMenu.classList.toggle('hidden');
-        
-        // Update aria-expanded
-        menuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-        
-        // Toggle icon between hamburger and close
-        if (isHidden) {
-          menuIcon.classList.remove('fa-bars');
-          menuIcon.classList.add('fa-times');
-          console.log('Menu opened, icon changed to X');
-        } else {
-          menuIcon.classList.remove('fa-times');
-          menuIcon.classList.add('fa-bars');
-          console.log('Menu closed, icon changed to hamburger');
+        if (!menuBtn || !mobileMenu || !menuIcon) {
+          console.error('❌ Mobile menu elements not found!');
+          console.log('menuBtn:', menuBtn);
+          console.log('mobileMenu:', mobileMenu);
+          console.log('menuIcon:', menuIcon);
+          return;
         }
-      }
+        
+        console.log('✅ Mobile menu elements found');
 
-      menuBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Menu button clicked');
-        toggleMobileMenu();
-      });
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+          const isHidden = mobileMenu.classList.contains('hidden');
+          
+          mobileMenu.classList.toggle('hidden');
+          menuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+          
+          // Toggle icon
+          if (isHidden) {
+            menuIcon.classList.remove('fa-bars');
+            menuIcon.classList.add('fa-times');
+          } else {
+            menuIcon.classList.remove('fa-times');
+            menuIcon.classList.add('fa-bars');
+          }
+        }
 
-      // Close mobile menu when clicking a link
-      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-      console.log('Mobile nav links found:', mobileNavLinks.length);
-      
-      mobileNavLinks.forEach(link => {
-        link.addEventListener('click', function() {
-          console.log('Mobile nav link clicked, closing menu');
-          if (!mobileMenu.classList.contains('hidden')) {
+        // Click handler for menu button
+        menuBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMobileMenu();
+        });
+
+        // Close menu when clicking links
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        mobileNavLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            if (!mobileMenu.classList.contains('hidden')) {
+              toggleMobileMenu();
+            }
+          });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!menuBtn.contains(event.target) && 
+              !mobileMenu.contains(event.target) && 
+              !mobileMenu.classList.contains('hidden')) {
             toggleMobileMenu();
           }
         });
-      });
 
-      // Close menu when clicking outside
-      document.addEventListener('click', function(event) {
-        if (!menuBtn.contains(event.target) && 
-            !mobileMenu.contains(event.target) && 
-            !mobileMenu.classList.contains('hidden')) {
-          console.log('Clicked outside, closing menu');
-          toggleMobileMenu();
-        }
-      });
-
-      // Intelligent section navigation
-      document.querySelectorAll('.section-link').forEach(link => {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          const section = this.dataset.section;
-          const home = '{{ .Site.Home.RelPermalink }}';
-
-          console.log('Section link clicked:', section);
-
-          if (window.location.pathname === home || window.location.pathname === home + 'index.html') {
-            const el = document.querySelector(section);
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              console.log('Scrolled to section:', section);
+        // Handle window resize - close mobile menu when switching to desktop
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function() {
+            // Close mobile menu if viewport is now desktop size (>= 1024px for lg breakpoint)
+            if (window.innerWidth >= 1024 && !mobileMenu.classList.contains('hidden')) {
+              toggleMobileMenu();
             }
-          } else {
-            window.location.href = home + section;
-          }
+          }, 250);
         });
-      });
+
+        // Intelligent section navigation
+        document.querySelectorAll('.section-link').forEach(link => {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const section = this.dataset.section;
+            const home = '{{ .Site.Home.RelPermalink }}';
+
+            if (window.location.pathname === home || window.location.pathname === home + 'index.html') {
+              const el = document.querySelector(section);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            } else {
+              window.location.href = home + section;
+            }
+          });
+        });
+        
+        console.log('✅ Navigation initialized successfully');
+        
+        // Store reference for external access if needed
+        window.CareerCanvasNav.toggleMobileMenu = toggleMobileMenu;
+      }
       
-      console.log('Navigation script initialized successfully');
+      // Initialize when DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNavigation);
+      } else {
+        initNavigation();
+      }
+      
     })();
   </script>
 </nav>
