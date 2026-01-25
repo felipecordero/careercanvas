@@ -115,7 +115,7 @@
                   {{ range $exp.bullet_points }}
                   <li class="flex items-start">
                     <i class="fas fa-check-circle text-second mr-3 mt-1 flex-shrink-0"></i>
-                    <span>{{ . }}</span>
+                    <span>{{ . | markdownify }}</span>
                   </li>
                   {{ end }}
                 </ul>
