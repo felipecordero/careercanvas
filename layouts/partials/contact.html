@@ -25,9 +25,9 @@
             </div>
             <div>
               <label for="message" class="block text-sm font-medium text-gray-700 dark:text-text-secondary mb-1">Message</label>
-              <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-border-primary dark:border-border-primary rounded-lg focus-ring-primary border-primary dark:bg-bg dark:text-text-primary" required></textarea>
+              <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-border-primary dark:border-border-primary rounded-lg focus:ring-primary focus:border-primary dark:bg-bg dark:text-text-primary" required></textarea>
             </div>
-                        <div class="text-center">
+            <div class="text-center">
               <button type="submit" class="bg-gradient-primary text-white px-6 py-3 rounded-lg font-medium shadow-lg button-hover">
                 Send Message
               </button>
@@ -40,7 +40,18 @@
       <div class="lg:w-1/2">
         {{ with .Site.GetPage "contact" }}
         <div class="contact-card bg-bg dark:bg-bg p-8 rounded-lg shadow-lg border border-border-primary dark:border-border-primary h-full card-hover">
-          <h3 class="text-xl font-semibold mb-6 text-text-primary dark:text-text-primary">{{ i18n "contactInformation" }}</h3>
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-semibold text-text-primary dark:text-text-primary">{{ i18n "contactInformation" }}</h3>
+            {{ if .Site.Params.calendly_url }}
+            <button
+              id="calendly-open"
+              type="button"
+              class="bg-gradient-primary text-white px-6 py-3 rounded-lg shadow-lg font-semibold text-base button-hover flex items-center">
+              <i class="fas fa-calendar-alt mr-2"></i>
+              Book a Meeting
+            </button>
+            {{ end }}
+          </div>
           <p class="mb-6 text-gray-700 dark:text-text-secondary">{{ .Params.intro }}</p>
           <div class="markdown-content text-gray-700 dark:text-text-secondary">
           {{ .Params.Content | markdownify}}
@@ -65,7 +76,7 @@
               </div>
               <div>
                 <h4 class="font-medium text-text-primary dark:text-text-primary">LinkedIn</h4>
-                <a href="{{ .Site.Params.linkedin_url }}" target="_blank" class="text-primary dark:text-white">{{ .Site.Params.linkedin_text }}</a>
+                <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-primary dark:text-white">{{ .Site.Params.linkedin_text }}</a>
               </div>
             </div>
             {{ end }}
@@ -77,7 +88,7 @@
               </div>
               <div>
                 <h4 class="font-medium text-text-primary dark:text-text-primary">GitHub</h4>
-                <a href="{{ .Site.Params.github_url }}" target="_blank" class="text-primary dark:text-white">{{ .Site.Params.github_text }}</a>
+                <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-primary dark:text-white">{{ .Site.Params.github_text }}</a>
               </div>
             </div>
             {{ end }}
@@ -120,45 +131,97 @@
       </div>
     </div>
   </div>
+
+  {{ if .Site.Params.calendly_url }}
+  <div id="calendly-modal" class="fixed inset-0 bg-bg bg-opacity-50 z-50 hidden items-center justify-center px-4 py-8">
+    <div class="bg-bg dark:bg-bg rounded-xl shadow-2xl w-full max-w-5xl lg:max-w-6xl max-h-[85vh] lg:max-h-[90vh] overflow-y-auto sidebar-scroll">
+      <div class="p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-text-primary dark:text-text-primary">Schedule a Call</h3>
+          <button id="calendly-close" type="button" class="text-text-muted text-text-secondary dark:text-text-muted text-2xl font-bold">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        {{ $height := default "600px" .Site.Params.calendly_height }}
+        <div class="calendly-inline-widget" data-url="{{ .Site.Params.calendly_url }}" style="min-width:320px;height:{{ $height }};"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  {{ end }}
 </section>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('contact-form');
-    
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      
-      // Get Formspree endpoint from secure configuration
-      const formspreeEndpoint = window.FORMSPREE_ENDPOINT;
-      
-      if (!formspreeEndpoint) {
-        showToast('⚠️ Contact form not configured. Please try again later.');
-        return;
-      }
-      
-      const formData = new FormData(form);
-  
-      try {
-        const response = await fetch(formspreeEndpoint, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-  
-        if (response.ok) {
-          showToast('✅ Thank you! I\'ll get back to you soon.');
-          form.reset();
-        } else {
-          showToast('❌ Error: Please try again.');
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        
+        // Get Formspree endpoint from secure configuration
+        const formspreeEndpoint = window.FORMSPREE_ENDPOINT;
+        
+        if (!formspreeEndpoint) {
+          showToast('⚠️ Contact form not configured. Please try again later.');
+          return;
         }
-      } catch (error) {
-        console.error(error);
-        showToast('⚠️ Failed to submit.');
+        
+        const formData = new FormData(form);
+    
+        try {
+          const response = await fetch(formspreeEndpoint, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+    
+          if (response.ok) {
+            showToast('✅ Thank you! I\'ll get back to you soon.');
+            form.reset();
+          } else {
+            showToast('❌ Error: Please try again.');
+          }
+        } catch (error) {
+          console.error(error);
+          showToast('⚠️ Failed to submit.');
+        }
+      });
+    }
+
+    const calendlyOpen = document.getElementById('calendly-open');
+    const calendlyModal = document.getElementById('calendly-modal');
+    const calendlyClose = document.getElementById('calendly-close');
+
+    if (calendlyOpen && calendlyModal && calendlyClose) {
+      calendlyOpen.addEventListener('click', function () {
+        calendlyModal.classList.remove('hidden');
+        calendlyModal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      });
+
+      function closeCalendlyModal() {
+        calendlyModal.classList.add('hidden');
+        calendlyModal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
       }
-    });
+
+      calendlyClose.addEventListener('click', closeCalendlyModal);
+
+      calendlyModal.addEventListener('click', function (e) {
+        if (e.target === calendlyModal) {
+          closeCalendlyModal();
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !calendlyModal.classList.contains('hidden')) {
+          closeCalendlyModal();
+        }
+      });
+    }
   
     function showToast(message) {
       const toast = document.createElement('div');
