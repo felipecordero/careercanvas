@@ -382,19 +382,32 @@
       transparent 80%
     );
   }
-  
-  /* Icon zoom effect - super simple */
+  /* Icon size and zoom - devicon font needs explicit size (img/.fas have intrinsic size) */
+  .tech-skill-card .devicon.colored {
+    font-size: 3rem; /* match container h-14 / text-5xl */
+  }
   .tech-skill-card img,
-  .tech-skill-card i,
-  .tech-skill-card .fas {
+  .tech-skill-card .fas,
+  .tech-skill-card .devicon {
     transition: transform var(--hover-transition);
-    font-size: 56px;
   }
 
   .tech-skill-card:hover img,
-  .tech-skill-card:hover i,
-  .tech-skill-card:hover .fas {
+  .tech-skill-card:hover .fas,
+  .tech-skill-card:hover .devicon {
     transform: scale(var(--hover-scale));
+  }
+
+  /* Lighten devicons that are too dark (GitHub, Linux) so they stay visible on light bg */
+  .tech-skill-card .devicon-github-plain.colored,
+  .tech-skill-card .devicon-github-original.colored,
+  .tech-skill-card .devicon-linux-plain.colored {
+    color: #6b7280 !important; /* gray-500 */
+  }
+  .dark .tech-skill-card .devicon-github-plain.colored,
+  .dark .tech-skill-card .devicon-github-original.colored,
+  .dark .tech-skill-card .devicon-linux-plain.colored {
+    color: #9ca3af !important; /* gray-400, visible on dark bg */
   }
 }
 

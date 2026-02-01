@@ -23,9 +23,9 @@
               {{ range $group.skills }}
               <div class="flex flex-col items-center text-center">
                 {{ if .devicon_name }}
-                  <!-- Use explicit devicon_name if provided -->
+                  {{ $style := .devicon_style | default "plain" }}
                   <div class="h-14 flex items-center justify-center mb-2">
-                    <i class="devicon devicon-{{ .devicon_name }}-plain colored" data-animation="skill-icon"></i>
+                    <i class="devicon devicon-{{ .devicon_name }}-{{ $style }} colored text-5xl" data-animation="skill-icon"></i>
                   </div>
                 {{ else }}
                   <!-- Fallback to FontAwesome with random colors -->
