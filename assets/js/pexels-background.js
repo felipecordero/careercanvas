@@ -6,6 +6,7 @@ class PexelsBackground {
         this.apiKey = null;
         this.queries = this.getQueries();
         this.currentImage = null;
+        this.currentPhoto = null;
         this.usedImages = new Set(); // Track used images to avoid repeats
         this.fallbackGradient = 'linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 20%, var(--color-primary-light) 40%, var(--color-primary) 60%, var(--color-primary-dark) 75%, var(--color-primary-dark) 90%, var(--color-primary) 100%)';
         
@@ -99,11 +100,13 @@ class PexelsBackground {
                 this.usedImages.clear();
                 const randomPhoto = data.photos[Math.floor(Math.random() * data.photos.length)];
                 this.currentImage = randomPhoto.src.large2x || randomPhoto.src.large || randomPhoto.src.medium;
+                this.currentPhoto = randomPhoto;
                 this.usedImages.add(randomPhoto.id);
             } else {
                 // Pick a random photo from available ones
                 const randomPhoto = availablePhotos[Math.floor(Math.random() * availablePhotos.length)];
                 this.currentImage = randomPhoto.src.large2x || randomPhoto.src.large || randomPhoto.src.medium;
+                this.currentPhoto = randomPhoto;
                 this.usedImages.add(randomPhoto.id);
             }
             
@@ -111,6 +114,26 @@ class PexelsBackground {
         } else {
             throw new Error('No photos found');
         }
+    }
+
+    setCredit(photo) {
+        const creditEl = document.getElementById('pexels-credit');
+        if (!creditEl) return;
+
+        const photographer = photo?.photographer;
+        const url = photo?.url;
+
+        // Keep credit always visible (no appear/disappear).
+        // If photo metadata is missing (e.g. fallback background), show a stable default.
+        if (photographer && url) {
+            creditEl.textContent = `Photo by ${photographer} / Pexels`;
+            creditEl.href = url;
+        } else {
+            creditEl.textContent = 'Photo / Pexels';
+            creditEl.href = 'https://www.pexels.com';
+        }
+
+        creditEl.hidden = false;
     }
 
     applyBackgroundImage() {
@@ -189,7 +212,6 @@ class PexelsBackground {
             bgContainer.style.backgroundSize = 'cover';
             bgContainer.style.backgroundPosition = 'center';
             bgContainer.style.backgroundRepeat = 'no-repeat';
-            bgContainer.style.backgroundAttachment = 'fixed';
             
             // Remove gradient-bg class and add pexels-bg class
             heroSection.classList.remove('gradient-bg');
@@ -200,6 +222,8 @@ class PexelsBackground {
                 bgContainer.style.opacity = '1';
                 overlay.style.opacity = '1';
             }, 50);
+
+            this.setCredit(this.currentPhoto);
         };
         
         img.src = this.currentImage;
@@ -224,6 +248,8 @@ class PexelsBackground {
         if (existingOverlay) {
             existingOverlay.remove();
         }
+
+        this.setCredit(null);
         
         // Remove blurred background styles from right content container
         const content = heroSection.querySelector('.max-w-7xl');

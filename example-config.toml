@@ -1,363 +1,100 @@
-# CareerCanvas Theme - Example Configuration
-# Copy this section to your site's config.toml and customize the colors
+# CareerCanvas theme – example config
+# Copy sections into your site config.toml and replace placeholders.
+# For running the site, see the Portfolio repo README: https://github.com/felipecordero/felipecordero.github.io
+
+baseURL = "https://yoursite.com"
+languageCode = "en-us"
+title = "Your Name"
+theme = "careercanvas"
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+
+[languages]
+  [languages.en]
+    contentDir = "content/en"
+    languageName = "English"
+    weight = 1
+    [languages.en.params]
+      tagline = "Your Tagline"
+      hero_description = "Short bio for the hero section."
+      hero_location = "City, Country"
+      collab_tags = ["Tag 1", "Tag 2", "Tag 3"]
+  # Add more [languages.xx] blocks for other languages (es, fr, etc.)
+
+[build]
+  writeStats = true
 
 [params]
-  # Your site parameters here...
   name = "Your Name"
-  tagline = "Your Tagline"
-  # ... other params
+  email = "your@email.com"
+  profile_image = "/images/your-profile.jpg"
+  author = "Your Name"
+  og_image = "images/your-og.png"
+  description = "One-line site description for SEO."
+  linkedin_url = "https://linkedin.com/in/yourprofile"
+  linkedin_text = "linkedin.com/in/yourprofile"
+  github_url = "https://github.com/yourusername"
+  github_text = "github.com/yourusername"
+  calendly_url = ""
+  calendly_height = "700px"
+  copyright = "© 2025 | Your Name"
+  resume_url_en = "/files/your-cv-en.pdf"
+  resume_url_fr = "/files/your-cv-fr.pdf"
+  resume_label = "View CV"
+  sectionPagesMenu = "main"
 
-  # Color Configuration - Optimized with base colors and semantic references
-  [params.colors]
-    # Base Color Palette - Single source of truth for all colors
-    [params.colors.base]
-      # Blue Palette
-      blue_50 = "#eff6ff"
-      blue_100 = "#dbeafe"
-      blue_200 = "#bfdbfe"
-      blue_300 = "#93c5fd"
-      blue_400 = "#60a5fa"
-      blue_500 = "#3b82f6"
-      blue_600 = "#2563eb"
-      blue_700 = "#1d4ed8"
-      blue_800 = "#1e40af"
-      blue_900 = "#1e3a8a"
-      
-      # Gray Palette
-      gray_50 = "#f9fafb"
-      gray_100 = "#f3f4f6"
-      gray_200 = "#e5e7eb"
-      gray_300 = "#d1d5db"
-      gray_400 = "#9ca3af"
-      gray_500 = "#6b7280"
-      gray_600 = "#4b5563"
-      gray_700 = "#374151"
-      gray_800 = "#1f2937"
-      gray_900 = "#111827"
-      
-      # Green Palette
-      green_100 = "#dcfce7"
-      green_200 = "#bbf7d0"
-      green_400 = "#4ade80"
-      green_500 = "#22c55e"
-      green_600 = "#16a34a"
-      green_800 = "#166534"
-      green_900 = "#14532d"
-      
-      # Purple Palette
-      purple_100 = "#f3e8ff"
-      purple_200 = "#e9d5ff"
-      purple_400 = "#c084fc"
-      purple_500 = "#a855f7"
-      purple_800 = "#6b21a8"
-      purple_900 = "#581c87"
-      
-      # Red Palette
-      red_100 = "#fecaca"
-      red_200 = "#fca5a5"
-      red_400 = "#f87171"
-      red_500 = "#ef4444"
-      red_600 = "#dc2626"
-      red_900 = "#991b1b"
-      
-      # Yellow/Amber Palette
-      amber_100 = "#fef3c7"
-      amber_200 = "#fde68a"
-      amber_400 = "#fbbf24"
-      amber_500 = "#f59e0b"
-      amber_600 = "#d97706"
-      amber_800 = "#ca8a04"
-      
-      # Other Colors
-      white = "#ffffff"
-      black = "#000000"
-      cyan_500 = "#06b6d4"
-      cyan_600 = "#0891b2"
-      cyan_400 = "#22d3ee"
-      indigo_500 = "#6366f1"
-      indigo_600 = "#4f46e5"
-      indigo_800 = "#3730a3"
-      indigo_900 = "#312e81"
-      pink_500 = "#ec4899"
-      pink_600 = "#db2777"
-      pink_800 = "#9d174d"
-      pink_900 = "#831843"
-      teal_500 = "#14b8a6"
-      teal_600 = "#0d9488"
-      teal_800 = "#115e59"
-      teal_900 = "#134e4a"
-      orange_500 = "#f97316"
-      orange_600 = "#ea580c"
-      orange_800 = "#c2410c"
-      orange_900 = "#9a3412"
-      light_blue = "#78dbff"
-      dark_blue = "#02081b"
-      purple_blue = "#0d0741"
+  # Contact form: use config.local.toml (not committed) for pexels_api_key and formspree_endpoint
 
-    # Semantic Color Mapping - References to base colors
-    [params.colors.semantic]
-      # Primary Brand Colors
-      primary = "blue_500"
-      primary_dark = "blue_700"
-      primary_light = "blue_400"
-      primary_lighter = "blue_300"
-      
-      # Secondary Colors
-      secondary = "gray_500"
-      secondary_dark = "gray_700"
-      secondary_light = "gray_400"
-      
-      # Status Colors
-      success = "green_500"
-      success_dark = "green_600"
-      success_light = "green_400"
-      
-      warning = "amber_500"
-      warning_dark = "amber_600"
-      warning_light = "amber_400"
-      
-      error = "red_500"
-      error_dark = "red_600"
-      error_light = "red_400"
-      
-      info = "cyan_500"
-      info_dark = "cyan_600"
-      info_light = "cyan_400"
+  [[params.social]]
+    icon = "linkedin-in"
+    url = "https://linkedin.com/in/yourprofile"
+  [[params.social]]
+    icon = "github"
+    url = "https://github.com/yourusername"
 
-    # Light Mode Colors - References to base colors
-    [params.colors.light]
-      background = "white"
-      background_secondary = "gray_50"
-      background_tertiary = "gray_100"
-      background_card = "white"
-      background_card_secondary = "gray_50"
-      
-      text_primary = "gray_900"
-      text_secondary = "gray_700"
-      text_tertiary = "gray_500"
-      text_muted = "gray_400"
-      
-      border_primary = "gray_300"
-      border_secondary = "gray_200"
-      border_accent = "blue_300"
-      
-      # Gradient Colors
-      gradient_primary_from = "blue_500"
-      gradient_primary_to = "blue_700"
-      gradient_secondary_from = "gray_50"
-      gradient_secondary_to = "gray_100"
-      gradient_accent_from = "blue_100"
-      gradient_accent_to = "blue_200"
+[taxonomies]
+  tag = "tags"
 
-    # Dark Mode Colors - References to base colors
-    [params.colors.dark]
-      background = "gray_900"
-      background_secondary = "gray_800"
-      background_tertiary = "gray_700"
-      background_card = "gray_800"
-      background_card_secondary = "gray_700"
-      
-      text_primary = "gray_50"
-      text_secondary = "gray_300"
-      text_tertiary = "gray_400"
-      text_muted = "gray_500"
-      
-      border_primary = "gray_600"
-      border_secondary = "gray_700"
-      border_accent = "blue_400"
-      
-      # Gradient Colors
-      gradient_primary_from = "blue_400"
-      gradient_primary_to = "blue_500"
-      gradient_secondary_from = "gray_700"
-      gradient_secondary_to = "gray_800"
-      gradient_accent_from = "blue_900"
-      gradient_accent_to = "blue_800"
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "monokai"
 
-    # Hero Section Colors
-    [params.colors.hero]
-      background_gradient_from = "black"
-      background_gradient_via1 = "dark_blue"
-      background_gradient_via2 = "purple_blue"
-      background_gradient_to = "black"
-      
-      overlay_color = "light_blue"
-      overlay_opacity = "0.3"
-      overlay_opacity_dark = "0.2"
-      
-      name_gradient_from = "white"
-      name_gradient_to = "blue_100"
-      name_gradient_to_dark = "blue_200"
-      
-      tagline_color = "blue_100"
-      tagline_color_dark = "blue_200"
-      description_color = "blue_50"
-      description_color_dark = "blue_100"
-      greeting_color = "blue_200"
-      greeting_color_dark = "blue_300"
-      
-      location_badge_bg = "amber_400"
-      location_badge_text = "gray_800"
+[server]
+  [[server.headers]]
+    for = "/**/*.css"
+    [server.headers.values]
+      Content-Type = "text/css"
 
-    # Skills Section Colors - Using base color references
-    [params.colors.skills]
-      # Domain colors using base color references
-      domain_colors = [
-        { name = "blue", light_bg_from = "blue_100", light_bg_to = "blue_200", light_border = "blue_300", light_text = "blue_600", dark_bg_from = "blue_900", dark_bg_to = "blue_800", dark_border = "blue_500", dark_text = "blue_300" },
-        { name = "purple", light_bg_from = "purple_100", light_bg_to = "purple_200", light_border = "purple_400", light_text = "purple_600", dark_bg_from = "purple_900", dark_bg_to = "purple_800", dark_border = "purple_500", dark_text = "purple_200" },
-        { name = "green", light_bg_from = "green_100", light_bg_to = "green_200", light_border = "green_400", light_text = "green_600", dark_bg_from = "green_900", dark_bg_to = "green_800", dark_border = "green_500", dark_text = "green_400" },
-        { name = "red", light_bg_from = "red_100", light_bg_to = "red_200", light_border = "red_400", light_text = "red_600", dark_bg_from = "red_900", dark_bg_to = "red_800", dark_border = "red_500", dark_text = "red_200" },
-        { name = "yellow", light_bg_from = "amber_100", light_bg_to = "amber_200", light_border = "amber_400", light_text = "amber_800", dark_bg_from = "amber_900", dark_bg_to = "amber_800", dark_border = "amber_500", dark_text = "amber_200" },
-        { name = "indigo", light_bg_from = "indigo_100", light_bg_to = "indigo_200", light_border = "indigo_400", light_text = "indigo_600", dark_bg_from = "indigo_900", dark_bg_to = "indigo_800", dark_border = "indigo_500", dark_text = "indigo_400" },
-        { name = "pink", light_bg_from = "pink_100", light_bg_to = "pink_200", light_border = "pink_400", light_text = "pink_600", dark_bg_from = "pink_900", dark_bg_to = "pink_800", dark_border = "pink_500", dark_text = "pink_400" },
-        { name = "teal", light_bg_from = "teal_100", light_bg_to = "teal_200", light_border = "teal_400", light_text = "teal_600", dark_bg_from = "teal_900", dark_bg_to = "teal_800", dark_border = "teal_500", dark_text = "teal_400" },
-        { name = "orange", light_bg_from = "orange_100", light_bg_to = "orange_200", light_border = "orange_400", light_text = "orange_600", dark_bg_from = "orange_900", dark_bg_to = "orange_800", dark_border = "orange_500", dark_text = "orange_200" },
-        { name = "cyan", light_bg_from = "cyan_100", light_bg_to = "cyan_200", light_border = "cyan_400", light_text = "cyan_600", dark_bg_from = "cyan_900", dark_bg_to = "cyan_800", dark_border = "cyan_500", dark_text = "cyan_400" }
-      ]
-      
-      # Technical skills pills
-      tech_pills_bg_from = "blue_100"
-      tech_pills_bg_to = "blue_200"
-      tech_pills_bg_from_dark = "blue_900"
-      tech_pills_bg_to_dark = "blue_800"
-      tech_pills_text = "blue_800"
-      tech_pills_text_dark = "blue_200"
-      tech_pills_border = "blue_200"
-      tech_pills_border_dark = "blue_800"
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$']
 
-    # Experience Timeline Colors
-    [params.colors.experience]
-      timeline_line_from = "blue_200"
-      timeline_line_via = "blue_400"
-      timeline_line_to = "blue_200"
-      timeline_line_from_dark = "blue_700"
-      timeline_line_via_dark = "blue_500"
-      timeline_line_to_dark = "blue_700"
-      
-      timeline_bullet_bg = "blue_500"
-      timeline_bullet_bg_dark = "blue_400"
-      timeline_bullet_border = "white"
-      timeline_bullet_border_dark = "gray_800"
-      
-      period_badge_from = "blue_500"
-      period_badge_to = "blue_700"
-      period_badge_from_dark = "blue_400"
-      period_badge_to_dark = "blue_500"
-      
-      industry_tag_bg = "green_100"
-      industry_tag_bg_dark = "green_900"
-      industry_tag_text = "green_800"
-      industry_tag_text_dark = "green_200"
-      
-      location_tag_bg = "purple_100"
-      location_tag_bg_dark = "purple_900"
-      location_tag_text = "purple_800"
-      location_tag_text_dark = "purple_200"
-      
-      achievement_icon = "green_500"
+# One palette is picked at random per page load. Each needs name, main_color, second_color, third_color (hex).
+[params.color_palettes]
+  [[params.color_palettes.palette]]
+    name = "professional"
+    main_color = "#474A51"
+    second_color = "#E52521"
+    third_color = "#3CB043"
+  [[params.color_palettes.palette]]
+    name = "ocean"
+    main_color = "#1E40AF"
+    second_color = "#06B6D4"
+    third_color = "#10B981"
+  [[params.color_palettes.palette]]
+    name = "steel"
+    main_color = "#374151"
+    second_color = "#6B7280"
+    third_color = "#10B981"
+  [[params.color_palettes.palette]]
+    name = "slate"
+    main_color = "#475569"
+    second_color = "#0EA5E9"
+    third_color = "#F97316"
 
-    # Contact Form Colors
-    [params.colors.contact]
-      form_border = "gray_300"
-      form_border_dark = "gray_600"
-      form_bg_dark = "gray_700"
-      form_focus_ring = "blue_500"
-      form_focus_border = "blue_500"
-      
-      submit_button_bg = "blue_500"
-      submit_button_bg_dark = "blue_400"
-      submit_button_hover = "blue_700"
-      submit_button_hover_dark = "blue_500"
-      
-      contact_icon_bg = "blue_100"
-      contact_icon_bg_dark = "blue_900"
-      contact_icon_color = "blue_500"
-      contact_icon_color_dark = "blue_300"
-      
-      collaboration_tag_bg = "blue_50"
-      collaboration_tag_bg_dark = "blue_900"
-      collaboration_tag_text = "blue_800"
-      collaboration_tag_text_dark = "blue_200"
-
-    # Navigation Colors
-    [params.colors.navigation]
-      nav_bg = "white"
-      nav_bg_dark = "gray_800"
-      nav_brand = "blue_500"
-      nav_brand_dark = "blue_400"
-      nav_text = "gray_800"
-      nav_text_dark = "gray_300"
-      nav_hover = "blue_500"
-      nav_hover_dark = "blue_400"
-      nav_active = "blue_500"
-      nav_active_dark = "blue_400"
-      
-      mobile_menu_hover_bg = "gray_100"
-      mobile_menu_hover_bg_dark = "gray_700"
-
-    # Blog/Content Page Colors
-    [params.colors.content]
-      content_bg = "white"
-      content_bg_dark = "gray_800"
-      content_card_from = "gray_50"
-      content_card_to = "gray_100"
-      content_card_from_dark = "gray_700"
-      content_card_to_dark = "gray_800"
-      
-      content_heading = "gray_900"
-      content_heading_dark = "gray_50"
-      content_text = "gray_700"
-      content_text_dark = "gray_300"
-      content_link = "blue_500"
-      content_link_dark = "blue_400"
-      content_link_hover = "blue_700"
-      content_link_hover_dark = "blue_300"
-      
-      content_tag_bg = "gray_200"
-      content_tag_bg_dark = "gray_600"
-      content_tag_text = "gray_700"
-      content_tag_text_dark = "gray_300"
-
-    # Special Effects and Animations
-    [params.colors.effects]
-      glow_color = "blue_500"
-      glow_color_dark = "blue_400"
-      glow_opacity = "0.4"
-      glow_opacity_dark = "0.3"
-      
-      shadow_color = "blue_500"
-      shadow_color_dark = "blue_400"
-      shadow_opacity = "0.2"
-      shadow_opacity_dark = "0.3"
-      
-      typewriter_cursor = "blue_300"
-      
-      # Hover effect colors
-      hover_shine_color = "white"
-      hover_shine_opacity = "0.2"
-      
-      # Quick fact hover colors
-      quick_fact_hover_bg = "blue_500"
-      quick_fact_hover_bg_dark = "blue_400"
-      quick_fact_hover_bg_opacity = "0.05"
-      quick_fact_hover_bg_opacity_dark = "0.1"
-      quick_fact_hover_border = "blue_500"
-      quick_fact_hover_border_dark = "blue_400"
-      quick_fact_hover_border_opacity = "0.2"
-      quick_fact_hover_border_opacity_dark = "0.3"
-
-# Example: Change Primary Color to Purple
-# To change the primary color to purple, modify these values:
-# [params.colors.semantic]
-#   primary = "purple_500"
-#   primary_dark = "purple_700"
-#   primary_light = "purple_400"
-#   primary_lighter = "purple_300"
-
-# Example: Change Base Colors
-# To change the base blue color, modify:
-# [params.colors.base]
-#   blue_500 = "#8b5cf6"  # Purple-500 instead of blue-500
-#   blue_700 = "#7c3aed"  # Purple-600 instead of blue-700
-#   blue_400 = "#a78bfa"  # Purple-400 instead of blue-400
-#   blue_300 = "#c4b5fd"  # Purple-300 instead of blue-300
+# Hero background images from Pexels. Requires pexels_api_key (e.g. in config.local.toml).
+[params.pexels]
+  queries = ["long span bridges", "skyscrapers", "sky and clouds"]

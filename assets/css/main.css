@@ -49,7 +49,25 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+  }
+
+  .pexels-credit {
+    position: absolute;
+    left: 1rem;
+    bottom: 0.75rem;
+    z-index: 20;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+  }
+
+  .pexels-credit:hover {
+    text-decoration: underline;
   }
 
   /* Ensure animations stay above background */
@@ -213,6 +231,12 @@
   }
 
   /* Hero Section */
+  .hero-section {
+    /* Navbar uses h-16 (4rem). baseof.html also adds a h-16 spacer. */
+    min-height: calc(100svh - 4rem);
+    min-height: calc(100vh - 4rem);
+  }
+
   .hero-name {
     background: linear-gradient(135deg, var(--color-white) 0%, var(--color-primary-lighter) 100%);
     -webkit-background-clip: text;
