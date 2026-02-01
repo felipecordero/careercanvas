@@ -25,11 +25,7 @@
                 {{ if .devicon_name }}
                   <!-- Use explicit devicon_name if provided -->
                   <div class="h-14 flex items-center justify-center mb-2">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/{{ .devicon_name }}/{{ .devicon_name }}-original.svg" 
-                         alt="{{ .name }}" 
-                         width="56" 
-                         height="56" 
-                         data-animation="skill-icon" />
+                    <i class="devicon devicon-{{ .devicon_name }}-plain colored" data-animation="skill-icon"></i>
                   </div>
                 {{ else }}
                   <!-- Fallback to FontAwesome with random colors -->

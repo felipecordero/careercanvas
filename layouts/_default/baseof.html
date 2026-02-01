@@ -17,6 +17,7 @@
     {{ if eq hugo.Environment "production" }}
       {{ $styles = $styles | minify | fingerprint }}
     {{ end }}
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />    
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}?v={{ now.Unix }}" data-version="{{ now.Unix }}">
     <style>
         /* Critical CSS to prevent FOUC */
