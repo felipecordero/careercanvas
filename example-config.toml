@@ -42,8 +42,8 @@ defaultContentLanguageInSubdir = false
   resume_url_fr = "/files/your-cv-fr.pdf"
   resume_label = "View CV"
   sectionPagesMenu = "main"
-
-  # Contact form: use config.local.toml (not committed) for pexels_api_key and formspree_endpoint
+  formspree_endpoint = ""
+  pexels_api_key = ""
 
   [[params.social]]
     icon = "linkedin-in"
@@ -95,6 +95,6 @@ defaultContentLanguageInSubdir = false
     second_color = "#0EA5E9"
     third_color = "#F97316"
 
-# Hero background images from Pexels. Requires pexels_api_key (e.g. in config.local.toml).
+# Pexels hero backgrounds
 [params.pexels]
   queries = ["long span bridges", "skyscrapers", "sky and clouds"]

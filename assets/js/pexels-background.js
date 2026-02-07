@@ -18,18 +18,12 @@ class PexelsBackground {
     }
 
     waitForConfig() {
-        const checkConfig = () => {
-            if (window.PEXELS_API_KEY) {
-                this.apiKey = window.PEXELS_API_KEY;
-                this.init();
-            } else {
-                // Wait a bit more for the configuration to load
-                setTimeout(checkConfig, 100);
-            }
-        };
-        
-        // Start checking after a short delay to allow config to load
-        setTimeout(checkConfig, 100);
+        this.apiKey = window.PEXELS_API_KEY || null;
+        if (this.apiKey) {
+            this.init();
+        } else {
+            this.useFallbackBackground();
+        }
     }
 
     hideGradientBackground() {
