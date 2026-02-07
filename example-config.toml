@@ -42,8 +42,8 @@ defaultContentLanguageInSubdir = false
   resume_url_fr = "/files/your-cv-fr.pdf"
   resume_label = "View CV"
   sectionPagesMenu = "main"
-  formspree_endpoint = ""
-  pexels_api_key = ""
+  formspreeendpoint = ""
+  pexelsapikey = ""
 
   [[params.social]]
     icon = "linkedin-in"

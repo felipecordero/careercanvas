@@ -2,7 +2,7 @@
 {{ if not $pexelsQueries }}
   {{ errorf "Pexels queries not configured in config.toml under [params.pexels.queries]" }}
 {{ end }}
-<div id="pexels-config" data-queries="{{ $pexelsQueries | jsonify }}" data-pexels-api-key="{{ .Site.Params.pexels_api_key | default "" }}" data-formspree-endpoint="{{ .Site.Params.formspree_endpoint | default "" }}" style="display: none;"></div>
+<div id="pexels-config" data-queries="{{ $pexelsQueries | jsonify }}" data-pexels-api-key="{{ .Site.Params.pexelsapikey | default "" }}" data-formspree-endpoint="{{ .Site.Params.formspreeendpoint | default "" }}" style="display: none;"></div>
 <script>
   (function() {
     var el = document.getElementById('pexels-config');
