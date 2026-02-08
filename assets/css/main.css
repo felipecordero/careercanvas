@@ -277,6 +277,16 @@
     color: var(--color-primary);
   }
 
+  /* Top nav: own stacking context above hero so links stay clickable */
+  nav.fixed {
+    z-index: 100;
+    isolation: isolate;
+  }
+
+  #calendly-modal {
+    z-index: 101;
+  }
+
   /* Hero Section */
   .hero-section {
     /* Navbar uses h-16 (4rem). baseof.html also adds a h-16 spacer. */

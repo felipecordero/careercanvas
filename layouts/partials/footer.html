@@ -24,7 +24,7 @@
           {{ end }}
           {{ if and .Site.Params.calendly_url $calendlyIcon }}
           <button type="button" class="calendly-open-trigger text-text-secondary dark:text-text-muted text-third dark:text-third-light transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
-            <img src="{{ $calendlyIcon.RelPermalink }}" alt="Calendly" class="w-8 h-8" width="32" height="32">
+            <img src="{{ $calendlyIcon.RelPermalink }}" alt="" class="w-8 h-8" width="32" height="32">
           </button>
           {{ end }}
         </div>

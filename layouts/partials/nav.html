@@ -1,4 +1,4 @@
-<nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50">
+<nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50" role="banner">
   <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
     <div class="flex justify-between h-16">
       <div class="flex items-center">
@@ -91,9 +91,9 @@
           {{ end }}
           {{ $calendlyIcon := resources.Get "images/calendly-icon.svg" }}
           {{ if and .Site.Params.calendly_url $calendlyIcon }}
-          <button type="button" class="calendly-open-trigger text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
-            <img src="{{ $calendlyIcon.RelPermalink }}" alt="Calendly" class="w-6 h-6" width="24" height="24">
-          </button>
+          <a href="{{ .Site.Params.calendly_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
+            <img src="{{ $calendlyIcon.RelPermalink }}" alt="" class="w-6 h-6" width="24" height="24">
+          </a>
           {{ end }}
         </div>
         <!-- Dark Mode Toggle -->
@@ -185,11 +185,11 @@
           <i class="fab fa-github text-2xl"></i>
         </a>
         {{ end }}
-        {{ $calendlyIconNav := resources.Get "images/calendly-icon.svg" }}
-        {{ if and .Site.Params.calendly_url $calendlyIconNav }}
-        <button type="button" class="calendly-open-trigger text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
-          <img src="{{ $calendlyIconNav.RelPermalink }}" alt="Calendly" class="w-7 h-7" width="28" height="28">
-        </button>
+        {{ $calendlyIcon := resources.Get "images/calendly-icon.svg" }}
+        {{ if and .Site.Params.calendly_url $calendlyIcon }}
+        <a href="{{ .Site.Params.calendly_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
+          <img src="{{ $calendlyIcon.RelPermalink }}" alt="" class="w-7 h-7" width="28" height="28">
+        </a>
         {{ end }}
       </div>
     </div>
