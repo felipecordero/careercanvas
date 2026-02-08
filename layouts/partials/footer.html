@@ -11,11 +11,21 @@
         <a href="mailto:{{ .Site.Params.email }}" class="text-text-secondary dark:text-text-muted text-primary dark:text-primary-light mt-1 inline-block">
           <i class="fas fa-envelope mr-2"></i>{{ .Site.Params.email }}
         </a>
-        <div class="flex space-x-8 mt-6" data-animation="social">
+        {{ $calendlyIcon := resources.Get "images/calendly-icon.svg" }}
+        <div class="flex space-x-8 mt-6 items-center" data-animation="social">
           {{ range .Site.Params.social }}
-          <a href="{{ .url }}" target="_blank" class="text-text-secondary dark:text-text-muted text-third dark:text-third-light transition-transform duration-300 hover:scale-125">
+          <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="text-text-secondary dark:text-text-muted text-third dark:text-third-light transition-transform duration-300 hover:scale-125">
+            {{ if and (eq .icon "calendly") $calendlyIcon }}
+            <img src="{{ $calendlyIcon.RelPermalink }}" alt="Calendly" class="w-8 h-8" width="32" height="32">
+            {{ else }}
             <i class="fab fa-{{ .icon }} text-3xl text-text-primary dark:text-text-primary"></i>
+            {{ end }}
           </a>
+          {{ end }}
+          {{ if and .Site.Params.calendly_url $calendlyIcon }}
+          <button type="button" class="calendly-open-trigger text-text-secondary dark:text-text-muted text-third dark:text-third-light transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
+            <img src="{{ $calendlyIcon.RelPermalink }}" alt="Calendly" class="w-8 h-8" width="32" height="32">
+          </button>
           {{ end }}
         </div>
       </div>

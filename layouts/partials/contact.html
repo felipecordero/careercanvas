@@ -1,6 +1,14 @@
 <section id="contact" class="py-12 bg-bg dark:bg-bg border-t border-border-primary" data-animate>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 class="text-3xl font-bold text-center mb-12 font-heading text-text-primary dark:text-text-primary">{{ i18n "contactFormLabel" }}</h2>
+    <h2 class="text-3xl font-bold text-center mb-4 font-heading text-text-primary dark:text-text-primary">{{ i18n "contactFormLabel" }}</h2>
+    {{ if .Site.Params.calendly_url }}
+    {{ $calendlyIcon := resources.Get "images/calendly-icon.svg" }}
+    <div class="flex justify-center mb-12">
+      <button type="button" class="calendly-open-trigger bg-gradient-primary text-white px-6 py-3 rounded-lg shadow-lg font-semibold text-base button-hover flex items-center">
+        {{ with $calendlyIcon }}<img src="{{ .RelPermalink }}" alt="Calendly" class="w-5 h-5 mr-2" width="20" height="20">{{ end }}Book a meeting on my Calendly
+      </button>
+    </div>
+    {{ end }}
 
     <div class="flex flex-col lg:flex-row justify-center gap-12">
       <!-- Contact Form -->
@@ -40,92 +48,54 @@
       <div class="lg:w-1/2">
         {{ with .Site.GetPage "contact" }}
         <div class="contact-card bg-bg dark:bg-bg p-8 rounded-lg shadow-lg border border-border-primary dark:border-border-primary h-full card-hover">
-          <div class="flex items-center justify-between mb-6">
-            <h3 class="text-xl font-semibold text-text-primary dark:text-text-primary">{{ i18n "contactInformation" }}</h3>
-            {{ if .Site.Params.calendly_url }}
-            <button
-              id="calendly-open"
-              type="button"
-              class="bg-gradient-primary text-white px-6 py-3 rounded-lg shadow-lg font-semibold text-base button-hover flex items-center">
-              <i class="fas fa-calendar-alt mr-2"></i>
-              Book a Meeting
-            </button>
-            {{ end }}
-          </div>
+          <h3 class="text-xl font-semibold mb-6 text-text-primary dark:text-text-primary">{{ i18n "contactInformation" }}</h3>
           <p class="mb-6 text-gray-700 dark:text-text-secondary">{{ .Params.intro }}</p>
           <div class="markdown-content text-gray-700 dark:text-text-secondary">
           {{ .Params.Content | markdownify}}
           </div>
-          <div class="space-y-4">
-            {{ if .Site.Params.email}}
-            <div class="flex items-start">
-              <div class="bg-second-lighter dark:bg-second-dark p-3 rounded-full mr-4">
-                <i class="fas fa-envelope text-second dark:text-second-light"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-text-primary dark:text-text-primary">Email</h4>
-                <a href="mailto:{{ .Site.Params.email }}" class="text-primary dark:text-white">{{ .Site.Params.email }}</a>
-              </div>
+          <div class="space-y-2">
+            {{ if .Site.Params.email }}
+            <div class="flex items-center gap-3">
+              <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+              <a href="mailto:{{ .Site.Params.email }}" class="text-primary dark:text-white">{{ .Site.Params.email }}</a>
             </div>
             {{ end }}
-
             {{ if .Site.Params.linkedin_url }}
-            <div class="flex items-start">
-              <div class="bg-primary-lighter dark:bg-primary-dark p-3 rounded-full mr-4">
-                <i class="fab fa-linkedin-in text-primary dark:text-primary-light"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-text-primary dark:text-text-primary">LinkedIn</h4>
-                <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-primary dark:text-white">{{ .Site.Params.linkedin_text }}</a>
-              </div>
+            <div class="flex items-center gap-3">
+              <div class="contact-info-icon"><i class="fab fa-linkedin-in"></i></div>
+              <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-primary dark:text-white">{{ .Site.Params.linkedin_text }}</a>
             </div>
             {{ end }}
-
             {{ if .Site.Params.github_url }}
-            <div class="flex items-start">
-              <div class="bg-primary-lighter dark:bg-primary-dark p-3 rounded-full mr-4">
-                <i class="fab fa-github text-primary dark:text-primary-light"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-text-primary dark:text-text-primary">GitHub</h4>
-                <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-primary dark:text-white">{{ .Site.Params.github_text }}</a>
-              </div>
+            <div class="flex items-center gap-3">
+              <div class="contact-info-icon"><i class="fab fa-github"></i></div>
+              <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-primary dark:text-white">{{ .Site.Params.github_text }}</a>
             </div>
             {{ end }}
-
+            {{ if .Site.Params.calendly_url }}
+            {{ with resources.Get "images/calendly-icon.svg" }}
+            <div class="flex items-center gap-3">
+              <div class="contact-info-icon" style="--calendly-mask: url({{ .RelPermalink }})">
+                <span class="contact-info-icon-img" role="img" aria-label="Calendly"></span>
+              </div>
+              <a href="{{ $.Site.Params.calendly_url }}" target="_blank" rel="noopener noreferrer" class="text-primary dark:text-white">{{ replace (replace $.Site.Params.calendly_url "https://" "") "http://" "" }}</a>
+            </div>
+            {{ end }}
+            {{ end }}
             {{ if .Site.Params.emergency_contact }}
-            <div class="flex items-start">
-              <div class="bg-third-lighter dark:bg-third-dark p-3 rounded-full mr-4">
-                <i class="fas fa-exclamation-triangle text-third dark:text-third-light"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-text-primary dark:text-text-primary">{{ i18n "priorityContact" }}</h4>
-                <a href="mailto:{{ .Site.Params.emergency_contact }}" class="text-third dark:text-third-light font-medium">{{ .Site.Params.emergency_contact }}</a>
-              </div>
+            <div class="flex items-center gap-3">
+              <div class="contact-info-icon"><i class="fas fa-exclamation-triangle"></i></div>
+              <a href="mailto:{{ .Site.Params.emergency_contact }}" class="text-primary dark:text-white font-medium">{{ .Site.Params.emergency_contact }}</a>
             </div>
             {{ end }}
-
             {{ if .Site.Language.Params.hero_location }}
-            <div class="flex items-start">
-              <div class="bg-second-lighter dark:bg-second-dark p-3 rounded-full mr-4">
-                <i class="fas fa-map-marker-alt text-second dark:text-second-light"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-text-primary dark:text-text-primary">{{ i18n "infoContactLocationLabel" }}</h4>
-                <p class="text-gray-700 dark:text-text-tertiary">{{ .Site.Language.Params.hero_location }}</p>
-              </div>
+            <div class="flex items-center gap-3">
+              <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <span class="text-gray-700 dark:text-text-tertiary">{{ .Site.Language.Params.hero_location }}</span>
             </div>
             {{ end }}
           </div>
 
-          <div class="mt-8">
-            <h4 class="font-medium mb-3 text-text-primary dark:text-text-primary">{{ .Params.collab_title }}</h4>
-            <div class="flex flex-wrap gap-2">
-              {{ range .Site.Params.collab_tags }}
-              <span class="collab-tag px-3 py-1 rounded-full text-sm">{{ . }}</span>
-              {{ end }}
-            </div>
-          </div>
         </div>
         {{ end }}
       </div>
@@ -191,15 +161,17 @@
       });
     }
 
-    const calendlyOpen = document.getElementById('calendly-open');
     const calendlyModal = document.getElementById('calendly-modal');
     const calendlyClose = document.getElementById('calendly-close');
 
-    if (calendlyOpen && calendlyModal && calendlyClose) {
-      calendlyOpen.addEventListener('click', function () {
+    if (calendlyModal && calendlyClose) {
+      function openCalendlyModal() {
         calendlyModal.classList.remove('hidden');
         calendlyModal.classList.add('flex');
         document.body.style.overflow = 'hidden';
+      }
+      document.querySelectorAll('.calendly-open-trigger').forEach(function (el) {
+        el.addEventListener('click', openCalendlyModal);
       });
 
       function closeCalendlyModal() {

@@ -51,6 +51,9 @@ defaultContentLanguageInSubdir = false
   [[params.social]]
     icon = "github"
     url = "https://github.com/yourusername"
+  # [[params.social]]
+  #   icon = "calendly"
+  #   url = "https://calendly.com/yourlink"
 
 [taxonomies]
   tag = "tags"

@@ -1,10 +1,10 @@
 <nav class="fixed w-full bg-bg dark:bg-bg shadow-md z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
     <div class="flex justify-between h-16">
       <div class="flex items-center">
         <a href="{{ .Site.Home.RelPermalink }}" class="text-3xl font-bold text-text-primary dark:text-text-primary font-heading">{{ .Site.Params.firstName }} {{ .Site.Params.lastName }}</a>
       </div>
-      <div class="hidden lg:flex items-center space-x-8">
+      <div class="hidden lg:flex items-center space-x-6">
         {{ range .Site.Menus.main }}
           {{ if .HasChildren }}
           <div class="relative group">
@@ -89,6 +89,12 @@
             <i class="fab fa-github text-xl"></i>
           </a>
           {{ end }}
+          {{ $calendlyIcon := resources.Get "images/calendly-icon.svg" }}
+          {{ if and .Site.Params.calendly_url $calendlyIcon }}
+          <button type="button" class="calendly-open-trigger text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
+            <img src="{{ $calendlyIcon.RelPermalink }}" alt="Calendly" class="w-6 h-6" width="24" height="24">
+          </button>
+          {{ end }}
         </div>
         <!-- Dark Mode Toggle -->
         <button id="darkModeToggle" class="text-text-primary dark:text-text-primary focus:outline-none">
@@ -169,12 +175,22 @@
 
       <!-- Mobile Social Media Icons -->
       <div class="flex items-center space-x-6 px-3 py-3 border-t border-border-primary dark:border-border-primary mt-2" data-animation="social">
+        {{ if .Site.Params.linkedin_url }}
         <a href="{{ .Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
           <i class="fab fa-linkedin-in text-2xl"></i>
         </a>
+        {{ end }}
+        {{ if .Site.Params.github_url }}
         <a href="{{ .Site.Params.github_url }}" target="_blank" rel="noopener noreferrer" class="text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125">
           <i class="fab fa-github text-2xl"></i>
         </a>
+        {{ end }}
+        {{ $calendlyIconNav := resources.Get "images/calendly-icon.svg" }}
+        {{ if and .Site.Params.calendly_url $calendlyIconNav }}
+        <button type="button" class="calendly-open-trigger text-text-primary dark:text-text-primary transition-transform duration-300 hover:scale-125" aria-label="Book a meeting on Calendly">
+          <img src="{{ $calendlyIconNav.RelPermalink }}" alt="Calendly" class="w-7 h-7" width="28" height="28">
+        </button>
+        {{ end }}
       </div>
     </div>
   </div>

@@ -87,6 +87,53 @@
 
 
 
+  /* Contact info card: one circle style for all icons */
+  .contact-info-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-primary);
+  }
+  .dark .contact-info-icon {
+    color: var(--color-primary-light);
+  }
+  .contact-info-icon i {
+    font-size: 1.5rem;
+  }
+  .contact-info-icon img,
+  .contact-info-icon .contact-info-icon-img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .contact-info-icon img {
+    object-fit: contain;
+    filter: brightness(0);
+  }
+  .dark .contact-info-icon img {
+    filter: brightness(0) invert(1);
+  }
+  .contact-info-icon .contact-info-icon-img {
+    display: block;
+    mask-image: var(--calendly-mask);
+    -webkit-mask-image: var(--calendly-mask);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    background-color: var(--color-primary);
+  }
+  .dark .contact-info-icon .contact-info-icon-img {
+    background-color: var(--color-primary-light);
+  }
+
   /* Company Link Styling */
   .company-link {
     color: inherit;
