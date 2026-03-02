@@ -25,14 +25,21 @@
                 {{ if .devicon_name }}
                   {{ $style := .devicon_style | default "plain" }}
                   <div class="h-14 flex items-center justify-center mb-2">
-                    <i class="devicon devicon-{{ .devicon_name }}-{{ $style }} colored text-5xl" data-animation="skill-icon"></i>
+                    <i class="devicon devicon-{{ .devicon_name }}-{{ $style }} colored text-5xl"
+                       data-animation="skill-icon"
+                       data-devicon-name="{{ .devicon_name }}"
+                       data-devicon-style="{{ $style }}"
+                       data-fa-icon="{{ .icon }}"
+                       aria-hidden="true"></i>
                   </div>
                 {{ else }}
                   <!-- Fallback to FontAwesome with random colors -->
                   {{ $colors := slice "text-blue-500" "text-green-500" "text-purple-500" "text-red-500" "text-yellow-500" "text-indigo-500" "text-pink-500" "text-teal-500" "text-orange-500" "text-cyan-500" }}
                   {{ $randomColor := index $colors (mod (add (mul (len $colors) 7) (len .name)) (len $colors)) }}
                   <div class="h-14 flex items-center justify-center mb-2">
-                    <i class="fas fa-{{ .icon }} text-5xl {{ $randomColor }}" data-animation="skill-icon" aria-hidden="true"></i>
+                    <i class="fas fa-{{ .icon }} text-5xl {{ $randomColor }}"
+                       data-animation="skill-icon"
+                       aria-hidden="true"></i>
                   </div>
                 {{ end }}
                 <span class="text-sm font-semibold text-text-secondary dark:text-text-secondary">{{ .name }}</span>
