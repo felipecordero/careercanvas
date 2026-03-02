@@ -19,30 +19,37 @@
             </div>
             
             <!-- Skills flex layout with icons and text below -->
-            <div class="flex flex-wrap gap-6 justify-center">
+            <div class="flex flex-wrap gap-8 justify-center">
               {{ range $group.skills }}
               <div class="flex flex-col items-center text-center">
                 {{ if .devicon_name }}
-                  {{ $style := .devicon_style | default "plain" }}
-                  <div class="h-14 flex items-center justify-center mb-2">
-                    <i class="devicon devicon-{{ .devicon_name }}-{{ $style }} colored text-5xl"
-                       data-animation="skill-icon"
-                       data-devicon-name="{{ .devicon_name }}"
-                       data-devicon-style="{{ $style }}"
-                       data-fa-icon="{{ .icon }}"
-                       aria-hidden="true"></i>
+                  {{ $style := .devicon_style | default "original" }}
+                  {{ $defaultInvertOnDark := slice "nextjs" "github" "ollama" "keras" "prisma" }}
+                  {{ $invertOnDark := or (.invert_on_dark) (in $defaultInvertOnDark .devicon_name) }}
+                  <div class="h-16 flex items-center justify-center mb-1">
+                    <img alt="{{ .name }}"
+                         width="64"
+                         height="64"
+                         loading="lazy"
+                         class="w-16 h-16 box-border rounded-md p-1 dark:bg-white/25 dark:ring-1 dark:ring-white/25 dark:brightness-135 dark:contrast-115 dark:opacity-100 {{ if $invertOnDark }}dark:invert dark:brightness-200{{ end }}"
+                         data-animation="skill-icon"
+                         data-devicon-name="{{ .devicon_name }}"
+                         data-devicon-style="{{ $style }}"
+                         data-fa-icon="{{ .icon }}" />
                   </div>
                 {{ else }}
                   <!-- Fallback to FontAwesome with random colors -->
                   {{ $colors := slice "text-blue-500" "text-green-500" "text-purple-500" "text-red-500" "text-yellow-500" "text-indigo-500" "text-pink-500" "text-teal-500" "text-orange-500" "text-cyan-500" }}
                   {{ $randomColor := index $colors (mod (add (mul (len $colors) 7) (len .name)) (len $colors)) }}
-                  <div class="h-14 flex items-center justify-center mb-2">
-                    <i class="fas fa-{{ .icon }} text-5xl {{ $randomColor }}"
-                       data-animation="skill-icon"
-                       aria-hidden="true"></i>
+                  <div class="h-16 flex items-center justify-center mb-1">
+                    <div class="w-16 h-16 box-border rounded-md p-1 dark:bg-white/25 dark:ring-1 dark:ring-white/25 flex items-center justify-center">
+                      <i class="fas fa-{{ .icon }} text-4xl md:text-5xl {{ $randomColor }}"
+                         data-animation="skill-icon"
+                         aria-hidden="true"></i>
+                    </div>
                   </div>
                 {{ end }}
-                <span class="text-sm font-semibold text-text-secondary dark:text-text-secondary">{{ .name }}</span>
+                <span class="text-sm md:text-base font-semibold text-text-secondary dark:text-text-secondary">{{ .name }}</span>
               </div>
               {{ end }}
             </div>

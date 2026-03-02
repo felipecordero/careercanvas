@@ -9,13 +9,25 @@ document.addEventListener('DOMContentLoaded', function () {
     var style = el.getAttribute('data-devicon-style') || 'plain';
     var faIcon = el.getAttribute('data-fa-icon');
 
-    var img = new Image();
+    var tryStyles = [];
+    if (style) tryStyles.push(style);
+    if (style !== 'original') tryStyles.push('original');
+    if (style !== 'plain') tryStyles.push('plain');
+    if (style !== 'line') tryStyles.push('line');
 
-    img.onload = function () {
-      // Devicon SVG exists; keep the current icon.
-    };
+    function iconUrl(iconStyle) {
+      return (
+        'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/' +
+        name +
+        '/' +
+        name +
+        '-' +
+        iconStyle +
+        '.svg'
+      );
+    }
 
-    img.onerror = function () {
+    function replaceWithFontAwesome() {
       if (!faIcon) return;
 
       var fa = document.createElement('i');
@@ -29,16 +41,35 @@ document.addEventListener('DOMContentLoaded', function () {
       if (el.parentNode) {
         el.parentNode.replaceChild(fa, el);
       }
-    };
+    }
 
-    img.src =
-      'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/' +
-      name +
-      '/' +
-      name +
-      '-' +
-      style +
-      '.svg';
+    function setImgSrcSequentially(idx) {
+      if (el.tagName !== 'IMG') {
+        // If this isn't an <img>, we can't set src; fall back.
+        replaceWithFontAwesome();
+        return;
+      }
+
+      if (idx >= tryStyles.length) {
+        replaceWithFontAwesome();
+        return;
+      }
+
+      var test = new Image();
+      var url = iconUrl(tryStyles[idx]);
+
+      test.onload = function () {
+        el.src = url;
+      };
+
+      test.onerror = function () {
+        setImgSrcSequentially(idx + 1);
+      };
+
+      test.src = url;
+    }
+
+    setImgSrcSequentially(0);
   });
 });
 
