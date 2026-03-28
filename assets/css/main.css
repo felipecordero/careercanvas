@@ -294,6 +294,37 @@
     min-height: calc(100vh - 4rem);
   }
 
+  /* Side-by-side hero: top-align columns (.items-center is in @layer utilities and would win without !important) */
+  @media (min-width: 1024px) {
+    .hero-inner-row {
+      align-items: flex-start !important;
+    }
+
+    /* Nudge portrait up so the top of the frame lines up with the greeting line (beats md:mt-0 from Tailwind) */
+    .hero-profile-col {
+      margin-top: -1rem !important;
+    }
+
+    /* Larger than lg:w-96 (arbitrary Tailwind classes are often missing from Hugo’s CSS output) */
+    .hero-profile-ring {
+      width: min(30rem, 100%) !important;
+      height: auto !important;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  /* Location badge: one scale factor (keeps inner markup at base size) */
+  .hero-location-badge-scale {
+    transform-origin: bottom right;
+    transform: scale(1.18);
+  }
+
+  @media (min-width: 1024px) {
+    .hero-location-badge-scale {
+      transform: scale(1.28);
+    }
+  }
+
   .hero-name {
     background: linear-gradient(135deg, var(--color-white) 0%, var(--color-primary-lighter) 100%);
     -webkit-background-clip: text;
