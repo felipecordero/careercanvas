@@ -134,11 +134,9 @@ function initializeHeroAnimations() {
     const animatedElements = heroSection.querySelectorAll('[data-animation]');
     const bgDecorations = heroSection.querySelectorAll('.absolute.opacity-10 > div');
     const quickFactCards = document.querySelectorAll('.quick-fact-card');
-    const locationBadge = heroSection.querySelector('[data-animation="location-badge"]');
-    
-    // Only animate elements that exist
+    // Only animate elements that exist — opacity-only fade (no y/rotate; matches hero portrait timing)
     if (animatedElements.length > 0) {
-        gsap.set(animatedElements, { opacity: 0, y: 50, rotationX: -15 });
+        gsap.set(animatedElements, { opacity: 0 });
     }
     if (bgDecorations.length > 0) {
         gsap.set(bgDecorations, { opacity: 0, scale: 0.5, rotation: -180 });
@@ -146,10 +144,6 @@ function initializeHeroAnimations() {
     if (quickFactCards.length > 0) {
         gsap.set(quickFactCards, { opacity: 0, y: 20, scale: 0.95 });
     }
-    if (locationBadge) {
-        gsap.set(locationBadge, { opacity: 0, y: 20 });
-    }
-    
     // Initialize floating background animations
     bgDecorations.forEach((circle, index) => {
         const delay = index * 0.5;
@@ -181,14 +175,11 @@ function initializeHeroAnimations() {
     
     // Only animate elements that exist
     if (animatedElements.length > 0) {
-        tl.to(animatedElements, { 
-            opacity: 1, 
-            y: 0, 
-            rotationX: 0, 
-            scale: 1,
-            duration: 0.8, 
-            stagger: 0.1,
-            ease: "back.out(1.7)" 
+        tl.to(animatedElements, {
+            opacity: 1,
+            duration: 2,
+            stagger: 0.12,
+            ease: "power2.inOut",
         });
     }
     
@@ -213,14 +204,6 @@ function initializeHeroAnimations() {
         }, "-=0.4");
     }
     
-    if (locationBadge) {
-        tl.to(locationBadge, {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: "back.out(1.7)"
-        }, "-=0.3");
-    }
 }
 
 // Enhanced typewriter effect with multiple concepts
