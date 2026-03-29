@@ -58,6 +58,10 @@
               <div class="max-w-sm w-full">
                 <!-- Company info -->
                 <div class="company-card bg-bg dark:bg-bg p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
+                  {{ $logoKey := or $exp.company_key (urlize $exp.company) }}
+                  {{ $logo := index site.Data.company_logos $logoKey }}
+                  {{ $logoDir := printf "static/images/companies/%s" $logoKey }}
+                  {{ $imgExt := `(?i)\.(png|jpe?g|webp|svg|gif)$` }}
                   <h3 class="text-xl font-heading font-bold text-text-primary dark:text-text-primary mb-2">
                     {{ if $exp.company_url }}
                     <a href="{{ $exp.company_url }}" target="_blank" rel="noopener noreferrer" class="company-link group">
@@ -68,6 +72,43 @@
                     {{ $exp.company }}
                     {{ end }}
                   </h3>
+                  {{ if $logo }}
+                  <div class="mb-3 w-full">
+                    {{/* Fixed-size white tile; YAML company_logos entry wins over a same-key folder */}}
+                    <div class="flex h-28 w-full items-center justify-center overflow-hidden rounded-md bg-white p-3">
+                      <img
+                        src="{{ $logo.src }}"
+                        alt="{{ with $logo.alt }}{{ . }}{{ else }}{{ $exp.company }}{{ end }}"
+                        loading="lazy"
+                        decoding="async"
+                        class="max-h-full max-w-full object-contain object-center"
+                      />
+                    </div>
+                  </div>
+                  {{ else if fileExists $logoDir }}
+                  {{/* No YAML logo: show every image in static/images/companies/<company-key>/ (sorted by filename) */}}
+                  {{ $gallery := slice }}
+                  {{ range readDir $logoDir }}
+                    {{ if and (not .IsDir) (findRE $imgExt .Name) }}
+                      {{ $gallery = $gallery | append . }}
+                    {{ end }}
+                  {{ end }}
+                  {{ with $gallery }}
+                  <div class="mb-3 flex w-full flex-nowrap gap-2 overflow-x-auto pb-1">
+                    {{ range . }}
+                    <div class="flex h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-white p-1.5">
+                      <img
+                        src="{{ printf "/images/companies/%s/%s" $logoKey .Name }}"
+                        alt="{{ $exp.company }} — {{ .Name }}"
+                        loading="lazy"
+                        decoding="async"
+                        class="max-h-full max-w-full object-contain object-center"
+                      />
+                    </div>
+                    {{ end }}
+                  </div>
+                  {{ end }}
+                  {{ end }}
                   <h4 class="text-primary dark:text-white font-semibold text-lg mb-3">{{ $exp.role }}</h4>
                   
                   <!-- Industry and Location -->
