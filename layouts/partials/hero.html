@@ -36,9 +36,9 @@
         <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 font-heading leading-tight hero-name hero-text-element" data-animation="name">
           {{ .Site.Params.firstName }} {{ .Site.Params.lastName }}
         </h1>
-        <!-- Tagline: one row; cycles sentences (split on ". " in JS) -->
-        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-6 font-light hero-text-accent hero-text-element w-full min-h-[3rem] md:min-h-[3.5rem] flex items-center justify-center lg:justify-start" data-animation="tagline">
-          <span class="typewriter hero-tagline-typewriter inline-block max-w-full text-center lg:text-left" data-original-text="{{ .Site.Params.tagline }}">{{ .Site.Params.tagline }}</span>
+        <!-- Tagline: one block; each cycling phrase wraps (up to ~2 lines); split phrases in JS on ". " -->
+        <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-6 font-light hero-text-accent hero-text-element w-full flex items-center justify-center lg:justify-start" data-animation="tagline">
+          <span class="typewriter w-full max-w-full text-center lg:text-left" data-original-text="{{ .Site.Params.tagline }}">{{ .Site.Params.tagline }}</span>
         </h2>
         <!-- Description -->
         <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0 hero-text-muted leading-relaxed hero-text-element px-4 py-3 rounded-lg" style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px);" data-animation="description">

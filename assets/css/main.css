@@ -772,18 +772,24 @@
   background: linear-gradient(135deg, var(--color-third-lighter), var(--color-third-light)) !important;
 }
 
-/* Typewriter: single row; cycles phrases in JS (split on ". ") */
+/* Typewriter: cycles phrases in JS (split on ". "); each phrase wraps to multiple lines so nothing clips */
 .typewriter {
-  display: inline-block;
+  display: block;
   max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: clip;
+  overflow: visible;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   font-family: inherit;
   font-size: inherit;
   vertical-align: bottom;
   color: transparent;
-  line-height: 1.2;
+  line-height: 1.25;
+}
+
+/* Reserve ~2 lines so layout stays stable while a one-line phrase is typing */
+.hero-section h2[data-animation="tagline"] .typewriter {
+  min-height: calc(2 * 1.25em);
 }
 
 /* Typing cursor */

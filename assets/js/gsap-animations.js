@@ -206,7 +206,7 @@ function initializeHeroAnimations() {
     
 }
 
-// Enhanced typewriter effect: cycles concepts split on ". " (single row, same hero line)
+// Enhanced typewriter effect: cycles concepts split on ". "
 let typingEffectInitialized = false;
 
 function initTypewriterForElement(typewriterElement, startDelayMs) {

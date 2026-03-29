@@ -33,7 +33,7 @@
         <div class="flex flex-wrap gap-2 justify-end">
           {{ range .Site.Language.Params.collab_tags }}
           {{ $isPriority := or (eq . "Urgent") (eq . "Priority") (eq . "Leadership") (eq . "Management") }}
-          <span class="{{ if $isPriority }}bg-third text-text-primary{{ else }}bg-bg-tertiary dark:bg-bg-tertiary text-text-primary{{ end }} px-3 py-1 rounded-full text-sm font-semibold shadow-md">{{ . }}</span>
+          <span class="{{ if $isPriority }}bg-third text-text-primary{{ else }}bg-bg-tertiary dark:bg-bg-tertiary text-text-primary{{ end }} inline-flex items-center justify-center text-center px-3 py-2 max-w-[11rem] min-h-[2.75rem] rounded-xl text-xs sm:text-sm font-semibold leading-snug whitespace-normal shadow-md">{{ . }}</span>
           {{ end }}
         </div>
       </div>
