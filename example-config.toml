@@ -15,7 +15,7 @@ defaultContentLanguageInSubdir = false
     languageName = "English"
     weight = 1
     [languages.en.params]
-      tagline = "Your Tagline"
+      tagline = "First sentence. Second sentence cycles in the same row."
       hero_description = "Short bio for the hero section."
       hero_location = "City, Country"
       collab_tags = ["Tag 1", "Tag 2", "Tag 3"]

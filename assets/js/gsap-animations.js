@@ -206,23 +206,17 @@ function initializeHeroAnimations() {
     
 }
 
-// Enhanced typewriter effect with multiple concepts
+// Enhanced typewriter effect: cycles concepts split on ". " (single row, same hero line)
 let typingEffectInitialized = false;
 
-function initTypingEffect() {
-    if (typingEffectInitialized) return;
-    
-    const typewriterElement = document.querySelector('.typewriter');
-    if (!typewriterElement) return;
-
-    // Get the concepts from the HTML element (which comes from Hugo i18n)
+function initTypewriterForElement(typewriterElement, startDelayMs) {
     const originalText = typewriterElement.getAttribute('data-original-text') || typewriterElement.textContent;
     const concepts = originalText.split('. ').map(concept => concept.trim()).filter(concept => concept.length > 0);
     let currentConceptIndex = 0;
-    
+
     typewriterElement.textContent = '';
     typewriterElement.style.color = 'transparent';
-    
+
     const cursor = document.createElement('span');
     cursor.className = 'typing-cursor';
     Object.assign(cursor.style, {
@@ -233,10 +227,9 @@ function initTypingEffect() {
         marginLeft: '2px',
         verticalAlign: 'text-bottom'
     });
-    
+
     typewriterElement.appendChild(cursor);
 
-    // Cursor blinking animation
     gsap.to(cursor, {
         opacity: 0,
         duration: 0.7,
@@ -248,8 +241,7 @@ function initTypingEffect() {
     function typeConcept(concept, onComplete) {
         const chars = concept.split('');
         const timeline = gsap.timeline();
-        
-        // Type the concept
+
         chars.forEach((char, index) => {
             timeline.to(typewriterElement, {
                 duration: 0.08,
@@ -261,11 +253,9 @@ function initTypingEffect() {
                 }
             });
         });
-        
-        // Pause after typing
+
         timeline.to(typewriterElement, { duration: 1.5 });
-        
-        // Erase the concept
+
         const reversedChars = [...chars].reverse();
         reversedChars.forEach((char, index) => {
             timeline.to(typewriterElement, {
@@ -277,10 +267,9 @@ function initTypingEffect() {
                 }
             });
         });
-        
-        // Pause before next concept
+
         timeline.to(typewriterElement, { duration: 0.5 });
-        
+
         timeline.call(onComplete);
     }
 
@@ -288,16 +277,26 @@ function initTypingEffect() {
         if (currentConceptIndex >= concepts.length) {
             currentConceptIndex = 0;
         }
-        
+
         typeConcept(concepts[currentConceptIndex], () => {
             currentConceptIndex++;
             setTimeout(startTypingLoop, 200);
         });
     }
 
-    // Start the typing effect after a delay
-    setTimeout(startTypingLoop, 1000);
-    
+    setTimeout(startTypingLoop, startDelayMs);
+}
+
+function initTypingEffect() {
+    if (typingEffectInitialized) return;
+
+    const typewriterElements = document.querySelectorAll('.typewriter');
+    if (!typewriterElements.length) return;
+
+    typewriterElements.forEach((el) => {
+        initTypewriterForElement(el, 1000);
+    });
+
     typingEffectInitialized = true;
 }
 

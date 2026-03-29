@@ -415,7 +415,7 @@
     --mouse-y: 50%;
     background: color-mix(in srgb, var(--color-primary) 2%, var(--color-bg));
     border: 1px solid transparent;
-    min-height: 4rem;
+    min-height: 2rem;
     width: 100%;
     display: flex;
     align-items: flex-start;
@@ -772,16 +772,18 @@
   background: linear-gradient(135deg, var(--color-third-lighter), var(--color-third-light)) !important;
 }
 
-/* Typewriter effect - Base styles only */
+/* Typewriter: single row; cycles phrases in JS (split on ". ") */
 .typewriter {
   display: inline-block;
+  max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  border-right: 2px solid var(--color-primary-light);
+  text-overflow: clip;
   font-family: inherit;
   font-size: inherit;
   vertical-align: bottom;
   color: transparent;
+  line-height: 1.2;
 }
 
 /* Typing cursor */
