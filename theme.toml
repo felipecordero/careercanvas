@@ -4,8 +4,8 @@ licenselink = "https://github.com/felipecordero/careercanvas/blob/main/LICENSE"
 description = "A modern, responsive Hugo theme for personal websites and portfolios"
 homepage = "https://github.com/felipecordero/careercanvas"
 demosite = "https://felipecordero.com"
-tags = ["blog", "portfolio", "personal", "responsive", "modern", "career", "resume"]
-features = ["responsive", "blog", "portfolio", "dark mode", "resume", "career showcase"]
+tags = ["blog", "portfolio", "personal", "responsive", "modern", "career", "resume", "dark", "light", "landing", "tailwind", "company"]
+features = ["responsive", "blog", "portfolio", "dark mode", "resume", "career showcase", "dark", "light", "landing", "tailwind", "company"]
 min_version = "0.110.0"
 
 [author]
