@@ -41,11 +41,16 @@
       <!-- Timeline items -->
       <div class="space-y-8 md:space-y-16">
         {{ range $index, $exp := .Params.positions }}
+        {{ $hasRoles := and $exp.roles (gt (len $exp.roles) 0) }}
+        {{ $primaryRole := $exp.role }}
+        {{ if $hasRoles }}
+          {{ $primaryRole = (index $exp.roles 0).title }}
+        {{ end }}
         <div class="relative timeline-item" data-animate>
           <!-- Timeline bullet -->
           <div class="hidden md:block absolute left-1/2 top-2 w-4 h-4 rounded-full border-4 transform -translate-x-1/2 z-20 timeline-bullet shadow-lg"></div>
           
-          <!-- Period badge - visible on mobile first, outside flex container -->
+          <!-- Overall period badge - visible on mobile first -->
           <div class="md:hidden px-4 text-center mb-4">
             <div class="inline-block bg-gradient-primary text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
               <i class="fas fa-calendar-alt mr-2"></i>{{ $exp.period }}
@@ -56,7 +61,6 @@
             <!-- Company info card -->
             <div class="md:w-1/2 px-4 flex justify-end">
               <div class="max-w-sm w-full">
-                <!-- Company info -->
                 <div class="company-card bg-bg dark:bg-bg p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
                   {{ $logoKey := or $exp.company_key (urlize $exp.company) }}
                   {{ $logo := index site.Data.company_logos $logoKey }}
@@ -74,7 +78,6 @@
                   </h3>
                   {{ if $logo }}
                   <div class="mb-3 w-full">
-                    {{/* Fixed-size white tile; YAML company_logos entry wins over a same-key folder */}}
                     <div class="flex h-28 w-full items-center justify-center overflow-hidden rounded-md bg-white p-3">
                       <img
                         src="{{ $logo.src }}"
@@ -86,7 +89,6 @@
                     </div>
                   </div>
                   {{ else if fileExists $logoDir }}
-                  {{/* No YAML logo: show every image in static/images/companies/<company-key>/ (sorted by filename) */}}
                   {{ $gallery := slice }}
                   {{ range readDir $logoDir }}
                     {{ if and (not .IsDir) (findRE $imgExt .Name) }}
@@ -99,7 +101,7 @@
                     <div class="flex h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-white p-1.5">
                       <img
                         src="{{ printf "/images/companies/%s/%s" $logoKey .Name }}"
-                        alt="{{ $exp.company }} — {{ .Name }}"
+                        alt="{{ $exp.company }}: {{ .Name }}"
                         loading="lazy"
                         decoding="async"
                         class="max-h-full max-w-full object-contain object-center"
@@ -109,7 +111,9 @@
                   </div>
                   {{ end }}
                   {{ end }}
-                  <h4 class="text-primary dark:text-white font-semibold text-lg mb-3">{{ $exp.role }}</h4>
+                  {{ with $primaryRole }}
+                  <h4 class="text-primary dark:text-white font-semibold text-lg mb-3">{{ . }}</h4>
+                  {{ end }}
                   
                   <!-- Industry and Location -->
                   <div class="flex flex-wrap gap-2 mb-3">
@@ -130,7 +134,6 @@
                     {{ end }}
                   </div>
                   
-                  <!-- Company description -->
                   {{ if $exp.company_description }}
                   <p class="text-sm text-gray-700 dark:text-text-tertiary italic border-l-4 border-primary-light pl-3">
                     {{ $exp.company_description }}
@@ -140,13 +143,44 @@
               </div>
             </div>
 
-            <!-- Key achievements card -->
+            <!-- Key achievements -->
             <div class="md:w-1/2 px-4">
-              <!-- Period badge - hidden on mobile, visible on desktop -->
+              <!-- Overall period badge - desktop -->
               <div class="hidden md:block bg-gradient-primary text-white px-4 py-2 rounded-full text-sm font-medium mb-3 shadow-lg w-fit">
                 <i class="fas fa-calendar-alt mr-2"></i>{{ $exp.period }}
               </div>
-              
+
+              {{ if $hasRoles }}
+              <div class="space-y-4">
+                {{ range $exp.roles }}
+                <div class="achievements-card bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
+                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                    <div class="flex items-center">
+                      <i class="fas fa-briefcase text-third dark:text-third-light mr-3 text-lg"></i>
+                      <h5 class="text-lg font-semibold text-text-primary dark:text-text-primary">{{ .title }}</h5>
+                    </div>
+                    {{ with .period }}
+                    <div class="inline-flex items-center bg-gradient-primary text-white px-3 py-1 rounded-full text-xs font-medium shadow w-fit">
+                      <i class="fas fa-calendar-alt mr-2"></i>{{ . }}
+                    </div>
+                    {{ end }}
+                  </div>
+                  <div class="flex items-center mb-3">
+                    <i class="fas fa-tasks text-third dark:text-third-light mr-3 text-base"></i>
+                    <h6 class="text-base font-semibold text-text-primary dark:text-text-primary">{{ i18n "keyAchievements" }}</h6>
+                  </div>
+                  <ul class="space-y-3 text-gray-700 dark:text-text-secondary">
+                    {{ range .bullet_points }}
+                    <li class="flex items-start">
+                      <i class="fas fa-check-circle text-second mr-3 mt-1 flex-shrink-0"></i>
+                      <span>{{ . | markdownify }}</span>
+                    </li>
+                    {{ end }}
+                  </ul>
+                </div>
+                {{ end }}
+              </div>
+              {{ else }}
               <div class="achievements-card bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
                 <div class="flex items-center mb-4">
                   <i class="fas fa-tasks text-third dark:text-third-light mr-3 text-lg"></i>
@@ -161,6 +195,7 @@
                   {{ end }}
                 </ul>
               </div>
+              {{ end }}
             </div>
           </div>
         </div>
