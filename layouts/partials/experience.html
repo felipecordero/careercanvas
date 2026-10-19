@@ -41,10 +41,11 @@
       <!-- Timeline items -->
       <div class="space-y-8 md:space-y-16">
         {{ range $index, $exp := .Params.positions }}
-        {{ $hasRoles := and $exp.roles (gt (len $exp.roles) 0) }}
+        {{ $roles := or $exp.roles (slice) }}
+        {{ $hasRoles := gt (len $roles) 0 }}
         {{ $primaryRole := $exp.role }}
         {{ if $hasRoles }}
-          {{ $primaryRole = (index $exp.roles 0).title }}
+          {{ $primaryRole = (index $roles 0).title }}
         {{ end }}
         <div class="relative timeline-item" data-animate>
           <!-- Timeline bullet -->
@@ -152,7 +153,7 @@
 
               {{ if $hasRoles }}
               <div class="space-y-4">
-                {{ range $exp.roles }}
+                {{ range $roles }}
                 <div class="achievements-card bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-lg shadow-lg border border-border-primary dark:border-border-primary card-hover">
                   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                     <div class="flex items-center">
