@@ -38,11 +38,6 @@
     position: relative;
   }
 
-  /* Hide gradient initially to prevent flash, JavaScript will show it if needed */
-  .hero-section.gradient-bg {
-    background: transparent;
-  }
-
   /* Pexels Background */
   .pexels-bg {
     position: relative;

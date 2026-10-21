@@ -9,11 +9,8 @@ class PexelsBackground {
         this.currentPhoto = null;
         this.usedImages = new Set(); // Track used images to avoid repeats
         this.fallbackGradient = 'linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 20%, var(--color-primary-light) 40%, var(--color-primary) 60%, var(--color-primary-dark) 75%, var(--color-primary-dark) 90%, var(--color-primary) 100%)';
-        
-        // Hide gradient immediately to prevent flash
-        this.hideGradientBackground();
-        
-        // Wait for configuration to be loaded, then initialize
+
+        // Gradient stays until the photo fades in.
         this.waitForConfig();
     }
 
@@ -25,16 +22,6 @@ class PexelsBackground {
             this.useFallbackBackground();
         }
     }
-
-    hideGradientBackground() {
-        const heroSection = document.querySelector('.hero-section');
-        if (heroSection) {
-            // Immediately hide the gradient to prevent flash
-            heroSection.style.background = 'transparent';
-            heroSection.style.transition = 'background 0.3s ease-in-out';
-        }
-    }
-
 
     getQueries() {
         // Get queries from Hugo config, with fallback to default list
@@ -93,13 +80,13 @@ class PexelsBackground {
             if (availablePhotos.length === 0) {
                 this.usedImages.clear();
                 const randomPhoto = data.photos[Math.floor(Math.random() * data.photos.length)];
-                this.currentImage = randomPhoto.src.large2x || randomPhoto.src.large || randomPhoto.src.medium;
+                this.currentImage = randomPhoto.src.large || randomPhoto.src.medium;
                 this.currentPhoto = randomPhoto;
                 this.usedImages.add(randomPhoto.id);
             } else {
                 // Pick a random photo from available ones
                 const randomPhoto = availablePhotos[Math.floor(Math.random() * availablePhotos.length)];
-                this.currentImage = randomPhoto.src.large2x || randomPhoto.src.large || randomPhoto.src.medium;
+                this.currentImage = randomPhoto.src.large || randomPhoto.src.medium;
                 this.currentPhoto = randomPhoto;
                 this.usedImages.add(randomPhoto.id);
             }
@@ -198,28 +185,30 @@ class PexelsBackground {
             }
         }
 
-        // Preload the image to ensure smooth transition
+        // Decode off the main paint, then fade in over the gradient.
         const img = new Image();
+        img.decoding = 'async';
         img.onload = () => {
-            // Apply the background to the container
             bgContainer.style.backgroundImage = `url(${this.currentImage})`;
             bgContainer.style.backgroundSize = 'cover';
             bgContainer.style.backgroundPosition = 'center';
             bgContainer.style.backgroundRepeat = 'no-repeat';
-            
-            // Remove gradient-bg class and add pexels-bg class
-            heroSection.classList.remove('gradient-bg');
+
             heroSection.classList.add('pexels-bg');
-            
-            // Simple fade-in effect for background and overlay only
-            setTimeout(() => {
+
+            // Drop the gradient only after the fade finishes so it shows through.
+            bgContainer.addEventListener('transitionend', () => {
+                heroSection.classList.remove('gradient-bg');
+            }, { once: true });
+
+            requestAnimationFrame(() => {
                 bgContainer.style.opacity = '1';
                 overlay.style.opacity = '1';
-            }, 50);
+            });
 
             this.setCredit(this.currentPhoto);
         };
-        
+
         img.src = this.currentImage;
     }
 
@@ -275,12 +264,11 @@ class PexelsBackground {
     }
 }
 
-// Initialize when DOM is ready
+// Initialize after the first frame so the gradient paints before the fetch.
 document.addEventListener('DOMContentLoaded', function() {
-    // Small delay to ensure other scripts are loaded
-    setTimeout(() => {
+    requestAnimationFrame(() => {
         window.pexelsBackground = new PexelsBackground();
-    }, 100);
+    });
 });
 
 // Export for potential external use

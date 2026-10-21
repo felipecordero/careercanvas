@@ -9,7 +9,8 @@
               <img 
                 src="{{ .Site.Params.profile_image }}" 
                 alt="Portrait of {{ .Site.Params.name }}" 
-                loading="lazy" 
+                loading="eager"
+                fetchpriority="high"
                 decoding="async" 
                 class="object-cover w-full h-full rounded-full"
               />
