@@ -270,6 +270,7 @@ function initTypewriterForElement(typewriterElement, startDelayMs) {
 
     setTimeout(function() {
         const visibleText = typewriterElement.textContent.trim();
+        typewriterElement.style.color = 'inherit';
 
         cursor = document.createElement('span');
         cursor.className = 'typing-cursor';
