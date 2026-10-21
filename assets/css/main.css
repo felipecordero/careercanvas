@@ -289,6 +289,28 @@
     min-height: calc(100vh - 4rem);
   }
 
+  /* Portrait and text fade in on reveal. The class is added with the body reveal so this does not run while the page is hidden. */
+  .hero-section [data-animation] {
+    opacity: 0;
+  }
+
+  .hero-section.hero-content-in [data-animation] {
+    animation: hero-content-in 0.7s ease-in forwards;
+  }
+
+  @keyframes hero-content-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-section [data-animation],
+    .hero-section.hero-content-in [data-animation] {
+      opacity: 1;
+      animation: none;
+    }
+  }
+
   /* Side-by-side hero: top-align columns (.items-center is in @layer utilities and would win without !important) */
   @media (min-width: 1024px) {
     .hero-inner-row {

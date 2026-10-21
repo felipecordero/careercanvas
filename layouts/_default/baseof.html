@@ -74,6 +74,10 @@
         // Do not wait for window load: the hero photo must not hold first paint.
         document.addEventListener('DOMContentLoaded', function() {
             document.body.style.visibility = 'visible';
+            const heroSection = document.querySelector('.hero-section');
+            if (heroSection) {
+                heroSection.classList.add('hero-content-in');
+            }
         });
     </script>
 </body>

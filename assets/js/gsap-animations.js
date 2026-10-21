@@ -130,14 +130,9 @@ function initializeHeroAnimations() {
 
     console.log('🎯 Initializing hero animations...');
     
-    // Set initial states for all animated elements
-    const animatedElements = heroSection.querySelectorAll('[data-animation]');
+    // Portrait and text stay at their first-paint opacity. Only decorations start hidden.
     const bgDecorations = heroSection.querySelectorAll('.absolute.opacity-10 > div');
     const quickFactCards = document.querySelectorAll('.quick-fact-card');
-    // Only animate elements that exist — opacity-only fade (no y/rotate; matches hero portrait timing)
-    if (animatedElements.length > 0) {
-        gsap.set(animatedElements, { opacity: 0 });
-    }
     if (bgDecorations.length > 0) {
         gsap.set(bgDecorations, { opacity: 0, scale: 0.5, rotation: -180 });
     }
@@ -170,19 +165,9 @@ function initializeHeroAnimations() {
     // Initialize quick fact lighting effects
     initQuickFactLighting();
     
-    // Play hero entrance animation
+    // Decorations and quick facts still enter. Hero portrait and text do not.
     const tl = gsap.timeline();
-    
-    // Only animate elements that exist
-    if (animatedElements.length > 0) {
-        tl.to(animatedElements, {
-            opacity: 1,
-            duration: 2,
-            stagger: 0.12,
-            ease: "power2.inOut",
-        });
-    }
-    
+
     if (bgDecorations.length > 0) {
         tl.to(bgDecorations, { 
             opacity: 0.1, 
@@ -213,30 +198,7 @@ function initTypewriterForElement(typewriterElement, startDelayMs) {
     const originalText = typewriterElement.getAttribute('data-original-text') || typewriterElement.textContent;
     const concepts = originalText.split('. ').map(concept => concept.trim()).filter(concept => concept.length > 0);
     let currentConceptIndex = 0;
-
-    typewriterElement.textContent = '';
-    typewriterElement.style.color = 'transparent';
-
-    const cursor = document.createElement('span');
-    cursor.className = 'typing-cursor';
-    Object.assign(cursor.style, {
-        display: 'inline-block',
-        width: '2px',
-        height: '1.2em',
-        backgroundColor: 'var(--color-primary-light)',
-        marginLeft: '2px',
-        verticalAlign: 'text-bottom'
-    });
-
-    typewriterElement.appendChild(cursor);
-
-    gsap.to(cursor, {
-        opacity: 0,
-        duration: 0.7,
-        ease: "power2.inOut",
-        yoyo: true,
-        repeat: -1
-    });
+    let cursor = null;
 
     function typeConcept(concept, onComplete) {
         const chars = concept.split('');
@@ -284,7 +246,33 @@ function initTypewriterForElement(typewriterElement, startDelayMs) {
         });
     }
 
-    setTimeout(startTypingLoop, startDelayMs);
+    setTimeout(function() {
+        typewriterElement.textContent = '';
+        typewriterElement.style.color = 'transparent';
+
+        cursor = document.createElement('span');
+        cursor.className = 'typing-cursor';
+        Object.assign(cursor.style, {
+            display: 'inline-block',
+            width: '2px',
+            height: '1.2em',
+            backgroundColor: 'var(--color-primary-light)',
+            marginLeft: '2px',
+            verticalAlign: 'text-bottom'
+        });
+
+        typewriterElement.appendChild(cursor);
+
+        gsap.to(cursor, {
+            opacity: 0,
+            duration: 0.7,
+            ease: "power2.inOut",
+            yoyo: true,
+            repeat: -1
+        });
+
+        startTypingLoop();
+    }, startDelayMs);
 }
 
 function initTypingEffect() {
