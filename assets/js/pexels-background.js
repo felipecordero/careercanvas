@@ -196,11 +196,6 @@ class PexelsBackground {
 
             heroSection.classList.add('pexels-bg');
 
-            // Drop the gradient only after the fade finishes so it shows through.
-            bgContainer.addEventListener('transitionend', () => {
-                heroSection.classList.remove('gradient-bg');
-            }, { once: true });
-
             requestAnimationFrame(() => {
                 bgContainer.style.opacity = '1';
                 overlay.style.opacity = '1';

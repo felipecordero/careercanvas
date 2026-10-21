@@ -285,6 +285,7 @@
   /* Hero Section */
   .hero-section {
     /* Navbar uses h-16 (4rem). baseof.html also adds a h-16 spacer. */
+    position: relative;
     min-height: calc(100svh - 4rem);
     min-height: calc(100vh - 4rem);
   }
@@ -311,7 +312,11 @@
     }
   }
 
-  /* Side-by-side hero: top-align columns (.items-center is in @layer utilities and would win without !important) */
+  /* Stacked hero stays centered. Side-by-side hero stays top-aligned. */
+  .hero-inner-row {
+    align-items: center;
+  }
+
   @media (min-width: 1024px) {
     .hero-inner-row {
       align-items: flex-start !important;
