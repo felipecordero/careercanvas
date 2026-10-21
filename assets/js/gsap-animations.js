@@ -200,6 +200,28 @@ function initTypewriterForElement(typewriterElement, startDelayMs) {
     let currentConceptIndex = 0;
     let cursor = null;
 
+    function eraseText(text, onComplete) {
+        const chars = text.split('');
+        const timeline = gsap.timeline();
+        const reversedChars = [...chars].reverse();
+
+        timeline.to(typewriterElement, { duration: 1.5 });
+
+        reversedChars.forEach((char, index) => {
+            timeline.to(typewriterElement, {
+                duration: 0.04,
+                onUpdate: function() {
+                    const textContent = reversedChars.slice(index + 1).reverse().join('');
+                    typewriterElement.textContent = textContent;
+                    typewriterElement.appendChild(cursor);
+                }
+            });
+        });
+
+        timeline.to(typewriterElement, { duration: 0.5 });
+        timeline.call(onComplete);
+    }
+
     function typeConcept(concept, onComplete) {
         const chars = concept.split('');
         const timeline = gsap.timeline();
@@ -247,8 +269,7 @@ function initTypewriterForElement(typewriterElement, startDelayMs) {
     }
 
     setTimeout(function() {
-        typewriterElement.textContent = '';
-        typewriterElement.style.color = 'transparent';
+        const visibleText = typewriterElement.textContent.trim();
 
         cursor = document.createElement('span');
         cursor.className = 'typing-cursor';
@@ -271,7 +292,11 @@ function initTypewriterForElement(typewriterElement, startDelayMs) {
             repeat: -1
         });
 
-        startTypingLoop();
+        // Keep the visible tagline; hold, erase it, then type from concept 0.
+        eraseText(visibleText, () => {
+            currentConceptIndex = 0;
+            setTimeout(startTypingLoop, 200);
+        });
     }, startDelayMs);
 }
 
