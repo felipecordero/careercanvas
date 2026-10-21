@@ -196,7 +196,10 @@ let typingEffectInitialized = false;
 
 function initTypewriterForElement(typewriterElement, startDelayMs) {
     const originalText = typewriterElement.getAttribute('data-original-text') || typewriterElement.textContent;
-    const concepts = originalText.split('. ').map(concept => concept.trim()).filter(concept => concept.length > 0);
+    const concepts = originalText.split('. ')
+        .map(concept => concept.trim())
+        .filter(concept => concept.length > 0)
+        .map(concept => (concept.endsWith('.') ? concept : `${concept}.`));
     let currentConceptIndex = 0;
     let cursor = null;
 
@@ -293,9 +296,9 @@ function initTypewriterForElement(typewriterElement, startDelayMs) {
             repeat: -1
         });
 
-        // Keep the visible tagline; hold, erase it, then type from concept 0.
+        // Keep the visible tagline; hold, erase it, then type the next phrase.
         eraseText(visibleText, () => {
-            currentConceptIndex = 0;
+            currentConceptIndex = concepts.length > 1 ? 1 : 0;
             setTimeout(startTypingLoop, 200);
         });
     }, startDelayMs);
