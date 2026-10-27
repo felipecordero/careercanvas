@@ -51,6 +51,16 @@ class PexelsBackground {
         }
     }
 
+    photoUrl(photo) {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.min(2560, Math.ceil(window.innerWidth * dpr));
+        const original = photo.src && photo.src.original;
+        if (original) {
+            return `${original}?auto=compress&cs=tinysrgb&w=${width}`;
+        }
+        return photo.src.large2x || photo.src.large;
+    }
+
     async loadRandomBackground() {
         const randomQuery = this.queries[Math.floor(Math.random() * this.queries.length)];
         
@@ -60,7 +70,7 @@ class PexelsBackground {
         // Random per_page (1-15) to get different result sets
         const randomPerPage = Math.floor(Math.random() * 15) + 1;
         
-        const response = await fetch(`https://api.pexels.com/v1/search?query=${randomQuery}&orientation=landscape&size=small&per_page=${randomPerPage}&page=${randomPage}`, {
+        const response = await fetch(`https://api.pexels.com/v1/search?query=${randomQuery}&orientation=landscape&size=large&per_page=${randomPerPage}&page=${randomPage}`, {
             headers: {
                 'Authorization': this.apiKey
             }
@@ -80,13 +90,13 @@ class PexelsBackground {
             if (availablePhotos.length === 0) {
                 this.usedImages.clear();
                 const randomPhoto = data.photos[Math.floor(Math.random() * data.photos.length)];
-                this.currentImage = randomPhoto.src.large || randomPhoto.src.medium;
+                this.currentImage = this.photoUrl(randomPhoto);
                 this.currentPhoto = randomPhoto;
                 this.usedImages.add(randomPhoto.id);
             } else {
                 // Pick a random photo from available ones
                 const randomPhoto = availablePhotos[Math.floor(Math.random() * availablePhotos.length)];
-                this.currentImage = randomPhoto.src.large || randomPhoto.src.medium;
+                this.currentImage = this.photoUrl(randomPhoto);
                 this.currentPhoto = randomPhoto;
                 this.usedImages.add(randomPhoto.id);
             }
