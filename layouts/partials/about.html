@@ -45,14 +45,14 @@
                       {{ range $items }}
                         {{ $item := trim . "- " }}
                         {{ if $item }}
-                          <span class="inline-flex items-center px-3 py-1.5 text-gray-700 dark:text-text-tertiary text-base font-medium border border-border-primary dark:border-border-primary rounded-xl">
+                          <div class="inline-flex items-center px-3 py-1.5 text-gray-700 dark:text-text-tertiary text-base font-medium border border-border-primary dark:border-border-primary rounded-xl">
                             {{ $item | markdownify | safeHTML }}
-                          </span>
+                          </div>
                         {{ end }}
                       {{ end }}
                     </div>
                   {{ else }}
-                    <p class="text-gray-700 dark:text-text-tertiary text-base leading-relaxed">{{ $fact.value | markdownify }}</p>
+                    <div class="text-gray-700 dark:text-text-tertiary text-base leading-relaxed">{{ $fact.value | markdownify }}</div>
                   {{ end }}
                 </div>
               </div>
