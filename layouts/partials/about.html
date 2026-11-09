@@ -4,9 +4,9 @@
     <div class="flex flex-col lg:flex-row gap-8">
       <div class="flex-1 about-text-element">
         <div class="bg-gradient-to-br from-bg-secondary to-bg-tertiary dark:from-bg-secondary dark:to-bg-tertiary p-6 rounded-xl shadow-lg border border-border-primary dark:border-border-primary">
-          <p class="text-lg text-text-secondary dark:text-text-secondary leading-relaxed">
+          <div class="text-lg text-text-secondary dark:text-text-secondary leading-relaxed space-y-2">
             {{ with .Site.GetPage "about" }}{{ .Params.intro | markdownify }}{{ end }}
-          </p>
+          </div>
           <div class="mt-6">
             <a href="{{ $.Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center bg-gradient-primary text-white px-4 py-2 rounded-lg shadow-lg about-button button-hover">
               <i class="fab fa-linkedin-in mr-3 text-lg"></i> 
@@ -75,19 +75,29 @@
         </div>
         
         <div class="space-y-6 text-text-secondary dark:text-text-secondary">
-          <p class="text-lg leading-relaxed">{{ .Params.intro | markdownify }}</p>
-          <p class="text-lg leading-relaxed">{{ .Params.study | markdownify }}</p>
+          <div class="text-lg leading-relaxed space-y-2">
+            {{ .Params.intro | markdownify }}
+          </div>
+          <div class="text-lg leading-relaxed space-y-2">
+            {{ .Params.study | markdownify }}
+          </div>
 
           <div class="bg-gradient-primary-lighter p-6 rounded-xl border border-primary-light">
             <h4 class="text-xl font-semibold mb-3 text-primary-dark flex items-center">
               <i class="fas fa-heart mr-3 text-second"></i>
               {{ .Params.passion_title }}
             </h4>
-            <p class="text-primary-dark leading-relaxed">{{ .Params.passion_text | markdownify }}</p>
+            <div class="text-primary-dark leading-relaxed space-y-2">
+              {{ .Params.passion_text | markdownify }}
+            </div>
           </div>
 
-          <p class="text-lg leading-relaxed">{{ .Params.mix | markdownify }}</p>
-          <p class="text-lg leading-relaxed">{{ .Params.personal | markdownify }}</p>
+          <div class="text-lg leading-relaxed space-y-2">
+            {{ .Params.mix | markdownify }}
+          </div>
+          <div class="text-lg leading-relaxed space-y-2">
+            {{ .Params.personal | markdownify }}
+          </div>
         </div>
       </div>
     </div>
