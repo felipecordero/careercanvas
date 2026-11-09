@@ -15,6 +15,7 @@ defaultContentLanguageInSubdir = false
     languageName = "English"
     weight = 1
     [languages.en.params]
+      resume_url = "/files/your-cv-en.pdf"
       tagline = "First sentence. Second sentence cycles in the same block (wraps to ~2 lines)."
       hero_description = "Short bio for the hero section."
       hero_location = "City, Country"
@@ -38,9 +39,6 @@ defaultContentLanguageInSubdir = false
   calendly_url = ""
   calendly_height = "700px"
   copyright = "© 2025 | Your Name"
-  resume_url_en = "/files/your-cv-en.pdf"
-  resume_url_fr = "/files/your-cv-fr.pdf"
-  resume_label = "View CV"
   sectionPagesMenu = "main"
   formspreeendpoint = ""
   pexelsapikey = ""

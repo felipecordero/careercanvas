@@ -14,7 +14,10 @@
           </p>
           <div class="flex space-x-4">
             <a href="{{ .Site.Home.RelPermalink }}" class="bg-bg dark:bg-bg text-primary dark:text-primary-light px-6 py-3 rounded-lg font-medium hover:bg-bg-secondary dark:hover:bg-bg-secondary transition duration-300">{{ .Site.Params.fourofour_gohome | default (i18n "goHome") }}</a>
-            <a href="{{ .Site.Params.resume_url_en }}" target="_blank" rel="noopener" class="bg-primary text-text-primary px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition duration-300">{{ i18n "viewCV" }}</a>
+            {{ $resumes := partial "resume-links.html" .Site }}
+            {{ range $resumes }}
+            <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="bg-primary text-text-primary px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition duration-300">{{ i18n "viewCV" }}{{ if gt (len $resumes) 1 }} ({{ .label }}){{ end }}</a>
+            {{ end }}
           </div>
         </div>
         {{ if .Site.Params.fourofour_image }}

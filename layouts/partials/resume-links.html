@@ -1,0 +1,29 @@
+{{/*
+  Resolve the resumes selected by the current site's experience page.
+  Input: Site. Output: ordered slice of {lang, label, url} dictionaries.
+  URLs belong to languages.LANGUAGE.params.resume_url; resume_downloads controls
+  selection, labels, and order. Unknown/disabled languages and empty URLs are
+  omitted. With no experience page or selection, no resume links are returned.
+*/}}
+{{ $resumeMap := dict }}
+{{ range .Languages }}
+  {{ $lang := .Lang }}
+  {{ with .Params.resume_url }}
+    {{ $resumeMap = merge $resumeMap (dict $lang .) }}
+  {{ end }}
+{{ end }}
+
+{{ $resumes := slice }}
+{{ with .GetPage "experience" }}
+  {{ range .Params.resume_downloads }}
+    {{ $item := . }}
+    {{ with index $resumeMap $item.lang }}
+      {{ $resumes = $resumes | append (dict
+        "lang" $item.lang
+        "label" ($item.label | default (upper $item.lang))
+        "url" .
+      ) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ return $resumes }}
