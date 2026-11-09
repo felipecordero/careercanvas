@@ -53,9 +53,12 @@
           <a href="#contact" class="bg-bg text-primary dark:text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
             {{ i18n "getInTouch" }}
           </a>
-          <a href="{{ .Site.Params.resume_url }}" target="_blank" rel="noopener" class="bg-bg text-primary dark:text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
-            {{ i18n "viewCV" }}
+          {{ $resumes := partial "resume-links.html" .Site }}
+          {{ range $resumes }}
+          <a href="{{ .url }}" target="_blank" rel="noopener noreferrer" class="bg-bg text-primary dark:text-white px-8 py-4 rounded-lg font-semibold hero-button button-hover">
+            {{ i18n "viewCV" }}{{ if gt (len $resumes) 1 }} ({{ .label }}){{ end }}
           </a>
+          {{ end }}
         </div>
         <!-- Social links -->
         <div class="flex justify-center lg:justify-end mt-8 mb-8 md:mb-0 hero-text-element" data-animation="social">
