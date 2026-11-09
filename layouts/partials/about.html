@@ -7,12 +7,14 @@
           <p class="text-lg text-text-secondary dark:text-text-secondary leading-relaxed">
             {{ with .Site.GetPage "about" }}{{ .Params.intro | markdownify }}{{ end }}
           </p>
+          {{ if $.Site.Params.linkedin_url }}
           <div class="mt-6">
             <a href="{{ $.Site.Params.linkedin_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center bg-gradient-primary text-white px-4 py-2 rounded-lg shadow-lg about-button button-hover">
               <i class="fab fa-linkedin-in mr-3 text-lg"></i> 
               {{ i18n "connectOnLinkedIn" }}
             </a>
           </div>
+          {{ end }}
         </div>
       </div>
       <div class="flex-1">
